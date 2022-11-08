@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "FIXME",
+  "description": "FIXME",
+  "version": "1.0",
+  "options_ui": {
+    "page": "./options.html"
+  },
+  "action": {
+    "default_icon": "./img/icon.png",
+    "default_popup": "./popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["./js/content-script.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "./js/background.js"
+  },
+  "permissions": []
+}
