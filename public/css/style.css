@@ -2,13 +2,13 @@
   outline: dotted pink 1px;
 }
 body {
-  width: 662px; /* is_popup=false のときなくしたい... */
   background-color: #6d6d6d;
 }
 main {
   background-color: white;
   max-width: 662px;
   margin: 0px auto;
+  padding: 2px;
   border-radius: 8px;
 }
 svg {
@@ -46,6 +46,17 @@ svg {
   margin: 10px 10px 0 10px;
   font-size: 18px;
 }
+.items {
+  max-height: calc(100vh - 135px);
+  overflow-y: auto;
+}
+.items::-webkit-scrollbar {
+  width: 6px;
+}
+.items::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #7c7c7c;
+}
 .item,
 .search-container {
   border-bottom: solid 1px #eae5e3;
@@ -78,4 +89,8 @@ svg {
 .highlight {
   color: black;
   font-weight: bold;
+}
+
+.hide {
+  display: none;
 }

@@ -8,7 +8,7 @@
   },
   "action": {
     "default_icon": "./img/icon.png",
-    "default_popup": "./test.html"
+    "default_popup": "./search.html?popup"
   },
   "content_scripts": [
     {

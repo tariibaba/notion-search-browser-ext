@@ -6,8 +6,39 @@ const NOTION_SEARCH_URL = `${NOTION_HOST}/api/v3/search`;
 const DEBOUNCE_TIME = 150;
 const MIN_SEARCH_LENGTH = 1;
 const STRANGE_NOTION_TAG = 'gzkNfoUU';
+let POPUP_MODE = false;
 
-const search = async (query: string) => {
+/* TODO
+  - browserAction のアイコン
+  - 前回の状態保持 （）
+  - (pagenation)
+*/
+
+const onInput = debounce(search, DEBOUNCE_TIME);
+
+const input = querySeletor<HTMLInputElement>('.search');
+
+input.focus();
+input.addEventListener('input', () => onInput(input.value));
+
+if (location.search === '?popup') {
+  document.body.style.width = '662px';
+  document.body.style.margin = '0px';
+  POPUP_MODE = true;
+} else {
+  document.body.style.margin = '40px 0 0 0';
+}
+querySeletor('main').classList.remove('hide');
+
+querySeletor('.icon-clear-input-container').addEventListener(
+  'click',
+  (event: Event) => {
+    input.value = '';
+    event.preventDefault();
+  },
+);
+
+async function search(query: string) {
   const resultElem = querySeletor('.items');
 
   if (query.length <= MIN_SEARCH_LENGTH) {
@@ -44,7 +75,7 @@ const search = async (query: string) => {
   });
   const res = (await response.json()) as Res;
 
-  const results: Results = res.results.map((data) => {
+  let results: Results = res.results.map((data) => {
     const recordMap = res.recordMap;
     const value = recordMap.block[data.id].value;
     const result: Result = { title: '', url: '' };
@@ -82,24 +113,10 @@ const search = async (query: string) => {
     return result;
   });
 
-  escape(results);
+  results = escape(results);
 
   resultElem.innerHTML = render(results);
-};
-
-/* TODO
-  - 起動時は last modified でソートしても良い気がするが ... query="" の検索無理じゃね？
-  - XSS ...
-  - popup = true  : target=blank
-  - popup = false : body の width を削除 (auto?)
-*/
-
-const onInput = debounce(search, DEBOUNCE_TIME);
-
-const input = querySeletor<HTMLInputElement>('.search');
-
-input.focus();
-input.addEventListener('input', () => onInput(input.value));
+}
 
 // ========================================
 // Utils
@@ -124,14 +141,13 @@ const regexp = new RegExp(
   `&lt;${STRANGE_NOTION_TAG}&gt;(.+?)&lt;/${STRANGE_NOTION_TAG}&gt;`,
   'g',
 );
-function escape(results: Results) {
-  results.map((result) => {
-    result.title = escapeHtml(result.title).replace(
-      regexp,
-      '<span class="highlight">$1</span>',
-    );
+function escape(results: Results): Results {
+  const addHighlight = (str: string) =>
+    str.replace(regexp, '<span class="highlight">$1</span>');
+  return structuredClone(results).map((result) => {
+    result.title = addHighlight(escapeHtml(result.title));
     if (result.text) {
-      result.text = escapeHtml(result.text);
+      result.text = addHighlight(escapeHtml(result.text));
     }
     if (result.parentsPath) {
       result.parentsPath = escapeHtml(result.parentsPath);
@@ -154,7 +170,9 @@ function render(results: Results): string {
     .map((data: Result) => {
       return `
       <div class="item">
-        <a class="url" target="_blank" href="${data.url}">
+        <a class="url" ${POPUP_MODE ? 'target="_blank"' : ''} href="${
+        data.url
+      }">
           <div class="article-icon-container">
             ${data.pageIcon || defaultIcon}
           </div>
