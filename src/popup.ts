@@ -7,38 +7,8 @@ const DEBOUNCE_TIME = 150;
 const MIN_SEARCH_LENGTH = 1;
 const STRANGE_NOTION_TAG = 'gzkNfoUU';
 
-function idToUuid(path: string) {
-  return `${path.substr(0, 8)}-${path.substr(8, 4)}-${path.substr(
-    12,
-    4,
-  )}-${path.substr(16, 4)}-${path.substr(20)}`;
-}
-
-type Res = {
-  results: {
-    id: string;
-    highlight: { text: string; title?: string };
-    highlightBlockId: string;
-    featureGroups?: object[]; // TODO: 最後に消す
-    sources?: string[]; // TODO: 最後に消す
-    analytics?: object;
-  }[];
-  recordMap: {
-    block: {
-      [id: string]: {
-        value: {
-          properties: { title: string[][] };
-          parent_id?: string;
-          format?: { page_icon?: string };
-        };
-      };
-    };
-  };
-};
-
 const search = async (query: string) => {
-  const resultElem = document.getElementById('result');
-  if (!resultElem) throw new Error('code block is not found'); // FIXME
+  const resultElem = querySeletor('.items');
 
   if (query.length <= MIN_SEARCH_LENGTH) {
     resultElem.innerText = '';
@@ -47,8 +17,7 @@ const search = async (query: string) => {
 
   const body = JSON.stringify({
     type: 'BlocksInSpace',
-    // TODO: 検索結果 0 の理由、SpaceID と permission, host_permission が臭う ...
-    query: query,
+    query,
     spaceId: idToUuid('81149e3a3d874d25b7082226dd72bfdd'),
     limit: 10,
     filters: {
@@ -74,43 +43,43 @@ const search = async (query: string) => {
     },
   });
   const res = (await response.json()) as Res;
-  const results: any = res.results.map((result) => {
-    const recordMap = res.recordMap;
-    const value = recordMap.block[result.id].value;
 
-    const parentPaths: string[] = [];
-    const getParentPath = (parentId: string) => {
-      if (!recordMap.block[parentId]) return;
+  const results: Results = res.results.map((data) => {
+    const recordMap = res.recordMap;
+    const value = recordMap.block[data.id].value;
+    const result: Result = { title: '', url: '' };
+
+    const getParentPath = (paths: string[], parentId: string): string[] => {
+      if (!recordMap.block[parentId]) return paths;
 
       const value = recordMap.block[parentId].value;
-      parentPaths.push(
-        value.properties.title.map((array) => array[0]).join(''),
-      );
-      if (value.parent_id) getParentPath(value.parent_id);
+      paths.push(value.properties.title.map((array) => array[0]).join(''));
+      if (!value.parent_id) return paths;
+      return getParentPath(paths, value.parent_id);
     };
-    if (value.parent_id) getParentPath(value.parent_id);
+    if (value.parent_id) {
+      const parentPaths = getParentPath([], value.parent_id);
+      if (parentPaths.length >= 1)
+        result.parentsPath = parentPaths.reverse().join(' / ');
+    }
 
     const pageIcon = value.format?.page_icon;
+    if (pageIcon) result.pageIcon = pageIcon;
 
-    if (result.highlight.title) {
-      return {
-        title: result.highlight.title,
-        url: NOTION_HOST + '/' + result.id.replaceAll('-', ''),
-        pageIcon,
-        parentsPath: parentPaths.reverse().join(' / '), // TODO: 存在しないキーではキーごとなくしたい
-      };
+    const id = data.id.replaceAll('-', '');
+
+    if (data.highlight.title) {
+      result.title = data.highlight.title;
+      result.url = NOTION_HOST + '/' + id;
     } else {
-      return {
-        title: value.properties.title.map((array) => array[0]).join(''),
-        text: result.highlight.text,
-        url: `${NOTION_HOST}/${result.id.replaceAll(
-          '-',
-          '',
-        )}#${result.highlightBlockId.replaceAll('-', '')}`,
-        pageIcon,
-        parentsPath: parentPaths.reverse().join(' / '),
-      };
+      result.title = value.properties.title.map((array) => array[0]).join('');
+      result.text = data.highlight.text;
+      result.url = `${NOTION_HOST}/${id}#${data.highlightBlockId.replaceAll(
+        '-',
+        '',
+      )}`;
     }
+    return result;
   });
 
   const svg = `
@@ -146,14 +115,6 @@ const search = async (query: string) => {
   `;
     })
     .join('\n');
-
-  const resElem = document.getElementById('res');
-  res.results.forEach((r) => {
-    delete r.featureGroups;
-    delete r.sources;
-    delete r.analytics;
-  });
-  if (resElem) resElem.innerText = JSON.stringify(res, null, 2);
 };
 
 /* TODO
@@ -163,8 +124,28 @@ const search = async (query: string) => {
 
 const onInput = debounce(search, DEBOUNCE_TIME);
 
-const input = document.getElementById('query') as HTMLInputElement;
-if (!input) throw new Error('input element is not found');
+const input = querySeletor<HTMLInputElement>('.search');
 
 input.focus();
 input.addEventListener('input', () => onInput(input.value));
+
+// ========================================
+// Utils
+// ========================================
+
+function querySeletor<T extends HTMLElement>(selector: string) {
+  const elem = document.querySelector<T>(selector);
+  if (!elem) {
+    throw new Error(`Element "${selector}"`);
+  }
+  return elem;
+}
+
+function idToUuid(path: string) {
+  return `${path.substring(0, 8)}-${path.substring(8, 12)}-${path.substring(
+    12,
+    16,
+  )}-${path.substring(16, 20)}-${path.substring(20)}`;
+}
+
+function escapeHTML() {}

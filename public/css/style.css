@@ -1,0 +1,81 @@
+* {
+  outline: dotted pink 1px;
+}
+body {
+  width: 662px; /* is_popup=false のときなくしたい... */
+  background-color: #6d6d6d;
+}
+main {
+  background-color: white;
+  max-width: 662px;
+  margin: 0px auto;
+  border-radius: 8px;
+}
+svg {
+  display: inline;
+  fill: rgba(55, 53, 47, 0.45);
+  flex-shrink: 0;
+  backface-visibility: hidden;
+}
+.search-container {
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.icon-search {
+  margin: 0px 10px;
+  width: 20px;
+  height: 20px;
+}
+.icon-clear-input {
+  margin: 0px 15px;
+  width: 14px;
+  height: 14px;
+}
+.search {
+  border: none;
+  width: 100%;
+  font-size: 18px;
+}
+.icon-document {
+  width: 18px;
+  height: 18px;
+}
+.article-icon-container {
+  margin: 10px 10px 0 10px;
+  font-size: 18px;
+}
+.item,
+.search-container {
+  border-bottom: solid 1px #eae5e3;
+}
+.item:hover {
+  background-color: #f3f3f3;
+}
+.url {
+  text-decoration: none;
+  display: flex;
+}
+.main-item {
+  padding: 7px;
+}
+.main-item p {
+  margin: 2px;
+}
+.title {
+  font-size: 14px;
+  color: #595857;
+}
+.text {
+  font-size: 12.5px;
+  color: #595857;
+}
+.parents-path {
+  font-size: 12.5px;
+  color: #949495;
+}
+.highlight {
+  color: black;
+  font-weight: bold;
+}
