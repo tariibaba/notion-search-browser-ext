@@ -51,6 +51,7 @@ const config = {
   watchOptions: {
     ignored: /node_modules/,
   },
+  experiments: { topLevelAwait: true },
 };
 
 if (config.mode === 'development') {

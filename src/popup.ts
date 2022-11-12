@@ -6,29 +6,44 @@ const NOTION_SEARCH_URL = `${NOTION_HOST}/api/v3/search`;
 const DEBOUNCE_TIME = 150;
 const MIN_SEARCH_LENGTH = 1;
 const STRANGE_NOTION_TAG = 'gzkNfoUU';
-let POPUP_MODE = false;
+const STORAGE_KEY = 'last-searched';
+let POPUP = false;
 
 /* TODO
   - browserAction のアイコン
-  - 前回の状態保持 （）
   - (pagenation)
 */
 
-const onInput = debounce(search, DEBOUNCE_TIME);
+const searchFn = search();
+const onInput = debounce(searchFn, DEBOUNCE_TIME);
 
 const input = querySeletor<HTMLInputElement>('.search');
+const resultElem = querySeletor('.items');
 
-input.focus();
-input.addEventListener('input', () => onInput(input.value));
-
+// set style
 if (location.search === '?popup') {
   document.body.style.width = '662px';
   document.body.style.margin = '0px';
-  POPUP_MODE = true;
+  POPUP = true;
 } else {
   document.body.style.margin = '40px 0 0 0';
 }
+
+// render from cache
+// if (POPUP) {
+const cache: { query: string; results: Results } = (
+  await chrome.storage.local.get(STORAGE_KEY)
+)[STORAGE_KEY];
+if (cache) {
+  input.value = cache.query;
+  resultElem.innerHTML = render(escape(cache.results));
+}
+// }
+
 querySeletor('main').classList.remove('hide');
+
+input.focus();
+input.addEventListener('input', () => onInput(input.value.trim()));
 
 querySeletor('.icon-clear-input-container').addEventListener(
   'click',
@@ -38,84 +53,99 @@ querySeletor('.icon-clear-input-container').addEventListener(
   },
 );
 
-async function search(query: string) {
-  const resultElem = querySeletor('.items');
-
-  if (query.length <= MIN_SEARCH_LENGTH) {
-    resultElem.innerText = '';
-    return;
-  }
-
-  const body = JSON.stringify({
-    type: 'BlocksInSpace',
-    query,
-    spaceId: idToUuid('81149e3a3d874d25b7082226dd72bfdd'),
-    limit: 10,
-    filters: {
-      isDeletedOnly: false,
-      excludeTemplates: false,
-      isNavigableOnly: false,
-      requireEditPermissions: false,
-      ancestors: [],
-      createdBy: [],
-      editedBy: [],
-      lastEditedTime: {},
-      createdTime: {},
-    },
-    sort: { field: 'relevance' },
-    source: 'quick_find_input_change',
-  });
-
-  const response = await fetch(NOTION_SEARCH_URL, {
-    method: 'POST',
-    body,
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-    },
-  });
-  const res = (await response.json()) as Res;
-
-  let results: Results = res.results.map((data) => {
-    const recordMap = res.recordMap;
-    const value = recordMap.block[data.id].value;
-    const result: Result = { title: '', url: '' };
-
-    const getParentPath = (paths: string[], parentId: string): string[] => {
-      if (!recordMap.block[parentId]) return paths;
-
-      const value = recordMap.block[parentId].value;
-      paths.push(value.properties.title.map((array) => array[0]).join(''));
-      if (!value.parent_id) return paths;
-      return getParentPath(paths, value.parent_id);
-    };
-    if (value.parent_id) {
-      const parentPaths = getParentPath([], value.parent_id);
-      if (parentPaths.length >= 1)
-        result.parentsPath = parentPaths.reverse().join(' / ');
+function search() {
+  let lastQuery = '';
+  return async function (query: string) {
+    if (query.length <= MIN_SEARCH_LENGTH) {
+      resultElem.innerText = '';
+      return;
     }
+    if (lastQuery === query) return;
+    lastQuery = query;
 
-    const pageIcon = value.format?.page_icon;
-    if (pageIcon) result.pageIcon = pageIcon;
+    const body = JSON.stringify({
+      type: 'BlocksInSpace',
+      query,
+      spaceId: idToUuid('81149e3a3d874d25b7082226dd72bfdd'),
+      limit: 10,
+      filters: {
+        isDeletedOnly: false,
+        excludeTemplates: false,
+        isNavigableOnly: false,
+        requireEditPermissions: false,
+        ancestors: [],
+        createdBy: [],
+        editedBy: [],
+        lastEditedTime: {},
+        createdTime: {},
+      },
+      sort: { field: 'relevance' },
+      source: 'quick_find_input_change',
+    });
 
-    const id = data.id.replaceAll('-', '');
+    const response = await fetch(NOTION_SEARCH_URL, {
+      method: 'POST',
+      body,
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    });
+    const res = (await response.json()) as Res;
 
-    if (data.highlight.title) {
-      result.title = data.highlight.title;
-      result.url = NOTION_HOST + '/' + id;
-    } else {
-      result.title = value.properties.title.map((array) => array[0]).join('');
-      result.text = data.highlight.text;
-      result.url = `${NOTION_HOST}/${id}#${data.highlightBlockId.replaceAll(
-        '-',
-        '',
-      )}`;
-    }
-    return result;
-  });
+    let results: Results = res.results.map((data) => {
+      const recordMap = res.recordMap;
+      const record = recordMap.block[data.id].value;
+      const result: Result = { title: '', url: '' };
 
-  results = escape(results);
+      const getParentPath = (paths: string[], parentId: string): string[] => {
+        if (!recordMap.block[parentId]) return paths;
 
-  resultElem.innerHTML = render(results);
+        const record = recordMap.block[parentId].value;
+        paths.push(record.properties.title.map((array) => array[0]).join(''));
+        if (!record.parent_id) return paths;
+        return getParentPath(paths, record.parent_id);
+      };
+      if (record.parent_id) {
+        const parentPaths = getParentPath([], record.parent_id);
+        if (parentPaths.length >= 1)
+          result.parentsPath = parentPaths.reverse().join(' / ');
+      }
+
+      const pageIcon = record.format?.page_icon;
+      if (pageIcon) result.pageIcon = pageIcon;
+
+      result.url = `${NOTION_HOST}/${data.id.replaceAll('-', '')}`;
+
+      if (data.highlight?.title) {
+        result.title = data.highlight.title;
+      } else if (data.highlight && data.highlightBlockId) {
+        result.title = record.properties.title
+          .map((array) => array[0])
+          .join('');
+        result.url += `#${data.highlightBlockId.replaceAll('-', '')}`;
+        result.text = data.highlight.text;
+      } else {
+        console.log(`(${query.split(/\s/).join('|')})`);
+        console.log(record.properties.title.map((array) => array[0]).join(''));
+        result.title = record.properties.title
+          .map((array) => array[0])
+          .join('')
+          .replace(
+            new RegExp(`(${query.split(/\s/).join('|')})`, 'ig'),
+            `<${STRANGE_NOTION_TAG}>$1</${STRANGE_NOTION_TAG}>`,
+          );
+      }
+      return result;
+    });
+    // if (POPUP)
+    chrome.storage.local
+      .set({ [STORAGE_KEY]: { query, results } })
+      .catch((error) =>
+        console.error(`failed to set data to storage.local. error: ${error}`),
+      );
+
+    resultElem.innerHTML = render(escape(results));
+  };
 }
 
 // ========================================
@@ -137,11 +167,11 @@ function idToUuid(path: string) {
   )}-${path.substring(16, 20)}-${path.substring(20)}`;
 }
 
-const regexp = new RegExp(
-  `&lt;${STRANGE_NOTION_TAG}&gt;(.+?)&lt;/${STRANGE_NOTION_TAG}&gt;`,
-  'g',
-);
 function escape(results: Results): Results {
+  const regexp = new RegExp(
+    `&lt;${STRANGE_NOTION_TAG}&gt;(.+?)&lt;/${STRANGE_NOTION_TAG}&gt;`,
+    'g',
+  );
   const addHighlight = (str: string) =>
     str.replace(regexp, '<span class="highlight">$1</span>');
   return structuredClone(results).map((result) => {
@@ -156,23 +186,21 @@ function escape(results: Results): Results {
   });
 }
 
-const defaultIcon = `
-  <svg viewBox="0 0 30 30" class="icon-document">
-    <g>
-      <path
-        d="M16,1H4v28h22V11L16,1z M16,3.828L23.172,11H16V3.828z M24,27H6V3h8v10h10V27z M8,17h14v-2H8V17z M8,21h14v-2H8V21z M8,25h14v-2H8V25z"
-      ></path>
-    </g>
-  </svg>`;
-
 function render(results: Results): string {
+  const defaultIcon = `
+    <svg viewBox="0 0 30 30" class="icon-document">
+      <g>
+        <path
+          d="M16,1H4v28h22V11L16,1z M16,3.828L23.172,11H16V3.828z M24,27H6V3h8v10h10V27z M8,17h14v-2H8V17z M8,21h14v-2H8V21z M8,25h14v-2H8V25z"
+        ></path>
+      </g>
+    </svg>`;
+
   return results
     .map((data: Result) => {
       return `
       <div class="item">
-        <a class="url" ${POPUP_MODE ? 'target="_blank"' : ''} href="${
-        data.url
-      }">
+        <a class="url" ${POPUP ? 'target="_blank"' : ''} href="${data.url}">
           <div class="article-icon-container">
             ${data.pageIcon || defaultIcon}
           </div>

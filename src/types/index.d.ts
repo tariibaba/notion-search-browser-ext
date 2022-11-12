@@ -1,8 +1,8 @@
 type Res = {
   results: {
     id: string;
-    highlight: { text: string; title?: string };
-    highlightBlockId: string;
+    highlight?: { text: string; title?: string };
+    highlightBlockId?: string;
     analytics?: object;
   }[];
   recordMap: {
