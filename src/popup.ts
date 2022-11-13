@@ -40,6 +40,9 @@ if (POPUP) {
 
 querySeletor('main').classList.remove('hide');
 
+// display: none にしてた要素に autofocus 属性は効かないため、仕方なく
+inputElem.focus();
+
 querySeletor('.icon-clear-input-container').addEventListener(
   'click',
   (event: Event) => {

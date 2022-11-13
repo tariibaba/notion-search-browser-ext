@@ -4,7 +4,6 @@ const config = {
     background: './src/background.ts',
     popup: './src/popup.ts',
     options: './src/options.ts',
-    'content-script': './src/contentScript.ts',
   },
   output: {
     path: `${__dirname}/public/js`,
