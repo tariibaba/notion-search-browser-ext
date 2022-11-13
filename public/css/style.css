@@ -29,7 +29,7 @@ svg {
   height: 18px;
 }
 .icon-clear-input {
-  margin: 0px 15px;
+  margin: 0 15px;
   width: 14px;
   height: 14px;
 }
@@ -44,11 +44,10 @@ svg {
   height: 18px;
 }
 .article-icon-container {
-  margin: 10px 10px 0 10px;
+  margin: 9px 8px 0 15px;
   font-size: 18px;
 }
 .items {
-  max-height: calc(100vh - 135px);
   overflow-y: auto;
 }
 .items::-webkit-scrollbar {

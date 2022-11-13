@@ -16,14 +16,25 @@ type Res = {
       };
     };
   };
+  total: number;
 };
 
-type Result = {
+type Item = {
   title: string;
-  text?: string;
   url: string;
+  text?: string;
   pageIcon?: string;
   parentsPath?: string;
 };
 
-type Results = Result[];
+type Items = Item[];
+
+type SearchResults = {
+  items: Items;
+  total: number;
+};
+
+type StorageData = {
+  query: string;
+  results: SearchResults;
+};
