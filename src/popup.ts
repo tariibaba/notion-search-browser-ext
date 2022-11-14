@@ -1,10 +1,11 @@
 import debounce from 'lodash.debounce';
 import escape from 'lodash.escape';
+import errors from './errors';
 
 const NOTION_HOST = 'https://www.notion.so';
 const NOTION_SEARCH_URL = `${NOTION_HOST}/api/v3/search`;
 const DEBOUNCE_TIME = 150;
-const MIN_SEARCH_LENGTH = 1;
+const MIN_QUERY_LENGTH = 1;
 const SEARCH_LIMIT = 50;
 const STRANGE_NOTION_TAG = 'gzkNfoUU';
 const STORAGE_KEY = 'last-searched';
@@ -14,17 +15,16 @@ const TIMEOUT_MSEC = 5_000;
 let LAST_QUERY = '';
 
 const inputElem = querySeletor<HTMLInputElement>('.search');
-const itemsElem = querySeletor('.items');
 
 // set style
 if (POPUP) {
   // css ファイルを append した方が見通しは良くなるが、同期的なスタイル適用が出来ない
   document.body.style.width = '662px';
   document.body.style.margin = '0px';
-  document.body.style.height = '550px';
+  // document.body.style.height = '550px';
 } else {
   document.body.style.margin = '40px 0 0 0';
-  itemsElem.style.maxHeight = 'calc(100vh - 135px)';
+  querySeletor('.items').style.maxHeight = 'calc(100vh - 135px)';
 }
 
 // render from storage
@@ -46,47 +46,54 @@ inputElem.focus();
 
 querySeletor('.icon-clear-input-container').addEventListener(
   'click',
-  (event: Event) => {
+  async (event: Event) => {
     inputElem.value = '';
+    render(await search(''));
     event.preventDefault();
   },
 );
 
 const onInput = debounce(async (query: string) => {
-  if (LAST_QUERY === query) return;
-  LAST_QUERY = query;
-  const result = await search(query);
-  render(result);
+  render(await search(query));
 }, DEBOUNCE_TIME);
 inputElem.addEventListener('input', () => onInput(inputElem.value.trim()));
 
 async function search(query: string): Promise<SearchResults> {
-  if (query.length <= MIN_SEARCH_LENGTH) return { items: [], total: 0 };
+  if (query.length <= MIN_QUERY_LENGTH)
+    return { error: errors.MIN_QUERY_LENGTH, items: [], total: 0 };
+
+  if (LAST_QUERY === query)
+    return { error: errors.SAME_QUERY, items: [], total: 0 };
 
   LAST_QUERY = query;
 
-  const res = await fetchJSON(NOTION_SEARCH_URL, {
-    method: 'POST',
-    body: {
-      type: 'BlocksInSpace',
-      query,
-      spaceId: idToUuid('81149e3a3d874d25b7082226dd72bfdd'),
-      limit: SEARCH_LIMIT,
-      filters: {
-        isDeletedOnly: false,
-        excludeTemplates: false,
-        isNavigableOnly: false,
-        requireEditPermissions: false,
-        ancestors: [],
-        createdBy: [],
-        editedBy: [],
-        lastEditedTime: {},
-        createdTime: {},
+  let res: Res;
+  try {
+    res = await fetchJSON(NOTION_SEARCH_URL, {
+      method: 'POST',
+      body: {
+        type: 'BlocksInSpace',
+        query,
+        spaceId: idToUuid('81149e3a3d874d25b7082226dd72bfdd'),
+        limit: SEARCH_LIMIT,
+        filters: {
+          isDeletedOnly: false,
+          excludeTemplates: false,
+          isNavigableOnly: false,
+          requireEditPermissions: false,
+          ancestors: [],
+          createdBy: [],
+          editedBy: [],
+          lastEditedTime: {},
+          createdTime: {},
+        },
+        sort: { field: 'relevance' },
+        source: 'quick_find_input_change',
       },
-      sort: { field: 'relevance' },
-      source: 'quick_find_input_change',
-    },
-  });
+    });
+  } catch (error) {
+    return { error: errors.HTTP_REQUEST_FAILED, items: [], total: 0 };
+  }
 
   const results: SearchResults = {
     items: res.results.map((data) => {
@@ -133,6 +140,7 @@ async function search(query: string): Promise<SearchResults> {
       return result;
     }),
     total: res.total,
+    error: null,
   };
   if (POPUP)
     chrome.storage.local
@@ -144,8 +152,27 @@ async function search(query: string): Promise<SearchResults> {
   return results;
 }
 
-function render({ items, total }: SearchResults) {
-  querySeletor('.summary').innerHTML =
+function render({ items, total, error }: SearchResults) {
+  const itemsElem = querySeletor('.items');
+  const summaryElem = querySeletor('.summary');
+
+  if (error) {
+    switch (error) {
+      case errors.SAME_QUERY:
+      case errors.HTTP_REQUEST_FAILED:
+        return; // noop
+
+      case errors.MIN_QUERY_LENGTH:
+        itemsElem.innerHTML = '';
+        summaryElem.innerHTML = '';
+        return;
+
+      default:
+        throw new Error(`unknown error: ${error}`);
+    }
+  }
+
+  summaryElem.innerHTML =
     total > SEARCH_LIMIT
       ? `<span class="highlight">${SEARCH_LIMIT}</span> of <span class="highlight">${total}</span> results`
       : `<span class="highlight">${total}</span> results`;

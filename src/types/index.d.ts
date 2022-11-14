@@ -29,9 +29,16 @@ type Item = {
 
 type Items = Item[];
 
+type SearchError =
+  | 'MIN_QUERY_LENGTH'
+  | 'SAME_QUERY'
+  | 'HTTP_REQUEST_FAILED'
+  | null;
+
 type SearchResults = {
   items: Items;
   total: number;
+  error: SearchError;
 };
 
 type StorageData = {
