@@ -67,7 +67,7 @@ async function search(query: string): Promise<SearchResults> {
 
   LAST_QUERY = query;
 
-  let res: Res;
+  let res: ApiRes;
   try {
     res = await fetchJSON(NOTION_SEARCH_URL, {
       method: 'POST',
@@ -174,22 +174,13 @@ function render({ items, total, error }: SearchResults) {
 
   summaryElem.innerHTML =
     total > SEARCH_LIMIT
-      ? `<span class="highlight">${SEARCH_LIMIT}</span> of <span class="highlight">${total}</span> results`
-      : `<span class="highlight">${total}</span> results`;
+      ? `<span class="total">${SEARCH_LIMIT}</span> of <span class="total">${total}</span> results`
+      : `<span class="total">${total}</span> results`;
 
   if (total === 0) {
     itemsElem.innerHTML = '';
     return;
   }
-
-  const defaultIcon = `
-    <svg viewBox="0 0 30 30" class="icon-document">
-      <g>
-        <path
-          d="M16,1H4v28h22V11L16,1z M16,3.828L23.172,11H16V3.828z M24,27H6V3h8v10h10V27z M8,17h14v-2H8V17z M8,21h14v-2H8V21z M8,25h14v-2H8V25z"
-        ></path>
-      </g>
-    </svg>`;
 
   const regexp = new RegExp(
     escape(`<${STRANGE_NOTION_TAG}>`) +
@@ -205,8 +196,17 @@ function render({ items, total, error }: SearchResults) {
       return `
       <div class="item">
         <a class="url" ${POPUP ? 'target="_blank"' : ''} href="${data.url}">
-          <div class="article-icon-container">
-            ${data.pageIcon || defaultIcon}
+          <div class="page-icon-container">
+            ${
+              data.pageIcon ||
+              `<svg viewBox="0 0 30 30" class="icon-page">
+                <g>
+                  <path
+                    d="M16,1H4v28h22V11L16,1z M16,3.828L23.172,11H16V3.828z M24,27H6V3h8v10h10V27z M8,17h14v-2H8V17z M8,21h14v-2H8V21z M8,25h14v-2H8V25z"
+                  ></path>
+                </g>
+              </svg>`
+            }
           </div>
           <div class="main-item">
             <p class="title">${addHighlight(escape(data.title))}</p>

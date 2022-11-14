@@ -1,4 +1,4 @@
-type Res = {
+type ApiRes = {
   results: {
     id: string;
     highlight?: { text: string; title?: string };

@@ -17,11 +17,17 @@ svg {
   flex-shrink: 0;
   backface-visibility: hidden;
 }
+
+/* ----------------------------------------
+  Search
+---------------------------------------- */
+
 .search-container {
   height: 45px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: solid 1px #eae5e3;
 }
 .icon-search {
   margin: 0px 10px;
@@ -39,11 +45,16 @@ svg {
   width: 100%;
   font-size: 18px;
 }
-.icon-document {
+
+/* ----------------------------------------
+  Items
+---------------------------------------- */
+
+.icon-page {
   width: 18px;
   height: 18px;
 }
-.article-icon-container {
+.page-icon-container {
   margin: 9px 8px 0 15px;
   font-size: 18px;
 }
@@ -57,8 +68,8 @@ svg {
   border-radius: 5px;
   background-color: #7c7c7c;
 }
-.item,
-.search-container {
+
+.item {
   border-bottom: solid 1px #eae5e3;
 }
 .item:hover {
@@ -91,6 +102,23 @@ svg {
   color: black;
   font-weight: bold;
 }
+
+/* ----------------------------------------
+  Summary
+---------------------------------------- */
+
+.summary {
+  padding: 6px 10px;
+  color: #949495;
+}
+.total {
+  color: #595857;
+  font-weight: bold;
+}
+
+/* ----------------------------------------
+  Utils
+---------------------------------------- */
 
 .hide {
   display: none;
