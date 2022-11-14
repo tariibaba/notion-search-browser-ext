@@ -9,6 +9,7 @@ const SEARCH_LIMIT = 50;
 const STRANGE_NOTION_TAG = 'gzkNfoUU';
 const STORAGE_KEY = 'last-searched';
 const POPUP = location.search === '?popup';
+const TIMEOUT_MSEC = 5_000;
 
 let LAST_QUERY = '';
 
@@ -63,35 +64,29 @@ async function search(query: string): Promise<SearchResults> {
   if (query.length <= MIN_SEARCH_LENGTH) return { items: [], total: 0 };
 
   LAST_QUERY = query;
-  const body = JSON.stringify({
-    type: 'BlocksInSpace',
-    query,
-    spaceId: idToUuid('81149e3a3d874d25b7082226dd72bfdd'),
-    limit: SEARCH_LIMIT,
-    filters: {
-      isDeletedOnly: false,
-      excludeTemplates: false,
-      isNavigableOnly: false,
-      requireEditPermissions: false,
-      ancestors: [],
-      createdBy: [],
-      editedBy: [],
-      lastEditedTime: {},
-      createdTime: {},
-    },
-    sort: { field: 'relevance' },
-    source: 'quick_find_input_change',
-  });
 
-  const response = await fetch(NOTION_SEARCH_URL, {
+  const res = await fetchJSON(NOTION_SEARCH_URL, {
     method: 'POST',
-    body,
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
+    body: {
+      type: 'BlocksInSpace',
+      query,
+      spaceId: idToUuid('81149e3a3d874d25b7082226dd72bfdd'),
+      limit: SEARCH_LIMIT,
+      filters: {
+        isDeletedOnly: false,
+        excludeTemplates: false,
+        isNavigableOnly: false,
+        requireEditPermissions: false,
+        ancestors: [],
+        createdBy: [],
+        editedBy: [],
+        lastEditedTime: {},
+        createdTime: {},
+      },
+      sort: { field: 'relevance' },
+      source: 'quick_find_input_change',
     },
   });
-
-  const res = (await response.json()) as Res;
 
   const results: SearchResults = {
     items: res.results.map((data) => {
@@ -222,4 +217,38 @@ function idToUuid(path: string) {
     12,
     16,
   )}-${path.substring(16, 20)}-${path.substring(20)}`;
+}
+
+async function fetchJSON(
+  url: string,
+  { method, body }: { method: 'POST'; body: object },
+) {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => {
+    controller.abort();
+  }, TIMEOUT_MSEC);
+
+  try {
+    const response = await fetch(url, {
+      method,
+      body: JSON.stringify(body),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
+
+    return (await response.json()) as Res;
+  } catch (error) {
+    const message =
+      error instanceof Error && error.name === 'AbortError'
+        ? `HTTP Request timeout (${TIMEOUT_MSEC} milliseconds)`
+        : `HTTP Request error. ${error}`;
+
+    console.error(message);
+    alert(message);
+
+    throw new Error(message);
+  }
 }
