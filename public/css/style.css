@@ -1,21 +1,34 @@
-* {
-  outline: dotted pink 1px;
-}
 body {
   background-color: #6d6d6d;
 }
 main {
+  --text-color-light: #949495;
+
+  --font-size-large: 18px;
+  --font-size-medium: 14.5px;
+  --font-size-small: 12.5px;
+
+  --border-color: #eae5e3;
+
   background-color: white;
   max-width: 662px;
   margin: 0px auto;
   padding: 2px;
   border-radius: 8px;
+  color: #595857;
+  font-size: var(--font-size-medium);
 }
 svg {
   display: inline;
   fill: rgba(55, 53, 47, 0.45);
   flex-shrink: 0;
   backface-visibility: hidden;
+}
+
+.item:hover,
+.filter:hover,
+.sort:hover {
+  background-color: #f3f3f3;
 }
 
 /* ----------------------------------------
@@ -27,7 +40,7 @@ svg {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: solid 1px #eae5e3;
+  border-bottom: solid 1px var(--border-color);
 }
 .icon-search {
   margin: 0px 10px;
@@ -42,8 +55,41 @@ svg {
 .search {
   margin-left: 5px;
   border: none;
+  outline: none;
   width: 100%;
-  font-size: 18px;
+  font-size: var(--font-size-large);
+}
+.search::placeholder {
+  color: var(--text-color-light);
+}
+
+/* ----------------------------------------
+  Filter & Sort
+---------------------------------------- */
+
+.filters {
+  padding: 10px;
+}
+.filter {
+  padding: 4px 10px;
+  border: 1px solid #dcdddd;
+  border-radius: 20px;
+}
+.filter.selected {
+  color: rgb(35, 131, 226);
+  background-color: rgba(35, 131, 226, 0.03);
+  border-color: rgba(35, 131, 226, 0.35);
+}
+.sorts {
+  padding: 3px 10px;
+}
+.sort {
+  padding: 10px;
+  color: inherit;
+  outline: none;
+  font-size: var(--font-size-small);
+  padding: 3px;
+  border: none;
 }
 
 /* ----------------------------------------
@@ -56,7 +102,7 @@ svg {
 }
 .page-icon-container {
   margin: 9px 8px 0 15px;
-  font-size: 18px;
+  font-size: var(--font-size-very-large);
 }
 .items {
   overflow-y: auto;
@@ -70,12 +116,10 @@ svg {
 }
 
 .item {
-  border-bottom: solid 1px #eae5e3;
-}
-.item:hover {
-  background-color: #f3f3f3;
+  border-bottom: solid 1px var(--border-color);
 }
 .url {
+  color: inherit;
   text-decoration: none;
   display: flex;
 }
@@ -85,22 +129,17 @@ svg {
 .main-item p {
   margin: 2px;
 }
-.title {
-  font-size: 14.5px;
-  color: #595857;
-}
+
 .text {
   margin-top: 7px !important;
-  font-size: 12.5px;
-  color: #595857;
+  font-size: var(--font-size-small);
 }
 .parents-path {
-  font-size: 12.5px;
-  color: #949495;
+  font-size: var(--font-size-small);
+  color: var(--text-light);
 }
 .highlight {
   color: black;
-  font-weight: bold;
 }
 
 /* ----------------------------------------
@@ -108,11 +147,12 @@ svg {
 ---------------------------------------- */
 
 .summary {
+  color: var(--text-color-light);
+  font-size: var(--font-size-small);
   padding: 6px 10px;
-  color: #949495;
 }
 .total {
-  color: #595857;
+  font-size: calc(var(--font-size-small) + 0.5px);
   font-weight: bold;
 }
 

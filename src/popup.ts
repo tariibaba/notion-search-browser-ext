@@ -1,6 +1,6 @@
 import debounce from 'lodash.debounce';
 import escape from 'lodash.escape';
-import errors from './errors';
+import { SEARCH_ERROR } from './errors';
 
 const NOTION_HOST = 'https://www.notion.so';
 const NOTION_SEARCH_URL = `${NOTION_HOST}/api/v3/search`;
@@ -53,6 +53,31 @@ querySeletor('.icon-clear-input-container').addEventListener(
   },
 );
 
+const filterElem = querySeletor('.filter');
+filterElem.addEventListener('click', () => {
+  filterElem.classList.toggle('selected');
+});
+
+let SORT_OPTION: object; // TODO
+const selectElem = querySeletor<HTMLSelectElement>('.sort');
+const handleSortChange = () => {
+  switch (selectElem.value) {
+    case 'relevance':
+      SORT_OPTION = { field: 'relevance' };
+      break;
+    case 'lastEdited':
+      SORT_OPTION = { field: 'lastEdited', direction: 'desc' };
+      break;
+    case 'created':
+      SORT_OPTION = { field: 'created', direction: 'desc' };
+      break;
+    default:
+      throw new Error(`unknown sort option: ${selectElem.value}`);
+  }
+};
+selectElem.addEventListener('change', handleSortChange);
+handleSortChange();
+
 const onInput = debounce(async (query: string) => {
   render(await search(query));
 }, DEBOUNCE_TIME);
@@ -60,14 +85,14 @@ inputElem.addEventListener('input', () => onInput(inputElem.value.trim()));
 
 async function search(query: string): Promise<SearchResults> {
   if (query.length <= MIN_QUERY_LENGTH)
-    return { error: errors.MIN_QUERY_LENGTH, items: [], total: 0 };
+    return { error: SEARCH_ERROR.MIN_QUERY_LENGTH, items: [], total: 0 };
 
   if (LAST_QUERY === query)
-    return { error: errors.SAME_QUERY, items: [], total: 0 };
+    return { error: SEARCH_ERROR.SAME_QUERY, items: [], total: 0 };
 
   LAST_QUERY = query;
 
-  let res: ApiRes;
+  let res: ApiResonse;
   try {
     res = await fetchJSON(NOTION_SEARCH_URL, {
       method: 'POST',
@@ -87,12 +112,12 @@ async function search(query: string): Promise<SearchResults> {
           lastEditedTime: {},
           createdTime: {},
         },
-        sort: { field: 'relevance' },
+        sort: SORT_OPTION,
         source: 'quick_find_input_change',
       },
     });
   } catch (error) {
-    return { error: errors.HTTP_REQUEST_FAILED, items: [], total: 0 };
+    return { error: SEARCH_ERROR.HTTP_REQUEST_FAILED, items: [], total: 0 };
   }
 
   const results: SearchResults = {
@@ -158,11 +183,11 @@ function render({ items, total, error }: SearchResults) {
 
   if (error) {
     switch (error) {
-      case errors.SAME_QUERY:
-      case errors.HTTP_REQUEST_FAILED:
+      case SEARCH_ERROR.SAME_QUERY:
+      case SEARCH_ERROR.HTTP_REQUEST_FAILED:
         return; // noop
 
-      case errors.MIN_QUERY_LENGTH:
+      case SEARCH_ERROR.MIN_QUERY_LENGTH:
         itemsElem.innerHTML = '';
         summaryElem.innerHTML = '';
         return;
@@ -266,7 +291,7 @@ async function fetchJSON(
     });
     clearTimeout(timer);
 
-    return (await response.json()) as Res;
+    return (await response.json()) as ApiResonse;
   } catch (error) {
     const message =
       error instanceof Error && error.name === 'AbortError'

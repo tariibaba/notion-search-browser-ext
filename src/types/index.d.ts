@@ -1,4 +1,6 @@
-type ApiRes = {
+type valueOf<T> = T[keyof T]; // util
+
+type ApiResonse = {
   results: {
     id: string;
     highlight?: { text: string; title?: string };
@@ -29,11 +31,7 @@ type Item = {
 
 type Items = Item[];
 
-type SearchError =
-  | 'MIN_QUERY_LENGTH'
-  | 'SAME_QUERY'
-  | 'HTTP_REQUEST_FAILED'
-  | null;
+type SearchError = valueOf<typeof import('../errors').SEARCH_ERROR> | null;
 
 type SearchResults = {
   items: Items;
