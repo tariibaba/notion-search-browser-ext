@@ -76,7 +76,7 @@ async function search({
     },
   });
 
-  const results: SearchResult = {
+  const searchResult: SearchResult = {
     items: res.results.map((data) => {
       const recordMap = res.recordMap;
       const record = recordMap.block[data.id].value;
@@ -130,14 +130,17 @@ async function search({
   };
 
   if (savesLastSearchResult) {
+    const data: StorageData = { query, searchResult };
     try {
-      await chrome.storage.local.set({ [STORAGE_KEY]: { query, results } });
+      await chrome.storage.local.set({
+        [STORAGE_KEY]: data,
+      });
     } catch (error) {
       throw new Error(`Failed to set data to storage.local. error: ${error}`);
     }
   }
 
-  return results;
+  return searchResult;
 }
 
 // ========================================
