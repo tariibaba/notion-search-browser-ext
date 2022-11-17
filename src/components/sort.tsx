@@ -15,8 +15,8 @@ export default function Sort({
         onChange={(event) => setSortBy(event.target.value)}
       >
         <option value="relevance">Best matches</option>
-        <option value="lastEdited">Last edited</option>
-        <option value="created">Created</option>
+        <option value="lastEdited">Last edited: Newest first</option>
+        <option value="created">Created: Newest first</option>
       </select>
     </div>
   );

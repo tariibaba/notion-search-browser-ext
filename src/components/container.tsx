@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MIN_QUERY_LENGTH, SortBy, STORAGE_KEY } from '../constants';
-import { search } from '../search';
+import { debouncedSearch } from '../search';
 import Filter from './filter';
 import Footer from './footer';
 import Items from './items';
@@ -44,9 +44,13 @@ export default function Container() {
   useEffect(() => {
     if (query.length >= MIN_QUERY_LENGTH) {
       (async () => {
-        setSearchResult(
-          await search({ query, sortBy, filterBy, savesLastSearchResult }),
-        );
+        const result = await debouncedSearch({
+          query,
+          sortBy,
+          filterBy,
+          savesLastSearchResult,
+        });
+        if (result) setSearchResult(result);
       })();
     }
   }, [query, sortBy, filterBy]);

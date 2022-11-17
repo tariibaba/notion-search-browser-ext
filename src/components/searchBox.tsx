@@ -1,7 +1,4 @@
-import debounce from 'lodash.debounce';
 import React from 'react';
-
-const DEBOUNCE_TIME = 150;
 
 export default function SearchBox({
   query,
@@ -10,16 +7,6 @@ export default function SearchBox({
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
 }) {
-  // const inputRef = useRef<HTMLInputElement>(null);
-  // useEffect(() => {
-  //   if (inputRef.current)  inputRef.current.focus();
-  // }, []);
-  //       ref={inputRef}
-
-  const handleChange = debounce(
-    (query: string) => setQuery(query),
-    DEBOUNCE_TIME,
-  );
   const clear = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     setQuery('');
     event.preventDefault();
@@ -36,7 +23,7 @@ export default function SearchBox({
         placeholder="Search"
         autoFocus
         value={query}
-        onChange={(event) => handleChange(event.target.value.trim())}
+        onChange={(event) => setQuery(event.target.value.trim())}
       />
       <a href="#" className="icon-clear-input-container" onClick={clear}>
         <svg viewBox="0 0 30 30" className="icon-clear-input">

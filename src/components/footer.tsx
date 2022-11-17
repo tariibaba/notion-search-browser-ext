@@ -6,10 +6,10 @@ export default function Total({ total }: { total: number }) {
     <div className="summary">
       {total > SEARCH_LIMIT && (
         <>
-          <span className="total">${SEARCH_LIMIT}</span> of{' '}
+          <span className="total">{SEARCH_LIMIT}</span> of{' '}
         </>
       )}
-      <span className="total">${total}</span> results
+      <span className="total">{total}</span> results
     </div>
   );
 }

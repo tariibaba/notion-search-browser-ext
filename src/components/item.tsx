@@ -4,18 +4,21 @@ import reactStringReplace from 'react-string-replace';
 const STRANGE_NOTION_TAG = 'gzkNfoUU';
 
 const regexp = new RegExp(
-  `<${STRANGE_NOTION_TAG}>(.+?)<${STRANGE_NOTION_TAG}>`,
+  `<${STRANGE_NOTION_TAG}>(.+?)</${STRANGE_NOTION_TAG}>`,
   'g',
 );
 const addHighlight = (str: string) =>
-  reactStringReplace(str, regexp, (match) => (
-    <span className="highlight">{match}</span>
+  reactStringReplace(str, regexp, (match, i) => (
+    <span key={i} className="highlight">
+      {match}
+    </span>
   ));
 
 export default function Item({
   opensNewTab,
   pageIcon,
   title,
+  url,
   parentsPath,
   text,
 }: {
@@ -23,11 +26,7 @@ export default function Item({
 } & Item) {
   return (
     <div className="item">
-      <a
-        className="url"
-        {...(opensNewTab && { target: '_blank' })}
-        href="${url}"
-      >
+      <a className="url" {...(opensNewTab && { target: '_blank' })} href={url}>
         <div className="page-icon-container">
           {pageIcon || (
             <svg viewBox="0 0 30 30" className="icon-page">
@@ -40,7 +39,7 @@ export default function Item({
         <div className="main-item">
           <p className="title">{addHighlight(title)}</p>
           {parentsPath && <p className="parents-path">{parentsPath}</p>}
-          {text && <p className="text">addHighlight(text)</p>}
+          {text && <p className="text">{addHighlight(text)}</p>}
         </div>
       </a>
     </div>

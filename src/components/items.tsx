@@ -17,7 +17,6 @@ export default function Items({
       {items.map((item) => (
         <Item key={item.url} opensNewTab={isPopup} {...item}></Item>
       ))}
-      `;
     </div>
   );
 }
