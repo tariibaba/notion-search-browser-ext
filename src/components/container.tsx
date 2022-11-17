@@ -18,6 +18,8 @@ export default function Container() {
     total: 0,
   });
   const savesLastSearchResult = isPopup;
+  const trimmedQuery = query.trim();
+  const searchable = trimmedQuery.length >= MIN_QUERY_LENGTH;
 
   useEffect(() => {
     if (isPopup) {
@@ -42,25 +44,25 @@ export default function Container() {
   }, []);
 
   useEffect(() => {
-    if (query.length >= MIN_QUERY_LENGTH) {
-      (async () => {
-        const result = await debouncedSearch({
-          query,
-          sortBy,
-          filterBy,
-          savesLastSearchResult,
-        });
-        if (result) setSearchResult(result);
-      })();
-    }
-  }, [query, sortBy, filterBy]);
+    if (!searchable) return;
+
+    (async () => {
+      const result = await debouncedSearch({
+        query: trimmedQuery,
+        sortBy,
+        filterBy,
+        savesLastSearchResult,
+      });
+      if (result) setSearchResult(result);
+    })();
+  }, [trimmedQuery, sortBy, filterBy]);
 
   return renderable ? (
     <main>
       <SearchBox query={query} setQuery={setQuery} />
       <Filter filterBy={filterBy} setFilterBy={setFilterBy} />
       <Sort sortBy={sortBy} setSortBy={setSortBy} />
-      {query.length >= MIN_QUERY_LENGTH && (
+      {searchable && (
         <>
           <Items isPopup={isPopup} items={searchResult.items} />
           <Footer total={searchResult.total} />

@@ -1,5 +1,12 @@
-import debounce from 'lodash.debounce';
-import { FilterBy, MIN_QUERY_LENGTH, SortBy, STORAGE_KEY } from './constants';
+// import debounce from 'lodash.debounce';
+import { debounce } from 'throttle-debounce';
+import {
+  FilterBy,
+  MIN_QUERY_LENGTH,
+  SortBy,
+  STORAGE_KEY,
+  STRANGE_NOTION_TAG,
+} from './constants';
 
 const TIMEOUT_MSEC = 5_000;
 const NOTION_HOST = 'https://www.notion.so';
@@ -20,7 +27,6 @@ async function search({
   filterBy: FilterBy;
   savesLastSearchResult: boolean;
 }) {
-  console.log({ query });
   if (query.length < MIN_QUERY_LENGTH)
     throw new Error(`query.length < ${MIN_QUERY_LENGTH}. query: ${query}`);
 
@@ -75,6 +81,11 @@ async function search({
       const recordMap = res.recordMap;
       const record = recordMap.block[data.id].value;
       const result: Item = { title: '', url: '' };
+      const regexpRemovesTag = new RegExp(`</?${STRANGE_NOTION_TAG}>`, 'ig');
+      const regexpAddsTag = new RegExp(
+        `(${query.split(/\s+/).join('|')})`,
+        'ig',
+      );
 
       const getParentPath = (paths: string[], parentId: string): string[] => {
         if (!recordMap.block[parentId]) return paths;
@@ -94,20 +105,25 @@ async function search({
       if (pageIcon) result.pageIcon = pageIcon;
 
       result.url = `${NOTION_HOST}/${data.id.replaceAll('-', '')}`;
+      result.title = data.highlight?.title
+        ? data.highlight.title
+        : record.properties.title.map((array) => array[0]).join('');
 
-      if (data.highlight?.title) {
-        result.title = data.highlight.title;
-      } else if (data.highlight && data.highlightBlockId) {
-        result.title = record.properties.title
-          .map((array) => array[0])
-          .join('');
+      if (data.highlight && data.highlightBlockId) {
         result.url += `#${data.highlightBlockId.replaceAll('-', '')}`;
         result.text = data.highlight.text;
-      } else {
-        result.title = record.properties.title
-          .map((array) => array[0])
-          .join('');
       }
+      const setStrangeNotionTag = (str: string) => {
+        return str
+          .replace(regexpRemovesTag, '')
+          .replace(
+            regexpAddsTag,
+            `<${STRANGE_NOTION_TAG}>$1</${STRANGE_NOTION_TAG}>`,
+          );
+      };
+      if (result.title) result.title = setStrangeNotionTag(result.title);
+      if (result.text) result.text = setStrangeNotionTag(result.text);
+
       return result;
     }),
     total: res.total,

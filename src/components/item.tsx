@@ -1,7 +1,6 @@
 import React from 'react';
 import reactStringReplace from 'react-string-replace';
-
-const STRANGE_NOTION_TAG = 'gzkNfoUU';
+import { STRANGE_NOTION_TAG } from '../constants';
 
 const regexp = new RegExp(
   `<${STRANGE_NOTION_TAG}>(.+?)</${STRANGE_NOTION_TAG}>`,

@@ -23,7 +23,7 @@ export default function SearchBox({
         placeholder="Search"
         autoFocus
         value={query}
-        onChange={(event) => setQuery(event.target.value.trim())}
+        onChange={(event) => setQuery(event.target.value)}
       />
       <a href="#" className="icon-clear-input-container" onClick={clear}>
         <svg viewBox="0 0 30 30" className="icon-clear-input">
