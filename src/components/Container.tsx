@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { MIN_QUERY_LENGTH, SortBy, STORAGE_KEY } from '../constants';
 import { debouncedSearch } from '../search';
-import Filter from './filter';
-import Footer from './footer';
-import Items from './items';
-import SearchBox from './searchBox';
-import Sort from './sort';
+import Filter from './Filter';
+import Footer from './Footer';
+import Items from './Items';
+import SearchBox from './SearchBox';
+import Sort from './Sort';
 
 export default function Container() {
   const isPopup = location.search === '?popup';
