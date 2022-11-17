@@ -1,0 +1,157 @@
+import { FilterBy, MIN_QUERY_LENGTH, SortBy, STORAGE_KEY } from './constants';
+
+const TIMEOUT_MSEC = 5_000;
+const NOTION_HOST = 'https://www.notion.so';
+const NOTION_SEARCH_URL = `${NOTION_HOST}/api/v3/search`;
+const SEARCH_LIMIT = 50;
+
+function idToUuid(path: string) {
+  return `${path.substring(0, 8)}-${path.substring(8, 12)}-${path.substring(
+    12,
+    16,
+  )}-${path.substring(16, 20)}-${path.substring(20)}`;
+}
+
+async function fetchJSON(
+  url: string,
+  { method, body }: { method: 'POST'; body: object },
+) {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => {
+    controller.abort();
+  }, TIMEOUT_MSEC);
+
+  try {
+    const response = await fetch(url, {
+      method,
+      body: JSON.stringify(body),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
+
+    return (await response.json()) as ApiResonse;
+  } catch (error) {
+    throw new Error(
+      error instanceof Error && error.name === 'AbortError'
+        ? `HTTP Request timeout (${TIMEOUT_MSEC} milliseconds)`
+        : `HTTP Request error. ${error}`,
+    );
+  }
+}
+
+export async function search({
+  query,
+  sortBy,
+  filterBy,
+  savesLastSearchResult,
+}: {
+  query: string;
+  sortBy: SortBy;
+  filterBy: FilterBy;
+  savesLastSearchResult: boolean;
+}) {
+  if (query.length < MIN_QUERY_LENGTH)
+    throw new Error(`query.length < ${MIN_QUERY_LENGTH}. query: ${query}`);
+
+  let sortOptions = {};
+  switch (sortBy) {
+    case SortBy.RELEVANCE:
+      sortOptions = { field: 'relevance' };
+      break;
+    case SortBy.LASTEDITED:
+      sortOptions = { field: 'lastEdited', direction: 'desc' };
+      break;
+    case SortBy.CREATED:
+      sortOptions = { field: 'created', direction: 'desc' };
+      break;
+  }
+  let filterOptions = {};
+  switch (filterBy) {
+    case FilterBy.TITLE_ONLY:
+      filterOptions = { navigableBlockContentOnly: true };
+      break;
+    case null:
+      // same as {}
+      break;
+  }
+
+  const res = await fetchJSON(NOTION_SEARCH_URL, {
+    method: 'POST',
+    body: {
+      type: 'BlocksInSpace',
+      query,
+      spaceId: idToUuid('81149e3a3d874d25b7082226dd72bfdd'),
+      limit: SEARCH_LIMIT,
+      filters: {
+        isDeletedOnly: false,
+        excludeTemplates: false,
+        isNavigableOnly: false,
+        requireEditPermissions: false,
+        ancestors: [],
+        createdBy: [],
+        editedBy: [],
+        lastEditedTime: {},
+        createdTime: {},
+        ...filterOptions,
+      },
+      sort: sortOptions,
+      source: 'quick_find_input_change',
+    },
+  });
+
+  const results: SearchResult = {
+    items: res.results.map((data) => {
+      const recordMap = res.recordMap;
+      const record = recordMap.block[data.id].value;
+      const result: Item = { title: '', url: '' };
+
+      const getParentPath = (paths: string[], parentId: string): string[] => {
+        if (!recordMap.block[parentId]) return paths;
+
+        const record = recordMap.block[parentId].value;
+        paths.push(record.properties.title.map((array) => array[0]).join(''));
+        if (!record.parent_id) return paths;
+        return getParentPath(paths, record.parent_id);
+      };
+      if (record.parent_id) {
+        const parentPaths = getParentPath([], record.parent_id);
+        if (parentPaths.length >= 1)
+          result.parentsPath = parentPaths.reverse().join(' / ');
+      }
+
+      const pageIcon = record.format?.page_icon;
+      if (pageIcon) result.pageIcon = pageIcon;
+
+      result.url = `${NOTION_HOST}/${data.id.replaceAll('-', '')}`;
+
+      if (data.highlight?.title) {
+        result.title = data.highlight.title;
+      } else if (data.highlight && data.highlightBlockId) {
+        result.title = record.properties.title
+          .map((array) => array[0])
+          .join('');
+        result.url += `#${data.highlightBlockId.replaceAll('-', '')}`;
+        result.text = data.highlight.text;
+      } else {
+        result.title = record.properties.title
+          .map((array) => array[0])
+          .join('');
+      }
+      return result;
+    }),
+    total: res.total,
+  };
+
+  if (savesLastSearchResult) {
+    try {
+      await chrome.storage.local.set({ [STORAGE_KEY]: { query, results } });
+    } catch (error) {
+      throw new Error(`Failed to set data to storage.local. error: ${error}`);
+    }
+  }
+
+  return results;
+}

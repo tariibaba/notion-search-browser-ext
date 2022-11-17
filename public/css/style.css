@@ -20,7 +20,7 @@ main {
 }
 svg {
   display: inline;
-  fill: rgba(55, 53, 47, 0.45);
+  ill: rgba(55, 53, 47, 0.45);
   flex-shrink: 0;
   backface-visibility: hidden;
 }
@@ -143,10 +143,10 @@ svg {
 }
 
 /* ----------------------------------------
-  Summary
+  footer
 ---------------------------------------- */
 
-.summary {
+.footer {
   color: var(--text-color-light);
   font-size: var(--font-size-small);
   padding: 6px 10px;
@@ -154,12 +154,4 @@ svg {
 .total {
   font-size: calc(var(--font-size-small) + 0.5px);
   font-weight: bold;
-}
-
-/* ----------------------------------------
-  Utils
----------------------------------------- */
-
-.hide {
-  display: none;
 }

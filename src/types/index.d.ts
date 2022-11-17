@@ -31,15 +31,16 @@ type Item = {
 
 type Items = Item[];
 
-type SearchError = valueOf<typeof import('../errors').SEARCH_ERROR> | null;
-
-type SearchResults = {
+type SearchResult = {
   items: Items;
   total: number;
-  error: SearchError;
 };
 
 type StorageData = {
   query: string;
-  results: SearchResults;
+  searchResult: SearchResult;
 };
+
+type FilterBy = valueOf<typeof import('../constants').FilterBy> | null;
+
+type SortBy = valueOf<typeof import('../constants').SortBy>;

@@ -2,7 +2,7 @@ const config = {
   mode: process.env.NODE_ENV || 'development',
   entry: {
     background: './src/background.ts',
-    popup: './src/popup.ts',
+    popup: './src/popup.tsx',
     options: './src/options.ts',
   },
   output: {
