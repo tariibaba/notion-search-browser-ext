@@ -9,15 +9,7 @@ export default function Items({
   items: Items;
 }) {
   return (
-    <div
-      className="items"
-      // TODO: popup も高さ一定で良くない？
-      style={
-        opensNewTab
-          ? { maxHeight: '470px' }
-          : { maxHeight: 'calc(100vh - 215px)' }
-      }
-    >
+    <div className="items">
       {items.map((item) => (
         <Item key={item.url} opensNewTab={opensNewTab} {...item}></Item>
       ))}
