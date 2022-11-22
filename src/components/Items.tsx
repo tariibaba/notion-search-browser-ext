@@ -8,11 +8,11 @@ export default function Items({
   opensNewTab: boolean;
   items: Items;
 }) {
-  return (
+  return items.length >= 0 ? (
     <div className="items">
       {items.map((item) => (
         <Item key={item.url} opensNewTab={opensNewTab} {...item}></Item>
       ))}
     </div>
-  );
+  ) : null;
 }

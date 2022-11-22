@@ -13,13 +13,11 @@ export default function Container() {
   const [query, setQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<SortBy>(SortBy.RELEVANCE);
   const [filtersBy, setFiltersBy] = useState<FiltersBy>({});
-  const [searchResult, setSearchResult] = useState<SearchResult>({
-    items: [],
-    total: 0,
-  });
+  const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
+
   const savesLastSearchResult = isPopup;
   const trimmedQuery = query.trim();
-  const searchable = trimmedQuery.length >= MIN_QUERY_LENGTH;
+  const hasQuery = trimmedQuery.length >= MIN_QUERY_LENGTH;
 
   // set style & get cache
   useEffect(() => {
@@ -46,7 +44,7 @@ export default function Container() {
 
   // search
   useEffect(() => {
-    if (!searchable) return;
+    if (!hasQuery) return;
 
     (async () => {
       const result = await debouncedSearch({
@@ -66,7 +64,7 @@ export default function Container() {
           <SearchBox query={query} setQuery={setQuery} />
           <Filter filtersBy={filtersBy} setFiltersBy={setFiltersBy} />
           <Sort sortBy={sortBy} setSortBy={setSortBy} />
-          {searchable && (
+          {searchResult && hasQuery && (
             <>
               <Items items={searchResult.items} opensNewTab={isPopup} />
               <Footer total={searchResult.total} />
