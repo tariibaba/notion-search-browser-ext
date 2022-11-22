@@ -12,7 +12,7 @@ export default function Sort({
       <select
         className="sort"
         value={sortBy}
-        onChange={(event) => setSortBy(event.target.value)}
+        onChange={(event) => setSortBy(event.target.value as SortBy)}
       >
         <option value="relevance">Best matches</option>
         <option value="lastEdited">Last edited: Newest first</option>

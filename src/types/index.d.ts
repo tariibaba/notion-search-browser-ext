@@ -41,6 +41,8 @@ type StorageData = {
   searchResult: SearchResult;
 };
 
-type FilterBy = valueOf<typeof import('../constants').FilterBy> | null;
+type FiltersBy = {
+  [key in valueOf<typeof import('../constants').FiltersBy>]?: boolean;
+};
 
 type SortBy = valueOf<typeof import('../constants').SortBy>;

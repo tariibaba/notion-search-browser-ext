@@ -1,23 +1,26 @@
 import React from 'react';
-import { FilterBy } from '../constants';
+import { FiltersBy } from '../constants';
 
 export default function Filter({
-  filterBy,
-  setFilterBy,
+  filtersBy,
+  setFiltersBy,
 }: {
-  filterBy: FilterBy;
-  setFilterBy: React.Dispatch<React.SetStateAction<FilterBy>>;
+  filtersBy: FiltersBy;
+  setFiltersBy: React.Dispatch<React.SetStateAction<FiltersBy>>;
 }) {
   return (
     <div className="filters">
       <span
-        onClick={() =>
-          setFilterBy(
-            filterBy === FilterBy.TITLE_ONLY ? null : FilterBy.TITLE_ONLY,
-          )
-        }
-        className={`filter only-search-title ${
-          filterBy === FilterBy.TITLE_ONLY ? 'selected' : ''
+        onClick={() => {
+          setFiltersBy((prev) => {
+            return {
+              ...prev,
+              [FiltersBy.TITLE_ONLY]: !prev[FiltersBy.TITLE_ONLY],
+            };
+          });
+        }}
+        className={`filter ${
+          filtersBy[FiltersBy.TITLE_ONLY] ? 'selected' : ''
         }`}
       >
         Only search title

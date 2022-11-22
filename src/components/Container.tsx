@@ -12,7 +12,7 @@ export default function Container() {
   const [renderable, setRenderable] = useState<boolean>(false);
   const [query, setQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<SortBy>(SortBy.RELEVANCE);
-  const [filterBy, setFilterBy] = useState<FilterBy>(null);
+  const [filtersBy, setFiltersBy] = useState<FiltersBy>({});
   const [searchResult, setSearchResult] = useState<SearchResult>({
     items: [],
     total: 0,
@@ -21,6 +21,7 @@ export default function Container() {
   const trimmedQuery = query.trim();
   const searchable = trimmedQuery.length >= MIN_QUERY_LENGTH;
 
+  // set style & get cache
   useEffect(() => {
     if (isPopup) {
       // css ファイルを append した方が見通しは良くなるが、同期的なスタイル適用が出来ない
@@ -43,6 +44,7 @@ export default function Container() {
     })();
   }, []);
 
+  // search
   useEffect(() => {
     if (!searchable) return;
 
@@ -50,19 +52,19 @@ export default function Container() {
       const result = await debouncedSearch({
         query: trimmedQuery,
         sortBy,
-        filterBy,
+        filtersBy,
         savesLastSearchResult,
       });
       if (result) setSearchResult(result);
     })();
-  }, [trimmedQuery, sortBy, filterBy]);
+  }, [trimmedQuery, sortBy, filtersBy]); // TODO この filtersBy はいいの？
 
   return (
     <>
       {renderable && (
         <main {...(isPopup && { className: 'is-popup' })}>
           <SearchBox query={query} setQuery={setQuery} />
-          <Filter filterBy={filterBy} setFilterBy={setFilterBy} />
+          <Filter filtersBy={filtersBy} setFiltersBy={setFiltersBy} />
           <Sort sortBy={sortBy} setSortBy={setSortBy} />
           {searchable && (
             <>

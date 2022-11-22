@@ -1,7 +1,7 @@
 // import debounce from 'lodash.debounce';
 import { debounce } from 'throttle-debounce';
 import {
-  FilterBy,
+  FiltersBy,
   MIN_QUERY_LENGTH,
   SortBy,
   STORAGE_KEY,
@@ -19,12 +19,12 @@ export const debouncedSearch = debounce(search, DEBOUNCE_TIME);
 async function search({
   query,
   sortBy,
-  filterBy,
+  filtersBy,
   savesLastSearchResult,
 }: {
   query: string;
   sortBy: SortBy;
-  filterBy: FilterBy;
+  filtersBy: FiltersBy;
   savesLastSearchResult: boolean;
 }) {
   if (query.length < MIN_QUERY_LENGTH)
@@ -43,8 +43,8 @@ async function search({
       break;
   }
   let filterOptions = {};
-  switch (filterBy) {
-    case FilterBy.TITLE_ONLY:
+  switch (filtersBy) {
+    case FiltersBy.TITLE_ONLY:
       filterOptions = { navigableBlockContentOnly: true };
       break;
     case null:
