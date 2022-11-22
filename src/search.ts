@@ -158,7 +158,7 @@ async function fetchJSON(
   { method, body }: { method: 'POST'; body: object },
 ) {
   const controller = new AbortController();
-  const timer = window.setTimeout(() => {
+  const timer = setTimeout(() => {
     controller.abort();
   }, TIMEOUT_MSEC);
 

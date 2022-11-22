@@ -47,13 +47,19 @@ export default function Container() {
     if (!hasQuery) return;
 
     (async () => {
-      const result = await debouncedSearch({
-        query: trimmedQuery,
-        sortBy,
-        filtersBy,
-        savesLastSearchResult,
-      });
-      if (result) setSearchResult(result);
+      let result: SearchResult;
+      try {
+        result = await debouncedSearch({
+          query: trimmedQuery,
+          sortBy,
+          filtersBy,
+          savesLastSearchResult,
+        });
+        setSearchResult(result);
+      } catch (error) {
+        console.error(error);
+        alert(error);
+      }
     })();
   }, [trimmedQuery, sortBy, filtersBy]); // TODO この filtersBy はいいの？
 
