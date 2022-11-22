@@ -57,17 +57,21 @@ export default function Container() {
     })();
   }, [trimmedQuery, sortBy, filterBy]);
 
-  return renderable ? (
-    <main>
-      <SearchBox query={query} setQuery={setQuery} />
-      <Filter filterBy={filterBy} setFilterBy={setFilterBy} />
-      <Sort sortBy={sortBy} setSortBy={setSortBy} />
-      {searchable && (
-        <>
-          <Items isPopup={isPopup} items={searchResult.items} />
-          <Footer total={searchResult.total} />
-        </>
+  return (
+    <>
+      {renderable && (
+        <main {...(isPopup && { className: 'is-popup' })}>
+          <SearchBox query={query} setQuery={setQuery} />
+          <Filter filterBy={filterBy} setFilterBy={setFilterBy} />
+          <Sort sortBy={sortBy} setSortBy={setSortBy} />
+          {searchable && (
+            <>
+              <Items items={searchResult.items} opensNewTab={isPopup} />
+              <Footer total={searchResult.total} />
+            </>
+          )}
+        </main>
       )}
-    </main>
-  ) : null;
+    </>
+  );
 }
