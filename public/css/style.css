@@ -2,6 +2,7 @@ body {
   background-color: #6d6d6d;
 }
 main {
+  --text-color: #595857;
   --text-color-light: #949495;
 
   --font-size-large: 18px;
@@ -15,7 +16,7 @@ main {
   margin: 0px auto;
   padding: 2px;
   border-radius: 8px;
-  color: #595857;
+  color: var(--text-color);
   font-size: var(--font-size-medium);
 }
 svg {
@@ -140,7 +141,7 @@ svg {
 }
 .parents-path {
   font-size: var(--font-size-small);
-  color: var(--text-light);
+  color: var(--text-color-light);
 }
 .highlight {
   color: black;
