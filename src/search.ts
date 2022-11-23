@@ -25,7 +25,7 @@ async function search({
   savesLastSearchResult,
 }: {
   query: string;
-  sortBy: SortBy;
+  sortBy: string;
   filtersBy: FiltersBy;
   savesLastSearchResult: boolean;
 }) {
@@ -43,6 +43,8 @@ async function search({
     case SortBy.CREATED:
       sortOptions = { field: 'created', direction: 'desc' };
       break;
+    default:
+      throw new Error(`unknown sortBy: ${sortBy}`);
   }
   const filterOptions: { navigableBlockContentOnly?: boolean } = {};
   for (const [key, value] of Object.entries(filtersBy)) {
@@ -50,6 +52,8 @@ async function search({
       case FiltersBy.TITLE_ONLY:
         if (value) filterOptions.navigableBlockContentOnly = true;
         break;
+      default:
+        throw new Error(`unknown key: ${key}`);
     }
   }
 

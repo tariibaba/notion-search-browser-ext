@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import useHashParam from 'use-hash-param';
 import { MIN_QUERY_LENGTH, SortBy, STORAGE_KEY } from '../constants';
+import { useObjectHashParam } from '../hooks';
 import { debouncedSearch } from '../search';
 import Filter from './Filters';
 import Footer from './Footer';
@@ -10,9 +12,14 @@ import Sort from './Sorts';
 export default function Container() {
   const isPopup = location.search === '?popup';
   const [renderable, setRenderable] = useState<boolean>(false);
-  const [query, setQuery] = useState<string>('');
-  const [sortBy, setSortBy] = useState<SortBy>(SortBy.RELEVANCE);
-  const [filtersBy, setFiltersBy] = useState<FiltersBy>({});
+
+  const [query, setQuery] = useHashParam('query', '');
+  const [sortBy, setSortBy] = useHashParam('sort_by', SortBy.RELEVANCE);
+  const [filtersBy, setFiltersBy] = useObjectHashParam<FiltersBy>(
+    'filters_by',
+    {},
+  );
+
   const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
 
   const savesLastSearchResult = isPopup;

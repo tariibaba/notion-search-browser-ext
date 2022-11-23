@@ -41,6 +41,7 @@
     "axios": "^1.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-string-replace": "^1.1.0"
+    "react-string-replace": "^1.1.0",
+    "use-hash-param": "^0.2.4"
   }
 }

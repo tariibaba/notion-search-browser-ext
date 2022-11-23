@@ -5,11 +5,14 @@ export default function SearchBox({
   setQuery,
 }: {
   query: string;
-  setQuery: React.Dispatch<React.SetStateAction<string>>;
+  setQuery: (value: string) => void;
 }) {
   const clear = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     setQuery('');
     event.preventDefault();
+  };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.nativeEvent.isComposing) setQuery(event.target.value);
   };
 
   return (
@@ -23,7 +26,7 @@ export default function SearchBox({
         placeholder="Search"
         autoFocus
         value={query}
-        onChange={(event) => setQuery(event.target.value)}
+        onChange={handleChange}
       />
       <a href="#" className="icon-clear-input-container" onClick={clear}>
         <svg viewBox="0 0 30 30" className="icon-clear-input">

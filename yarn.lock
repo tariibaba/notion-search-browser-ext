@@ -4770,6 +4770,11 @@ url-parse@^1.5.3:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
 
+use-hash-param@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/use-hash-param/-/use-hash-param-0.2.4.tgz#fed109791b4bfe6db0c89707cce8898a027e0077"
+  integrity sha512-gZDYZFUIixOm6bV4IqLGNLTXiOpSMLTC/enPUQA8zR34BbKbmvd9pBxHQKGnwrdYsHvvkdh9mS7BUb6mjxsg0g==
+
 v8-to-istanbul@^9.0.1:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/v8-to-istanbul/-/v8-to-istanbul-9.0.1.tgz#b6f994b0b5d4ef255e17a0d17dc444a9f5132fa4"

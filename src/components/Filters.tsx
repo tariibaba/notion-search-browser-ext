@@ -6,17 +6,16 @@ export default function Filter({
   setFiltersBy,
 }: {
   filtersBy: FiltersBy;
-  setFiltersBy: React.Dispatch<React.SetStateAction<FiltersBy>>;
+  setFiltersBy: (value: FiltersBy) => void;
 }) {
   return (
     <div className="filters">
       <span
         onClick={() => {
-          setFiltersBy((prev) => {
-            return {
-              ...prev,
-              [FiltersBy.TITLE_ONLY]: !prev[FiltersBy.TITLE_ONLY],
-            };
+          // TODO: 余裕あったら prev を参照する形に変える（use-hash-paramの型の変更が必要）
+          setFiltersBy({
+            ...filtersBy,
+            [FiltersBy.TITLE_ONLY]: !filtersBy[FiltersBy.TITLE_ONLY],
           });
         }}
         className={`filter ${
