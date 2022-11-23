@@ -16,6 +16,7 @@ const DEBOUNCE_TIME = 150;
 
 export const debouncedSearch = debounce(search, DEBOUNCE_TIME);
 
+// TODO: 結合テストくらいは書きたい氣がする。。
 async function search({
   query,
   sortBy,
@@ -42,14 +43,13 @@ async function search({
       sortOptions = { field: 'created', direction: 'desc' };
       break;
   }
-  let filterOptions = {};
-  switch (filtersBy) {
-    case FiltersBy.TITLE_ONLY:
-      filterOptions = { navigableBlockContentOnly: true };
-      break;
-    case null:
-      // same as {}
-      break;
+  const filterOptions: { navigableBlockContentOnly?: boolean } = {};
+  for (const [key, value] of Object.entries(filtersBy)) {
+    switch (key) {
+      case FiltersBy.TITLE_ONLY:
+        if (value) filterOptions.navigableBlockContentOnly = true;
+        break;
+    }
   }
 
   const res = await fetchJSON(NOTION_SEARCH_URL, {
@@ -146,6 +146,7 @@ async function search({
 // ========================================
 // Utils
 // ========================================
+
 function idToUuid(path: string) {
   return `${path.substring(0, 8)}-${path.substring(8, 12)}-${path.substring(
     12,

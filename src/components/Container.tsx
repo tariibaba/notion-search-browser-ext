@@ -19,8 +19,9 @@ export default function Container() {
   const trimmedQuery = query.trim();
   const hasQuery = trimmedQuery.length >= MIN_QUERY_LENGTH;
 
-  // set style & get cache
+  // initialize
   useEffect(() => {
+    // set style
     if (isPopup) {
       // css ファイルを append した方が見通しは良くなるが、同期的なスタイル適用が出来ない
       document.body.style.width = '662px';
@@ -28,6 +29,7 @@ export default function Container() {
     } else {
       document.body.style.margin = '40px 0 0 0';
     }
+    // get cache
     (async () => {
       if (savesLastSearchResult) {
         const store: StorageData | undefined = (
@@ -61,7 +63,7 @@ export default function Container() {
         alert(error);
       }
     })();
-  }, [trimmedQuery, sortBy, filtersBy]); // TODO この filtersBy はいいの？
+  }, [trimmedQuery, sortBy, filtersBy]);
 
   return (
     <>
