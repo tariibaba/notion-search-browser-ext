@@ -1,4 +1,5 @@
 // import debounce from 'lodash.debounce';
+import axios from 'axios';
 import { debounce } from 'throttle-debounce';
 import {
   FiltersBy,
@@ -52,29 +53,42 @@ async function search({
     }
   }
 
-  const res = await fetchJSON(NOTION_SEARCH_URL, {
-    method: 'POST',
-    body: {
-      type: 'BlocksInSpace',
-      query,
-      spaceId: idToUuid('81149e3a3d874d25b7082226dd72bfdd'),
-      limit: SEARCH_LIMIT,
-      filters: {
-        isDeletedOnly: false,
-        excludeTemplates: false,
-        isNavigableOnly: false,
-        requireEditPermissions: false,
-        ancestors: [],
-        createdBy: [],
-        editedBy: [],
-        lastEditedTime: {},
-        createdTime: {},
-        ...filterOptions,
-      },
-      sort: sortOptions,
-      source: 'quick_find_input_change',
-    },
-  });
+  let res: ApiResponse;
+  try {
+    res = (
+      await axios.post<ApiResponse>(
+        NOTION_SEARCH_URL,
+        {
+          type: 'BlocksInSpace',
+          query,
+          spaceId: idToUuid('81149e3a3d874d25b7082226dd72bfdd'),
+          limit: SEARCH_LIMIT,
+          filters: {
+            isDeletedOnly: false,
+            excludeTemplates: false,
+            isNavigableOnly: false,
+            requireEditPermissions: false,
+            ancestors: [],
+            createdBy: [],
+            editedBy: [],
+            lastEditedTime: {},
+            createdTime: {},
+            ...filterOptions,
+          },
+          sort: sortOptions,
+          source: 'quick_find_input_change',
+        },
+        { timeout: TIMEOUT_MSEC },
+      )
+    ).data;
+  } catch (error) {
+    throw new Error(
+      `HTTP Request error. ` +
+        (error instanceof Error && error.name === 'AxiosError'
+          ? error.message
+          : error),
+    );
+  }
 
   const searchResult: SearchResult = {
     items: res.results.map((data) => {
@@ -152,34 +166,4 @@ function idToUuid(path: string) {
     12,
     16,
   )}-${path.substring(16, 20)}-${path.substring(20)}`;
-}
-
-async function fetchJSON(
-  url: string,
-  { method, body }: { method: 'POST'; body: object },
-) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => {
-    controller.abort();
-  }, TIMEOUT_MSEC);
-
-  try {
-    const response = await fetch(url, {
-      method,
-      body: JSON.stringify(body),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-      signal: controller.signal,
-    });
-    clearTimeout(timer);
-
-    return (await response.json()) as ApiResonse;
-  } catch (error) {
-    throw new Error(
-      error instanceof Error && error.name === 'AbortError'
-        ? `HTTP Request timeout (${TIMEOUT_MSEC} milliseconds)`
-        : `HTTP Request error. ${error}`,
-    );
-  }
 }

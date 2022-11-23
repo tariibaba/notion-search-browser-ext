@@ -1,6 +1,6 @@
 type valueOf<T> = T[keyof T]; // util
 
-type ApiResonse = {
+type ApiResponse = {
   results: {
     id: string;
     highlight?: { text: string; title?: string };
