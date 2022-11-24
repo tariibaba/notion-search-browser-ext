@@ -1,12 +1,25 @@
 import useHashParam from 'use-hash-param';
 
+const serialize = JSON.stringify;
+const deserialize = JSON.parse;
+
 export function useObjectHashParam<T extends object>(
   key: string,
-  defaultValue: object,
+  initialState: object,
 ) {
-  const [state, _setState] = useHashParam(key, JSON.stringify(defaultValue));
-  const setState = (value: T) => {
-    _setState(JSON.stringify(value));
+  const [stringState, setStringState] = useHashParam(
+    key,
+    serialize(initialState),
+  );
+  const setObjectState = (objectState: T | ((prev: T) => T)) => {
+    if (typeof objectState === 'function') {
+      setStringState((prev) => serialize(objectState(deserialize(prev))));
+    } else {
+      setStringState(serialize(objectState));
+    }
   };
-  return [JSON.parse(state), setState] as [T, typeof setState];
+  return [deserialize(stringState), setObjectState] as [
+    T,
+    typeof setObjectState,
+  ];
 }
