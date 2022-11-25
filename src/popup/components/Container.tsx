@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useHashParam, useObjectHashParam } from 'use-hash-param';
 import { SortBy, STORAGE_KEY } from '../constants';
 import { debouncedSearch } from '../search';
@@ -10,7 +10,6 @@ import Sort from './Sorts';
 
 export default function Container() {
   const isPopup = location.search === '?popup';
-  const [renderable, setRenderable] = useState<boolean>(false);
 
   const [query, setQuery] = useHashParam('query', '');
   const SortStateAndSetter = useHashParam('sort_by', SortBy.RELEVANCE);
@@ -27,9 +26,7 @@ export default function Container() {
   const trimmedQuery = query.trim();
 
   // initialize
-  // TODO: useLayoutEffect 使えば renderable 不要説
-  // https://ja.reactjs.org/docs/hooks-reference.html#uselayouteffect
-  useEffect(() => {
+  useLayoutEffect(() => {
     // set style
     if (isPopup) {
       // css ファイルを append した方が見通しは良くなるが、同期的なスタイル適用が出来ない
@@ -49,7 +46,6 @@ export default function Container() {
           setSearchResult(store.searchResult);
         }
       }
-      setRenderable(true);
     })();
   }, []);
 
@@ -77,20 +73,16 @@ export default function Container() {
   }, [trimmedQuery, sortBy, filtersBy]);
 
   return (
-    <>
-      {renderable && (
-        <main {...(isPopup && { className: 'is-popup' })}>
-          <SearchBox query={query} setQuery={setQuery} />
-          <Filter filtersBy={filtersBy} setFiltersBy={setFiltersBy} />
-          <Sort sortBy={sortBy} setSortBy={setSortBy} />
-          {searchResult && (
-            <>
-              <Items items={searchResult.items} opensNewTab={isPopup} />
-              <Footer total={searchResult.total} />
-            </>
-          )}
-        </main>
+    <main {...(isPopup && { className: 'is-popup' })}>
+      <SearchBox query={query} setQuery={setQuery} />
+      <Filter filtersBy={filtersBy} setFiltersBy={setFiltersBy} />
+      <Sort sortBy={sortBy} setSortBy={setSortBy} />
+      {searchResult && (
+        <>
+          <Items items={searchResult.items} opensNewTab={isPopup} />
+          <Footer total={searchResult.total} />
+        </>
       )}
-    </>
+    </main>
   );
 }
