@@ -70,7 +70,7 @@ export default function Container() {
         alert(error);
       }
     })();
-  }, [trimmedQuery, sortBy, filtersBy]);
+  }, [trimmedQuery, sortBy, JSON.stringify(filtersBy)]);
 
   return (
     <>

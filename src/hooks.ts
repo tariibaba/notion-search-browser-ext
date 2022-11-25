@@ -3,6 +3,8 @@ import useHashParam from 'use-hash-param';
 const serialize = JSON.stringify;
 const deserialize = JSON.parse;
 
+// TODO:
+//  - 描画のたびに JSON.parse が走ってるのはどうなのさ
 export function useObjectHashParam<T extends object>(
   key: string,
   initialState: object,
@@ -13,7 +15,9 @@ export function useObjectHashParam<T extends object>(
   );
   const setObjectState = (objectState: T | ((prev: T) => T)) => {
     if (typeof objectState === 'function') {
-      setStringState((prev) => serialize(objectState(deserialize(prev))));
+      setStringState((prev) =>
+        serialize(objectState(deserialize(prev || '{}'))),
+      );
     } else {
       setStringState(serialize(objectState));
     }

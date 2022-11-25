@@ -12,10 +12,13 @@ export default function Filter({
     <div className="filters">
       <span
         onClick={() => {
-          setFiltersBy((prev) => ({
-            ...prev,
-            [FiltersBy.TITLE_ONLY]: !prev[FiltersBy.TITLE_ONLY],
-          }));
+          console.log(filtersBy);
+          setFiltersBy((prev) => {
+            return {
+              ...prev,
+              [FiltersBy.TITLE_ONLY]: !prev[FiltersBy.TITLE_ONLY],
+            };
+          });
         }}
         className={`filter ${
           filtersBy[FiltersBy.TITLE_ONLY] ? 'selected' : ''
