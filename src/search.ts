@@ -1,23 +1,26 @@
-// import debounce from 'lodash.debounce';
 import axios from 'axios';
+import { setupCache } from 'axios-cache-adapter';
 import { debounce } from 'throttle-debounce';
-import {
-  FiltersBy,
-  MIN_QUERY_LENGTH,
-  SortBy,
-  STORAGE_KEY,
-  STRANGE_NOTION_TAG,
-} from './constants';
 
-const TIMEOUT_MSEC = 5_000;
+import { FiltersBy, MATCH_TAG, SortBy, STORAGE_KEY } from './constants';
+
+const TIMEOUT = 5_000;
 const NOTION_HOST = 'https://www.notion.so';
 const NOTION_SEARCH_URL = `${NOTION_HOST}/api/v3/search`;
 const SEARCH_LIMIT = 50;
 const DEBOUNCE_TIME = 150;
+const CACHE_TIME = 15 * 60 * 1_000;
+
+const AxiosInstance = axios.create({
+  adapter: setupCache({
+    maxAge: CACHE_TIME,
+    exclude: { methods: [] },
+  }).adapter,
+});
 
 export const debouncedSearch = debounce(search, DEBOUNCE_TIME);
 
-// TODO: 結合テストくらいは書きたい氣がする。。
+// TODO: 結合テストくらいは書きたい気がする。。
 async function search({
   query,
   sortBy,
@@ -29,9 +32,6 @@ async function search({
   filtersBy: FiltersBy;
   savesLastSearchResult: boolean;
 }) {
-  if (query.length < MIN_QUERY_LENGTH)
-    throw new Error(`query.length < ${MIN_QUERY_LENGTH}. query: ${query}`);
-
   let sortOptions = {};
   switch (sortBy) {
     case SortBy.RELEVANCE:
@@ -60,7 +60,7 @@ async function search({
   let res: ApiResponse;
   try {
     res = (
-      await axios.post<ApiResponse>(
+      await AxiosInstance.post<ApiResponse>(
         NOTION_SEARCH_URL,
         {
           type: 'BlocksInSpace',
@@ -82,10 +82,11 @@ async function search({
           sort: sortOptions,
           source: 'quick_find_input_change',
         },
-        { timeout: TIMEOUT_MSEC },
+        { timeout: TIMEOUT },
       )
     ).data;
   } catch (error) {
+    console.trace(error);
     throw new Error(
       `HTTP Request error. ` +
         (error instanceof Error && error.name === 'AxiosError'
@@ -99,7 +100,7 @@ async function search({
       const recordMap = res.recordMap;
       const record = recordMap.block[data.id].value;
       const result: Item = { title: '', url: '' };
-      const regexpRemovesTag = new RegExp(`</?${STRANGE_NOTION_TAG}>`, 'ig');
+      const regexpRemovesTag = new RegExp(`</?${MATCH_TAG}>`, 'ig');
       const regexpAddsTag = new RegExp(
         `(${query.split(/\s+/).join('|')})`,
         'ig',
@@ -131,14 +132,12 @@ async function search({
         result.url += `#${data.highlightBlockId.replaceAll('-', '')}`;
         result.text = data.highlight.text;
       }
-      const setStrangeNotionTag = (str: string) => {
-        return str
-          .replace(regexpRemovesTag, '')
-          .replace(
-            regexpAddsTag,
-            `<${STRANGE_NOTION_TAG}>$1</${STRANGE_NOTION_TAG}>`,
-          );
-      };
+      const setStrangeNotionTag = (str: string) =>
+        query
+          ? str
+              .replace(regexpRemovesTag, '')
+              .replace(regexpAddsTag, `<${MATCH_TAG}>$1</${MATCH_TAG}>`)
+          : str;
       if (result.title) result.title = setStrangeNotionTag(result.title);
       if (result.text) result.text = setStrangeNotionTag(result.text);
 

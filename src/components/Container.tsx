@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useHashParam from 'use-hash-param';
-import { MIN_QUERY_LENGTH, SortBy, STORAGE_KEY } from '../constants';
+import { SortBy, STORAGE_KEY } from '../constants';
 import { useObjectHashParam } from '../hooks';
 import { debouncedSearch } from '../search';
 import Filter from './Filters';
@@ -14,7 +14,7 @@ export default function Container() {
   const [renderable, setRenderable] = useState<boolean>(false);
 
   const [query, setQuery] = useHashParam('query', '');
-  const [sortBy, setSortBy] = useHashParam('sort_by', SortBy.RELEVANCE);
+  let [sortBy, setSortBy] = useHashParam('sort_by', SortBy.RELEVANCE);
   const [filtersBy, setFiltersBy] = useObjectHashParam<FiltersBy>(
     'filters_by',
     {},
@@ -24,7 +24,6 @@ export default function Container() {
 
   const savesLastSearchResult = isPopup;
   const trimmedQuery = query.trim();
-  const hasQuery = trimmedQuery.length >= MIN_QUERY_LENGTH;
 
   // initialize
   useEffect(() => {
@@ -53,9 +52,11 @@ export default function Container() {
 
   // search
   useEffect(() => {
-    if (!hasQuery) return;
-
     (async () => {
+      // ad hoc: query == '' && sort == 'relevance' is worthless
+      if (trimmedQuery === '' && sortBy === SortBy.RELEVANCE)
+        sortBy = SortBy.CREATED;
+
       let result: SearchResult;
       try {
         result = await debouncedSearch({
@@ -79,7 +80,7 @@ export default function Container() {
           <SearchBox query={query} setQuery={setQuery} />
           <Filter filtersBy={filtersBy} setFiltersBy={setFiltersBy} />
           <Sort sortBy={sortBy} setSortBy={setSortBy} />
-          {searchResult && hasQuery && (
+          {searchResult && (
             <>
               <Items items={searchResult.items} opensNewTab={isPopup} />
               <Footer total={searchResult.total} />

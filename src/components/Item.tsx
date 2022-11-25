@@ -1,11 +1,8 @@
 import React from 'react';
 import reactStringReplace from 'react-string-replace';
-import { STRANGE_NOTION_TAG } from '../constants';
+import { MATCH_TAG } from '../constants';
 
-const regexp = new RegExp(
-  `<${STRANGE_NOTION_TAG}>(.+?)</${STRANGE_NOTION_TAG}>`,
-  'g',
-);
+const regexp = new RegExp(`<${MATCH_TAG}>(.+?)</${MATCH_TAG}>`, 'g');
 const addHighlight = (str: string) =>
   reactStringReplace(str, regexp, (match, i) => (
     <span key={i} className="highlight">
