@@ -12,7 +12,6 @@ export default function Filter({
     <div className="filters">
       <span
         onClick={() => {
-          console.log(filtersBy);
           setFiltersBy((prev) => {
             return {
               ...prev,

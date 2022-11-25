@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import useHashParam from 'use-hash-param';
+import { useHashParam, useObjectHashParam } from 'use-hash-param';
 import { SortBy, STORAGE_KEY } from '../constants';
-import { useObjectHashParam } from '../hooks';
 import { debouncedSearch } from '../search';
 import Filter from './Filters';
 import Footer from './Footer';
@@ -28,6 +27,8 @@ export default function Container() {
   const trimmedQuery = query.trim();
 
   // initialize
+  // TODO: useLayoutEffect 使えば renderable 不要説
+  // https://ja.reactjs.org/docs/hooks-reference.html#uselayouteffect
   useEffect(() => {
     // set style
     if (isPopup) {
@@ -73,7 +74,7 @@ export default function Container() {
         alert(error);
       }
     })();
-  }, [trimmedQuery, sortBy, JSON.stringify(filtersBy)]);
+  }, [trimmedQuery, sortBy, filtersBy]);
 
   return (
     <>

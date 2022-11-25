@@ -44,5 +44,6 @@
     "react-dom": "^18.2.0",
     "react-string-replace": "^1.1.0",
     "use-hash-param": "https://github.com/Cside/use-hash-param"
-  }
+  },
+  "license": "MIT"
 }

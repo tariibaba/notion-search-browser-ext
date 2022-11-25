@@ -4803,7 +4803,7 @@ url-parse@^1.5.3:
 
 "use-hash-param@https://github.com/Cside/use-hash-param":
   version "0.2.4"
-  resolved "https://github.com/Cside/use-hash-param#dccb2ecac793b49957b351187663692f2a77b5c7"
+  resolved "https://github.com/Cside/use-hash-param#46c07144c30cb6c90237e268c62e99de6dd8bce7"
 
 v8-to-istanbul@^9.0.1:
   version "9.0.1"
