@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "strict": true,
     "module": "ESNext",
     "target": "ESNext",
     "moduleResolution": "node",
@@ -8,7 +7,12 @@
     "jsx": "react",
     "rootDir": "src",
     "outDir": "public/js",
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
   },
   "exclude": ["src/**/*.spec.ts"]
 }

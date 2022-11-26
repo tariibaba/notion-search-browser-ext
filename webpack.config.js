@@ -4,7 +4,6 @@ const config = {
     background: './src/background.ts',
     popup: './src/popup.tsx',
     options: './src/options.ts',
-    'extract-space-id': './src/extractSpaceId.ts',
   },
   output: {
     path: `${__dirname}/public/js`,

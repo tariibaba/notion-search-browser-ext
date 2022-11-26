@@ -1,16 +1,16 @@
 import { debounce } from 'throttle-debounce';
+import { NOTION_HOST } from '../constants';
 import { axios } from '../utils/axios';
 
 import {
   FiltersBy,
   ICON_TYPE,
   MATCH_TAG,
-  NOTION_HOST,
   SortBy,
   STORAGE_KEY,
 } from './constants';
 
-const PATH = '/api/v3/search';
+const PATH = '/search';
 const SEARCH_LIMIT = 50;
 const DEBOUNCE_TIME = 150;
 const ICON_WIDTH = 40;
@@ -57,6 +57,8 @@ const search = async ({
   savesLastSearchResult: boolean;
   spaceId: string;
 }) => {
+  if (!spaceId) throw new Error('spaceId is empty');
+
   let sortOptions = {};
   switch (sortBy) {
     case SortBy.RELEVANCE:
@@ -172,7 +174,7 @@ const search = async ({
   };
 
   if (savesLastSearchResult) {
-    const data: StorageData = { query, searchResult };
+    const data: SearchResultCache = { query, searchResult };
     try {
       await chrome.storage.local.set({
         [STORAGE_KEY.LAST_SEARCHED]: data,

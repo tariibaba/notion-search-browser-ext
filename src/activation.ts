@@ -1,6 +1,7 @@
-import { axios } from '../utils/axios';
+import { STORAGE_KEY } from './constants';
+import { axios } from './utils/axios';
 
-const PATH = '/api/v3/getSpaces';
+const PATH = '/getSpaces';
 
 type GetSpacesResponse = {
   [userId: string]: {
@@ -12,8 +13,6 @@ type GetSpacesResponse = {
   };
 };
 
-type Space = { id: string; name: string };
-
 const answerToInt = (str: string) => {
   str = str
     .trim()
@@ -24,7 +23,9 @@ const answerToInt = (str: string) => {
   return isNaN(int) ? null : int;
 };
 
-export const getSpaceId = async () => {
+export const activate = async (): Promise<
+  { aborted: true } | { aborted: false; space: Space }
+> => {
   const spaces: Space[] = [];
   const res = (await axios.post<GetSpacesResponse>(PATH)).data;
   for (const { space: spacesObj } of Object.values(res)) {
@@ -35,11 +36,13 @@ export const getSpaceId = async () => {
       });
     }
   }
+  let index: number;
   switch (spaces.length) {
     case 0:
       throw new Error('No spaces are found');
     case 1:
-      return spaces[0].id;
+      index = 0;
+      break;
     default: {
       let num: number | undefined = undefined;
       while (!num || !spaces[num - 1]) {
@@ -48,13 +51,29 @@ export const getSpaceId = async () => {
             spaces.map((space, i) => `    ${i + 1}. ${space.name}`).join('\n'),
           '1',
         );
-        if (answer === null) return null;
+        if (answer === null) return { aborted: true };
 
         const int = answerToInt(answer);
         if (!int) continue;
         num = int;
       }
-      return spaces[num - 1].id;
+      index = num - 1;
     }
   }
+  const space = spaces[index];
+  try {
+    await chrome.storage.local.set({
+      [STORAGE_KEY.SPACE]: space,
+    });
+  } catch (error) {
+    throw new Error(`Failed to set data to storage.local. error: ${error}`);
+  }
+  return {
+    aborted: false,
+    space,
+  };
 };
+
+export const getSpaceFromCache = async (): Promise<Space | null> =>
+  (await chrome.storage.local.get(STORAGE_KEY.SPACE))[STORAGE_KEY.SPACE] ||
+  null;

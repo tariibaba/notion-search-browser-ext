@@ -12,7 +12,8 @@ export default function SearchBox({
     event.preventDefault();
   };
 
-  // input の value に state を指定すると変化が取り消されてしまうため、回避策
+  // input の value に state を指定すると onhashchange 時に変化が取り消されてしまう
+  // ため、回避策 (use-hash-param の問題)
   const inputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     if (inputRef.current) inputRef.current.value = query;

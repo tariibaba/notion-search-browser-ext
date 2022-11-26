@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { STORAGE_KEY } from '../constants';
-import { getSpaceId } from '../getSpaceId';
-import ActivatedContainer from './ActivatedContainer';
+import { activate, getSpaceFromCache } from '../../activation';
+import SearchContainer from './SearchContainer';
 
 const ACTIVATION_STATUS = {
   NOT_ACTIVATED: 'NOT_CHECKED',
@@ -22,20 +21,24 @@ export default function Container() {
 
   const isPopup = location.search === '?popup';
 
-  const activate = async () => {
-    const id =
-      (await chrome.storage.sync.get(STORAGE_KEY.SPACE_ID))[
-        STORAGE_KEY.SPACE_ID
-      ] || (await getSpaceId());
-    if (id) {
-      setSpaceId(id);
+  const activateAndSetStatus = async () => {
+    const result = await activate();
+    if (result.aborted) {
+      setActivationStatus(ACTIVATION_STATUS.ABORTED);
       return;
     }
-    setActivationStatus(ACTIVATION_STATUS.ABORTED);
+    setSpaceId(result.space.id);
   };
 
   useEffect(() => {
-    activate();
+    (async () => {
+      const space = await getSpaceFromCache();
+      if (space) {
+        setSpaceId(space.id);
+        return;
+      }
+      activateAndSetStatus();
+    })();
   }, []);
 
   switch (activationStatus) {
@@ -47,7 +50,7 @@ export default function Container() {
           <a href="#">
             <p
               onClick={(event) => {
-                activate();
+                activateAndSetStatus();
                 event.preventDefault();
               }}
             >
@@ -57,6 +60,6 @@ export default function Container() {
         </main>
       );
     case ACTIVATION_STATUS.ACTIVATED:
-      return <ActivatedContainer isPopup={isPopup} spaceId={spaceId} />;
+      return <SearchContainer isPopup={isPopup} spaceId={spaceId} />;
   }
 }

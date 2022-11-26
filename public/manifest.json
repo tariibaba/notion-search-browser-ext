@@ -14,7 +14,7 @@
     "service_worker": "./js/background.js"
   },
   "permissions": ["storage", "commands"],
-  "host_permissions": ["https://www.notion.so/api/v3/search"],
+  "host_permissions": ["https://www.notion.so/api/v3/*"],
   "commands": {
     "open-search-page": {
       "suggested_key": {
