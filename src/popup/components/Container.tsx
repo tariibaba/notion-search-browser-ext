@@ -1,88 +1,62 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { useHashParam, useObjectHashParam } from 'use-hash-param';
-import { SortBy, STORAGE_KEY } from '../constants';
-import { debouncedSearch } from '../search';
-import Filter from './Filters';
-import Footer from './Footer';
-import Items from './Items';
-import SearchBox from './SearchBox';
-import Sort from './Sorts';
+import React, { useEffect, useState } from 'react';
+import { STORAGE_KEY } from '../constants';
+import { getSpaceId } from '../getSpaceId';
+import ActivatedContainer from './ActivatedContainer';
+
+const ACTIVATION_STATUS = {
+  NOT_ACTIVATED: 'NOT_CHECKED',
+  ABORTED: 'ABORTED',
+  ACTIVATED: 'ACTIVATED',
+} as const;
 
 export default function Container() {
+  const [spaceId, _setSpaceId] = useState<string>('');
+  const [activationStatus, setActivationStatus] = useState<
+    valueOf<typeof ACTIVATION_STATUS>
+  >(ACTIVATION_STATUS.NOT_ACTIVATED);
+
+  const setSpaceId = (spaceId: string) => {
+    _setSpaceId(spaceId);
+    setActivationStatus(ACTIVATION_STATUS.ACTIVATED);
+  };
+
   const isPopup = location.search === '?popup';
 
-  const [query, setQuery] = useHashParam('query', '');
-  const SortStateAndSetter = useHashParam('sort_by', SortBy.RELEVANCE);
-  let [sortBy] = SortStateAndSetter;
-  const [, setSortBy] = SortStateAndSetter;
-  const [filtersBy, setFiltersBy] = useObjectHashParam<FiltersBy>(
-    'filters_by',
-    {},
-  );
-
-  const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
-
-  const savesLastSearchResult = isPopup;
-  const trimmedQuery = query.trim();
-
-  // initialize
-  useLayoutEffect(() => {
-    // set style
-    if (isPopup) {
-      // css ファイルを append した方が見通しは良くなるが、同期的なスタイル適用が出来ない
-      document.body.style.width = '662px';
-      document.body.style.margin = '0px';
-    } else {
-      document.body.style.margin = '40px 0 0 0';
+  const activate = async () => {
+    const id =
+      (await chrome.storage.sync.get(STORAGE_KEY.SPACE_ID))[
+        STORAGE_KEY.SPACE_ID
+      ] || (await getSpaceId());
+    if (id) {
+      setSpaceId(id);
+      return;
     }
-    // get cache
-    (async () => {
-      if (savesLastSearchResult) {
-        const store: StorageData | undefined = (
-          await chrome.storage.local.get(STORAGE_KEY)
-        )[STORAGE_KEY];
-        if (store) {
-          setQuery(store.query);
-          setSearchResult(store.searchResult);
-        }
-      }
-    })();
+    setActivationStatus(ACTIVATION_STATUS.ABORTED);
+  };
+
+  useEffect(() => {
+    activate();
   }, []);
 
-  // search
-  useEffect(() => {
-    (async () => {
-      // ad hoc: query == '' && sort == 'relevance' is worthless
-      if (trimmedQuery === '' && sortBy === SortBy.RELEVANCE)
-        sortBy = SortBy.CREATED;
-
-      let result: SearchResult;
-      try {
-        result = await debouncedSearch({
-          query: trimmedQuery,
-          sortBy,
-          filtersBy,
-          savesLastSearchResult,
-        });
-        setSearchResult(result);
-      } catch (error) {
-        console.error(error);
-        alert(error);
-      }
-    })();
-  }, [trimmedQuery, sortBy, filtersBy]);
-
-  return (
-    <main {...(isPopup && { className: 'is-popup' })}>
-      <SearchBox query={query} setQuery={setQuery} />
-      <Filter filtersBy={filtersBy} setFiltersBy={setFiltersBy} />
-      <Sort sortBy={sortBy} setSortBy={setSortBy} />
-      {searchResult && (
-        <>
-          <Items items={searchResult.items} opensNewTab={isPopup} />
-          <Footer total={searchResult.total} />
-        </>
-      )}
-    </main>
-  );
+  switch (activationStatus) {
+    case ACTIVATION_STATUS.NOT_ACTIVATED:
+      return null;
+    case ACTIVATION_STATUS.ABORTED:
+      return (
+        <main>
+          <a href="#">
+            <p
+              onClick={(event) => {
+                activate();
+                event.preventDefault();
+              }}
+            >
+              Activate
+            </p>
+          </a>
+        </main>
+      );
+    case ACTIVATION_STATUS.ACTIVATED:
+      return <ActivatedContainer isPopup={isPopup} spaceId={spaceId} />;
+  }
 }

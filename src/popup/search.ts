@@ -1,43 +1,62 @@
-import axios from 'axios';
-import { setupCache } from 'axios-cache-adapter';
 import { debounce } from 'throttle-debounce';
+import { axios } from '../utils/axios';
 
 import {
   FiltersBy,
   ICON_TYPE,
   MATCH_TAG,
+  NOTION_HOST,
   SortBy,
   STORAGE_KEY,
 } from './constants';
 
-const TIMEOUT = 5_000;
-const NOTION_HOST = 'https://www.notion.so';
-const NOTION_SEARCH_URL = `${NOTION_HOST}/api/v3/search`;
+const PATH = '/api/v3/search';
 const SEARCH_LIMIT = 50;
 const DEBOUNCE_TIME = 150;
-const CACHE_TIME = 15 * 60 * 1_000;
+const ICON_WIDTH = 40;
 
-const AxiosInstance = axios.create({
-  adapter: setupCache({
-    maxAge: CACHE_TIME,
-    exclude: { methods: [] },
-  }).adapter,
-});
-
-export const debouncedSearch = debounce(search, DEBOUNCE_TIME);
+type Res = {
+  results: {
+    id: string;
+    highlight?: {
+      text: string;
+      title?: string;
+    };
+    highlightBlockId?: string;
+    analytics?: object;
+  }[];
+  recordMap: {
+    block: {
+      [id: string]: {
+        value: {
+          properties: {
+            title: string[][];
+          };
+          parent_id?: string;
+          format?: {
+            page_icon?: string;
+          };
+        };
+      };
+    };
+  };
+  total: number;
+};
 
 // TODO: 結合テストくらいは書きたい気がする。。
-async function search({
+const search = async ({
   query,
   sortBy,
   filtersBy,
   savesLastSearchResult,
+  spaceId,
 }: {
   query: string;
   sortBy: string;
   filtersBy: FiltersBy;
   savesLastSearchResult: boolean;
-}) {
+  spaceId: string;
+}) => {
   let sortOptions = {};
   switch (sortBy) {
     case SortBy.RELEVANCE:
@@ -63,43 +82,28 @@ async function search({
     }
   }
 
-  let res: ApiResponse;
-  try {
-    res = (
-      await AxiosInstance.post<ApiResponse>(
-        NOTION_SEARCH_URL,
-        {
-          type: 'BlocksInSpace',
-          query,
-          spaceId: idToUuid('81149e3a3d874d25b7082226dd72bfdd'),
-          limit: SEARCH_LIMIT,
-          filters: {
-            isDeletedOnly: false,
-            excludeTemplates: false,
-            isNavigableOnly: false,
-            requireEditPermissions: false,
-            ancestors: [],
-            createdBy: [],
-            editedBy: [],
-            lastEditedTime: {},
-            createdTime: {},
-            ...filterOptions,
-          },
-          sort: sortOptions,
-          source: 'quick_find_input_change',
-        },
-        { timeout: TIMEOUT },
-      )
-    ).data;
-  } catch (error) {
-    console.trace(error);
-    throw new Error(
-      `HTTP Request error. ` +
-        (error instanceof Error && error.name === 'AxiosError'
-          ? error.message
-          : error),
-    );
-  }
+  const res = (
+    await axios.post<Res>(PATH, {
+      type: 'BlocksInSpace',
+      query,
+      spaceId,
+      limit: SEARCH_LIMIT,
+      filters: {
+        isDeletedOnly: false,
+        excludeTemplates: false,
+        isNavigableOnly: false,
+        requireEditPermissions: false,
+        ancestors: [],
+        createdBy: [],
+        editedBy: [],
+        lastEditedTime: {},
+        createdTime: {},
+        ...filterOptions,
+      },
+      sort: sortOptions,
+      source: 'quick_find_input_change',
+    })
+  ).data;
 
   const searchResult: SearchResult = {
     items: res.results.map((data) => {
@@ -134,9 +138,9 @@ async function search({
               type: ICON_TYPE.IMAGE,
               value:
                 `${NOTION_HOST}/image/${encodeURIComponent(pageIcon)}` +
-                `?table=block` +
+                '?table=block' +
                 `&id=${id}` +
-                `&width=20`,
+                `&width=${ICON_WIDTH}`,
             }
           : {
               type: ICON_TYPE.EMOJI,
@@ -171,7 +175,7 @@ async function search({
     const data: StorageData = { query, searchResult };
     try {
       await chrome.storage.local.set({
-        [STORAGE_KEY]: data,
+        [STORAGE_KEY.LAST_SEARCHED]: data,
       });
     } catch (error) {
       throw new Error(`Failed to set data to storage.local. error: ${error}`);
@@ -179,15 +183,6 @@ async function search({
   }
 
   return searchResult;
-}
+};
 
-// ========================================
-// Utils
-// ========================================
-
-function idToUuid(path: string) {
-  return `${path.substring(0, 8)}-${path.substring(8, 12)}-${path.substring(
-    12,
-    16,
-  )}-${path.substring(16, 20)}-${path.substring(20)}`;
-}
+export const debouncedSearch = debounce(search, DEBOUNCE_TIME);

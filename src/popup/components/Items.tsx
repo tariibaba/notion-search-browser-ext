@@ -6,13 +6,17 @@ export default function Items({
   items,
 }: {
   opensNewTab: boolean;
-  items: Items;
+  items: Item[];
 }) {
-  return items.length >= 0 ? (
-    <div className="items">
-      {items.map((item) => (
-        <Item key={item.url} opensNewTab={opensNewTab} {...item}></Item>
-      ))}
-    </div>
-  ) : null;
+  return (
+    <>
+      {items.length >= 0 && (
+        <div className="items">
+          {items.map((item) => (
+            <Item key={item.url} opensNewTab={opensNewTab} {...item}></Item>
+          ))}
+        </div>
+      )}
+    </>
+  );
 }
