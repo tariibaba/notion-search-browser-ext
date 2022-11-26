@@ -11,3 +11,8 @@ export const SortBy = {
   LASTEDITED: 'lastEdited',
   CREATED: 'created',
 } as const;
+
+export const ICON_TYPE = {
+  IMAGE: 'IMAGE',
+  EMOJI: 'EMOJI',
+} as const;

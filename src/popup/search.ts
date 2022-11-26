@@ -2,7 +2,13 @@ import axios from 'axios';
 import { setupCache } from 'axios-cache-adapter';
 import { debounce } from 'throttle-debounce';
 
-import { FiltersBy, MATCH_TAG, SortBy, STORAGE_KEY } from './constants';
+import {
+  FiltersBy,
+  ICON_TYPE,
+  MATCH_TAG,
+  SortBy,
+  STORAGE_KEY,
+} from './constants';
 
 const TIMEOUT = 5_000;
 const NOTION_HOST = 'https://www.notion.so';
@@ -97,8 +103,9 @@ async function search({
 
   const searchResult: SearchResult = {
     items: res.results.map((data) => {
+      const id = data.id;
       const recordMap = res.recordMap;
-      const record = recordMap.block[data.id].value;
+      const record = recordMap.block[id].value;
       const result: Item = { title: '', url: '' };
       const regexpRemovesTag = new RegExp(`</?${MATCH_TAG}>`, 'ig');
       const regexpAddsTag = new RegExp(
@@ -121,9 +128,23 @@ async function search({
       }
 
       const pageIcon = record.format?.page_icon;
-      if (pageIcon) result.pageIcon = pageIcon;
+      if (pageIcon) {
+        result.pageIcon = pageIcon.startsWith('http')
+          ? {
+              type: ICON_TYPE.IMAGE,
+              value:
+                `${NOTION_HOST}/image/${encodeURIComponent(pageIcon)}` +
+                `?table=block` +
+                `&id=${id}` +
+                `&width=20`,
+            }
+          : {
+              type: ICON_TYPE.EMOJI,
+              value: pageIcon,
+            };
+      }
 
-      result.url = `${NOTION_HOST}/${data.id.replaceAll('-', '')}`;
+      result.url = `${NOTION_HOST}/${id.replaceAll('-', '')}`;
       result.title = data.highlight?.title
         ? data.highlight.title
         : record.properties.title.map((array) => array[0]).join('');

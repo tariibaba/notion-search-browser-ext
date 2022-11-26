@@ -97,13 +97,14 @@ svg {
   Items
 ---------------------------------------- */
 
-.icon-page {
+.page-icon-container svg,
+.page-icon-container img {
   width: 18px;
   height: 18px;
 }
 .page-icon-container {
   margin: 9px 8px 0 15px;
-  font-size: var(--font-size-very-large);
+  font-size: var(--font-size-large);
 }
 .items {
   overflow-y: auto;

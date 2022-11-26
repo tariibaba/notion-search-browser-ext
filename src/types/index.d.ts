@@ -3,7 +3,10 @@ type valueOf<T> = T[keyof T]; // util
 type ApiResponse = {
   results: {
     id: string;
-    highlight?: { text: string; title?: string };
+    highlight?: {
+      text: string;
+      title?: string;
+    };
     highlightBlockId?: string;
     analytics?: object;
   }[];
@@ -11,9 +14,13 @@ type ApiResponse = {
     block: {
       [id: string]: {
         value: {
-          properties: { title: string[][] };
+          properties: {
+            title: string[][];
+          };
           parent_id?: string;
-          format?: { page_icon?: string };
+          format?: {
+            page_icon?: string;
+          };
         };
       };
     };
@@ -21,11 +28,16 @@ type ApiResponse = {
   total: number;
 };
 
+type IconType = valueOf<typeof import('../popup/constants').ICON_TYPE>;
+
 type Item = {
   title: string;
   url: string;
   text?: string;
-  pageIcon?: string;
+  pageIcon?: {
+    type: IconType;
+    value: string;
+  };
   parentsPath?: string;
 };
 
@@ -42,5 +54,5 @@ type StorageData = {
 };
 
 type FiltersBy = {
-  [key in valueOf<typeof import('../constants').FiltersBy>]?: boolean;
+  [key in valueOf<typeof import('../popup/constants').FiltersBy>]?: boolean;
 };
