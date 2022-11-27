@@ -64,7 +64,7 @@ const search = async ({
     case SortBy.RELEVANCE:
       sortOptions = { field: 'relevance' };
       break;
-    case SortBy.LASTEDITED:
+    case SortBy.LAST_EDITED:
       sortOptions = { field: 'lastEdited', direction: 'desc' };
       break;
     case SortBy.CREATED:
@@ -180,7 +180,7 @@ const search = async ({
         [STORAGE_KEY.LAST_SEARCHED]: data,
       });
     } catch (error) {
-      throw new Error(`Failed to set data to storage.local. error: ${error}`);
+      throw new Error(`chrome.storage.local.set() failed. error: ${error}`);
     }
   }
 

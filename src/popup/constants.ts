@@ -7,7 +7,7 @@ export const FiltersBy = {
 
 export const SortBy = {
   RELEVANCE: 'RELEVANCE',
-  LASTEDITED: 'LAST_EDITED',
+  LAST_EDITED: 'LAST_EDITED',
   CREATED: 'CREATED',
 } as const;
 

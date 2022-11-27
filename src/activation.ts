@@ -13,14 +13,13 @@ type GetSpacesResponse = {
   };
 };
 
-const answerToInt = (str: string) => {
+export const answerToIndex = (str: string) => {
   str = str
     .trim()
     .replace(/[０-９]/g, (str) =>
       String.fromCharCode(str.charCodeAt(0) - 65248),
     );
-  const int = parseInt(str);
-  return isNaN(int) ? null : int;
+  return parseInt(str);
 };
 
 export const activate = async (): Promise<
@@ -36,16 +35,15 @@ export const activate = async (): Promise<
       });
     }
   }
-  let index: number;
+  let space: Space | undefined = undefined;
   switch (spaces.length) {
     case 0:
       throw new Error('No spaces are found');
     case 1:
-      index = 0;
+      space = spaces[0];
       break;
     default: {
-      let num: number | undefined = undefined;
-      while (!num || !spaces[num - 1]) {
+      while (!space) {
         const answer = prompt(
           'Select your Notion space by number:\n' +
             spaces.map((space, i) => `    ${i + 1}. ${space.name}`).join('\n'),
@@ -53,20 +51,16 @@ export const activate = async (): Promise<
         );
         if (answer === null) return { aborted: true };
 
-        const int = answerToInt(answer);
-        if (!int) continue;
-        num = int;
+        space = spaces[answerToIndex(answer) - 1];
       }
-      index = num - 1;
     }
   }
-  const space = spaces[index];
   try {
     await chrome.storage.local.set({
       [STORAGE_KEY.SPACE]: space,
     });
   } catch (error) {
-    throw new Error(`Failed to set data to storage.local. error: ${error}`);
+    throw new Error(`chrome.storage.local.set() failed. error: ${error}`);
   }
   return {
     aborted: false,
@@ -74,6 +68,13 @@ export const activate = async (): Promise<
   };
 };
 
-export const getSpaceFromCache = async (): Promise<Space | null> =>
-  (await chrome.storage.local.get(STORAGE_KEY.SPACE))[STORAGE_KEY.SPACE] ||
-  null;
+export const deactivate = async () => {
+  try {
+    await chrome.storage.local.remove(STORAGE_KEY.SPACE);
+  } catch (error) {
+    throw new Error(`chrome.storage.local.set() failed. error: ${error}`);
+  }
+};
+
+export const getSpaceFromCache = async (): Promise<Space | undefined> =>
+  (await chrome.storage.local.get(STORAGE_KEY.SPACE))[STORAGE_KEY.SPACE];

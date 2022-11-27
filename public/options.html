@@ -2,7 +2,74 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <script src="./js/options.js" defer></script>
+    <link rel="stylesheet" href="./css/options.css" />
   </head>
-  <body></body>
+  <body>
+    <h1>Activation Status</h1>
+    <div class="activated-block hide">
+      <p class="status">✅ Activated</p>
+      <p>Your Notion Space: <span class="space-name highlight"></span></p>
+      <p><button class="deactivate">Logout</button></p>
+    </div>
+    <div class="not-activated-block hide">
+      <p class="status">❌ Not activated</p>
+      <p><button class="activate">Activate</button></p>
+    </div>
+
+    <h1>Keyboard Shortcuts</h1>
+    <p>
+      The shortcut key to open the popup is set to
+      <span class="highlight">Ctrl+Shift+N</span> by default.
+    </p>
+    <p>The current shortcut key: <span class="current-key highlight"></span></p>
+    <p><a href="#" class="customize-key">Customize shortcut key</a></p>
+
+    <hr />
+
+    <p>About Notion Search</p>
+    <ul>
+      <li>
+        <a href="https://github.com/Cside/notion-search/issues" target="_blank"
+          >Bug Report</a
+        >
+      </li>
+      <li>
+        <a href="https://github.com/Cside/notion-search/" target="_blank"
+          >Source Code</a
+        >
+      </li>
+      <li>
+        <a href="mailto:cside.story@gmail.com" target="_blank">Contact</a>
+      </li>
+    </ul>
+
+    <style type="text/css">
+      body {
+        font-size: 16px;
+      }
+      h1 {
+        font-size: 20px;
+      }
+      .hide {
+        display: none;
+      }
+      .highlight {
+        color: blue;
+        font-weight: bold;
+      }
+      .activated-block .status {
+        color: #00c600;
+        font-weight: bold;
+      }
+      .not-activated-block .status {
+        color: red;
+        font-weight: bold;
+      }
+
+      .key {
+      }
+    </style>
+    <script src="./js/vendor.js"></script>
+    <script src="./js/options.js"></script>
+  </body>
 </html>
