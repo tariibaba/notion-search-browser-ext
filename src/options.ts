@@ -34,10 +34,6 @@ $('.deactivate').addEventListener('click', async () => {
 // ========================================
 // Keyboard Shortcut
 // ========================================
-// TODO: 国際化
-$('.current-key').textContent =
-  (await chrome.commands.getAll())[0].shortcut || 'No shortcut keys are set';
-
 $('.customize-key').addEventListener('click', async (event) => {
   chrome.tabs.create({ url: 'chrome://extensions/shortcuts' });
   event.preventDefault();

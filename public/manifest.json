@@ -16,12 +16,15 @@
   "permissions": ["storage", "commands"],
   "host_permissions": ["https://www.notion.so/*"],
   "commands": {
-    "open-search-page": {
+    "_execute_action": {
       "suggested_key": {
         "default": "Ctrl+Shift+N",
         "mac": "MacCtrl+Shift+N"
       },
-      "description": "Open the search page"
+      "description": "Open the popup"
+    },
+    "open-search-page": {
+      "description": "Open the search page in new a tab"
     }
   }
 }
