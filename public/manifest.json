@@ -8,13 +8,13 @@
   },
   "action": {
     "default_icon": "./img/icon.png",
-    "default_popup": "./search.html?popup"
+    "default_popup": "./popup.html?popup"
   },
   "background": {
     "service_worker": "./js/background.js"
   },
   "permissions": ["storage", "commands"],
-  "host_permissions": ["https://www.notion.so/api/v3/*"],
+  "host_permissions": ["https://www.notion.so/*"],
   "commands": {
     "open-search-page": {
       "suggested_key": {
