@@ -1,10 +1,11 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { setupCache } from 'axios-cache-adapter';
 import { NOTION_HOST } from '../constants';
 
 const API_BASE_URL = `${NOTION_HOST}/api/v3`;
 const CACHE_TIME = 15 * 60 * 1_000;
-const TIMEOUT = 5_000;
+const TIMEOUT = 10_000;
+const STATUS_CODE_UNAUTHORIZED = 401;
 
 const AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -18,14 +19,24 @@ const AxiosInstance = axios.create({
 AxiosInstance.interceptors.response.use(
   (res) => res,
   (error) => {
-    error = new Error(
-      `HTTP Request error. ` +
-        (error instanceof Error && error.name === 'AxiosError'
-          ? error.message
-          : error),
-    );
-    console.trace(error);
-    return Promise.reject(error);
+    let message = 'HTTP Request error. ';
+    if (error instanceof AxiosError) {
+      if (error.response?.status === STATUS_CODE_UNAUTHORIZED) {
+        // TODO: 国際化
+        message = 'Must be logged in to Notion';
+      } else {
+        message += error.response?.data?.message || error.message;
+      }
+    } else if (error instanceof Error) {
+      message += error.message;
+    } else {
+      message += error;
+    }
+    alert(message);
+
+    const e = new Error(message);
+    console.trace(e);
+    return Promise.reject(e);
   },
 );
 

@@ -23,7 +23,9 @@ export default function Container({
     'filters_by',
     {},
   );
-  const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
+  const [searchResult, setSearchResult] = useState<SearchResult | undefined>(
+    undefined,
+  );
 
   const savesLastSearchResult = isPopup;
   const trimmedQuery = query.trim();
@@ -59,20 +61,15 @@ export default function Container({
       if (trimmedQuery === '' && sortBy === SortBy.RELEVANCE)
         sortBy = SortBy.CREATED;
 
-      let result: SearchResult;
-      try {
-        result = await debouncedSearch({
+      setSearchResult(
+        await debouncedSearch({
           query: trimmedQuery,
           sortBy,
           filtersBy,
           savesLastSearchResult,
           spaceId,
-        });
-        setSearchResult(result);
-      } catch (error) {
-        console.error(error);
-        alert(error);
-      }
+        }),
+      );
     })();
   }, [trimmedQuery, sortBy, filtersBy]);
 
