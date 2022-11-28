@@ -14,5 +14,10 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true
   },
-  "exclude": ["src/**/*.spec.ts"]
+  "include": ["src"],
+  "exclude": [
+    "./src/**/__tests__/**/*.ts",
+    "./src/**/*.spec.ts",
+    "./src/**/*.test.ts"
+  ]
 }

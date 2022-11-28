@@ -1,4 +1,7 @@
-const config = {
+const merge = require('lodash.merge');
+const TerserPlugin = require('terser-webpack-plugin');
+
+let config = {
   mode: process.env.NODE_ENV || 'development',
   entry: {
     background: './src/background.ts',
@@ -42,9 +45,7 @@ const config = {
   optimization: {
     splitChunks: {
       name: 'vendor',
-      chunks(chunk) {
-        return chunk.name !== 'background';
-      },
+      chunks: (chunk) => chunk.name !== 'background',
     },
   },
   watchOptions: {
@@ -54,7 +55,21 @@ const config = {
 };
 
 if (config.mode === 'development') {
-  config.devtool = 'inline-source-map';
+  config = merge(config, {
+    devtool: 'inline-source-map',
+  });
+} else {
+  config = merge(config, {
+    plugins: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            pure_funcs: ['console.log', 'console.info'],
+          },
+        },
+      }),
+    ],
+  });
 }
 
 module.exports = config;

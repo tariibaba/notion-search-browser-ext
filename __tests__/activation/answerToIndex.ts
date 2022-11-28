@@ -1,4 +1,4 @@
-import { answerToIndex } from '../../activation';
+import { answerToIndex } from '../../src/activation';
 
 it.each([
   ['1', 1],
