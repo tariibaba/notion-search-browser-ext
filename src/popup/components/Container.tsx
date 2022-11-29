@@ -47,7 +47,7 @@ export default function Container() {
       return null;
     case ACTIVATION_STATUS.ABORTED:
       return (
-        <main>
+        <main style={{ width: '400px', height: '300px', padding: '20px' }}>
           <button
             onClick={(event) => {
               activateAndSetStatus();

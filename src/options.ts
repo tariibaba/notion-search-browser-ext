@@ -20,14 +20,6 @@ HTMLElement.prototype.hide = function () {
 const activationStatus = await getActivationStatus();
 const activatedBlock = $('.activated-block');
 const notActivatedBlock = $('.not-activated-block');
-const errorBlock = $('.error');
-
-// chrome://extensions の iframe で描画される際は alert が表示されないため、苦肉の回避策
-const showError = (error: unknown) => {
-  errorBlock.show();
-  $('.error-message').textContent =
-    error instanceof Error ? error.message : error + '';
-};
 
 let space: Space;
 
@@ -40,14 +32,7 @@ if (activationStatus.hasActivated) {
 }
 
 $('.activate').addEventListener('click', async () => {
-  let result: { aborted: true } | { aborted: false; space: Space };
-  try {
-    result = await activate();
-    errorBlock.hide();
-  } catch (error) {
-    showError(error);
-    return;
-  }
+  const result = await activate();
   if (result.aborted) return;
   const space = result.space;
   $('.space-name').textContent = space.name;

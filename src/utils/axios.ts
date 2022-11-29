@@ -21,11 +21,15 @@ AxiosInstance.interceptors.response.use(
   (error) => {
     let message = 'HTTP Request error. ';
     if (error instanceof AxiosError) {
+      message += error.response?.data?.message || error.message;
       if (error.response?.status === STATUS_CODE_UNAUTHORIZED) {
         // TODO: 国際化
-        message = 'You must be logged in to Notion';
-      } else {
-        message += error.response?.data?.message || error.message;
+        if (confirm('You must log in to Notion.\nGo to Notion and log in?')) {
+          window.open(`${NOTION_HOST}/login`);
+        }
+        const e = new Error(message);
+        console.trace(e);
+        return Promise.reject(e);
       }
     } else if (error instanceof Error) {
       message += error.message;
