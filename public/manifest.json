@@ -3,10 +3,7 @@
   "name": "Notion Search",
   "description": "Notion search inside the popup",
   "version": "1.0",
-  "options_ui": {
-    "page": "./options.html",
-    "open_in_tab": false
-  },
+  "options_page": "./options.html",
   "action": {
     "default_icon": "./images/icon38.png",
     "default_popup": "./popup.html?popup"

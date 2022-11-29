@@ -6,7 +6,8 @@
     "eslint:fix": "eslint --fix 'src/**/*.{ts,tsx}'",
     "prettier": "prettier --write . '!dist/**/*'",
     "lint": "yarn run eslint:fix && yarn run prettier",
-    "lint:css": "stylelint ./public/**/*.css"
+    "lint:css": "stylelint ./public/**/*.css",
+    "release": "rm out.zip; yarn run build; zip -r out.zip public"
   },
   "devDependencies": {
     "@babel/core": "^7.19.6",
