@@ -110,10 +110,13 @@ svg {
 }
 .items {
   overflow-y: auto;
+  overflow-x: hidden;
   max-height: calc(100vh - 215px);
 }
 .is-popup .items {
-  max-height: 470px;
+  /* TODO: これ、他の要素の高さを変えたら追従して変える必要があるので、
+     うまく変数化できないかなあ。 */
+  max-height: 453px;
 }
 .items::-webkit-scrollbar {
   width: 6px;
