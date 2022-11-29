@@ -5,7 +5,8 @@
     "eslint": "eslint 'src/**/*.{ts,tsx}'",
     "eslint:fix": "eslint --fix 'src/**/*.{ts,tsx}'",
     "prettier": "prettier --write . '!dist/**/*'",
-    "lint": "yarn run eslint:fix && yarn run prettier"
+    "lint": "yarn run eslint:fix && yarn run prettier",
+    "lint:css": "stylelint ./public/**/*.css"
   },
   "devDependencies": {
     "@babel/core": "^7.19.6",
@@ -16,8 +17,8 @@
     "@types/lodash.debounce": "^4.0.7",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
-    "@typescript-eslint/eslint-plugin": "^5.44.0",
-    "@typescript-eslint/parser": "^5.44.0",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
     "babel-loader": "^9.0.0",
     "core-js": "3",
     "eslint": "^8.28.0",
@@ -30,7 +31,10 @@
     "jsdom": "^20.0.3",
     "lodash.debounce": "^4.0.8",
     "lodash.merge": "^4.6.2",
-    "prettier": "^2.7.1",
+    "prettier": "^2.8.0",
+    "stylelint": "^14.15.0",
+    "stylelint-config-recommended": "^9.0.0",
+    "stylelint-value-no-unknown-custom-properties": "^4.0.0",
     "throttle-debounce": "https://github.com/Cside/throttle-debounce",
     "ts-jest": "^29.0.3",
     "ts-loader": "^9.4.1",

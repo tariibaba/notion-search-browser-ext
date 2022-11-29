@@ -85,7 +85,6 @@ svg {
   padding: 3px 10px;
 }
 .sort {
-  padding: 10px;
   color: inherit;
   outline: none;
   font-size: var(--font-size-small);
