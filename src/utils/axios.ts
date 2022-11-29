@@ -23,7 +23,7 @@ AxiosInstance.interceptors.response.use(
     if (error instanceof AxiosError) {
       if (error.response?.status === STATUS_CODE_UNAUTHORIZED) {
         // TODO: 国際化
-        message = 'Must be logged in to Notion';
+        message = 'You must be logged in to Notion';
       } else {
         message += error.response?.data?.message || error.message;
       }

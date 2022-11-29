@@ -76,5 +76,11 @@ export const deactivate = async () => {
   }
 };
 
-export const getSpaceFromCache = async (): Promise<Space | undefined> =>
-  (await chrome.storage.local.get(STORAGE_KEY.SPACE))[STORAGE_KEY.SPACE];
+export const getActivationStatus = async (): Promise<
+  { hasActivated: false } | { hasActivated: true; space: Space }
+> => {
+  const space = (await chrome.storage.local.get(STORAGE_KEY.SPACE))[
+    STORAGE_KEY.SPACE
+  ];
+  return space ? { hasActivated: true, space } : { hasActivated: false };
+};

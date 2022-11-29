@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { activate, getSpaceFromCache } from '../../activation';
+import { activate, getActivationStatus } from '../../activation';
 import SearchContainer from './SearchContainer';
 
 const ACTIVATION_STATUS = {
@@ -32,11 +32,12 @@ export default function Container() {
 
   useEffect(() => {
     (async () => {
-      const space = await getSpaceFromCache();
-      if (space) {
-        setSpaceId(space.id);
+      const activationStatus = await getActivationStatus();
+      if (activationStatus.hasActivated) {
+        setSpaceId(activationStatus.space.id);
         return;
       }
+      console.log('activate automatically');
       activateAndSetStatus();
     })();
   }, []);
@@ -47,16 +48,14 @@ export default function Container() {
     case ACTIVATION_STATUS.ABORTED:
       return (
         <main>
-          <a href="#">
-            <p
-              onClick={(event) => {
-                activateAndSetStatus();
-                event.preventDefault();
-              }}
-            >
-              Activate
-            </p>
-          </a>
+          <button
+            onClick={(event) => {
+              activateAndSetStatus();
+              event.preventDefault();
+            }}
+          >
+            Click here to connect Notion
+          </button>
         </main>
       );
     case ACTIVATION_STATUS.ACTIVATED:

@@ -5,15 +5,19 @@
     <link rel="stylesheet" href="./css/options.css" />
   </head>
   <body>
-    <h1>Activation Status</h1>
+    <div class="error hide">
+      <h1>Error</h1>
+      <p class="error-message"></p>
+    </div>
+    <h1>Connection Status</h1>
     <div class="activated-block hide">
-      <p class="status">✅ Activated</p>
+      <p class="status">✅ Connected to Notion</p>
       <p>Your Notion Space: <span class="space-name highlight"></span></p>
-      <p><button class="deactivate">Logout</button></p>
+      <p><button class="deactivate">Disconnect from Notion</button></p>
     </div>
     <div class="not-activated-block hide">
-      <p class="status">❌ Not activated</p>
-      <p><button class="activate">Activate</button></p>
+      <p class="status">❌ Not Connected to Notion</p>
+      <p><button class="activate">Connect to Notion</button></p>
     </div>
 
     <h1>Keyboard Shortcuts</h1>
@@ -70,6 +74,15 @@
       .not-activated-block .status {
         color: red;
         font-weight: bold;
+      }
+      .error {
+        border: 1px solid red;
+        color: red;
+        background-color: #fdeff2;
+        padding: 0 10px;
+      }
+      .error h1 {
+        font-size: 20px;
       }
     </style>
     <script src="./js/vendor.js"></script>

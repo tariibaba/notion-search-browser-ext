@@ -4,7 +4,8 @@
   "description": "Notion search inside the popup",
   "version": "1.0",
   "options_ui": {
-    "page": "./options.html"
+    "page": "./options.html",
+    "open_in_tab": false
   },
   "action": {
     "default_icon": "./images/icon38.png",

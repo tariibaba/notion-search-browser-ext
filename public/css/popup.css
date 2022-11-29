@@ -1,6 +1,9 @@
 body {
   background-color: #6d6d6d;
 }
+/* TODO: main は actiovation container と共通のものだけを残し
+Search Container 特有のものは別 Div に切り出す
+*/
 main {
   --text-color: #595857;
   --text-color-light: #949495;
