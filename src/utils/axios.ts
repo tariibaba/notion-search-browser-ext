@@ -21,7 +21,9 @@ AxiosInstance.interceptors.response.use(
   (error) => {
     let message = 'HTTP Request error. ';
     if (error instanceof AxiosError) {
-      message += error.response?.data?.message || error.message;
+      message += toUpperCaseFirst(
+        error.response?.data?.message || error.message,
+      );
       if (error.response?.status === STATUS_CODE_UNAUTHORIZED) {
         // TODO: 国際化
         if (confirm('You must log in to Notion.\nGo to Notion and log in?')) {
@@ -32,9 +34,9 @@ AxiosInstance.interceptors.response.use(
         return Promise.reject(e);
       }
     } else if (error instanceof Error) {
-      message += error.message;
+      message += toUpperCaseFirst(error.message);
     } else {
-      message += error;
+      message += toUpperCaseFirst(error + '');
     }
     alert(message);
 
@@ -45,3 +47,11 @@ AxiosInstance.interceptors.response.use(
 );
 
 export { AxiosInstance as axios };
+
+// ========================================
+// Utils
+// ========================================
+
+function toUpperCaseFirst(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
