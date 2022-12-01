@@ -109,8 +109,8 @@ svg {
   font-size: var(--font-size-large);
 }
 .items {
+  overflow-wrap: anywhere;
   overflow-y: auto;
-  overflow-x: hidden;
   max-height: calc(100vh - 215px);
 }
 .is-popup .items {
