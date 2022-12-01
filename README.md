@@ -5,7 +5,9 @@
 [Notion Search - Chrome Web Store](https://chrome.google.com/webstore/detail/notion-search/nelmlmaelgfcpjgknkidapfnoddpjfee?hl=ja&authuser=0)
 
 Notion search on the popup.
+
 Allow quickly find content from your notion workspace without switching tabs.
+
 Just click this extension's icon and your search term in popup.
 
 ## How to Build
