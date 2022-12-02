@@ -17,28 +17,26 @@ let config = {
   module: {
     rules: [
       {
-        test: /\.ts/,
+        test: /\.tsx?/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  targets: ['last 1 years and Chrome >= 1'],
-                  useBuiltIns: 'usage',
-                  corejs: 3,
-                },
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    targets: ['last 1 years and Chrome >= 1'],
+                    useBuiltIns: 'usage',
+                    corejs: 3,
+                  },
+                ],
               ],
-            ],
+            },
           },
-        },
-      },
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
+          'ts-loader',
+        ],
       },
     ],
   },
