@@ -1,0 +1,178 @@
+body {
+  background-color: #6d6d6d;
+}
+/* TODO: main は actiovation container と共通のものだけを残し
+Search Container 特有のものは別 Div に切り出す
+*/
+main {
+  --text-color: #595857;
+  --text-color-light: #949495;
+
+  --font-size-large: 18px;
+  --font-size-medium: 14.5px;
+  --font-size-small: 12.5px;
+
+  --border-color: #eae5e3;
+
+  background-color: white;
+  max-width: 662px;
+  margin: 0px auto;
+  padding: 2px;
+  border-radius: 8px;
+  color: var(--text-color);
+  font-size: var(--font-size-medium);
+}
+svg {
+  display: inline;
+  fill: rgba(55, 53, 47, 0.45);
+  flex-shrink: 0;
+  backface-visibility: hidden;
+}
+
+.item:hover,
+.filter:hover,
+.sort:hover {
+  background-color: #f3f3f3;
+}
+
+/* ----------------------------------------
+  Search
+---------------------------------------- */
+
+.search-container {
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: solid 1px var(--border-color);
+
+  & .icon-search {
+    margin: 0px 10px;
+    width: 18px;
+    height: 18px;
+  }
+  & .icon-clear-input {
+    margin: 0 15px;
+    width: 14px;
+    height: 14px;
+  }
+  & .search {
+    margin-left: 5px;
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: var(--font-size-large);
+
+    &::placeholder {
+      color: ;
+    }
+  }
+}
+
+/* ----------------------------------------
+  Filter & Sort
+---------------------------------------- */
+
+.filters {
+  padding: 10px;
+
+  & .filter {
+    padding: 4px 10px;
+    border: 1px solid #dcdddd;
+    border-radius: 20px;
+
+    &.selected {
+      color: rgb(35, 131, 226);
+      background-color: rgba(35, 131, 226, 0.03);
+      border-color: rgba(35, 131, 226, 0.35);
+    }
+  }
+}
+.sorts {
+  padding: 3px 10px;
+
+  & .sort {
+    color: inherit;
+    outline: none;
+    font-size: var(--font-size-small);
+    padding: 3px;
+    border: none;
+  }
+}
+
+/* ----------------------------------------
+  Items
+---------------------------------------- */
+
+.page-icon-container {
+  margin: 9px 8px 0 15px;
+  font-size: var(--font-size-large);
+
+  & svg,
+  & img {
+    width: 18px;
+    height: 18px;
+  }
+}
+.items {
+  overflow-wrap: anywhere;
+  overflow-y: auto;
+  max-height: calc(100vh - 215px);
+
+  @nest .is-popup & {
+    /* TODO: これ、他の要素の高さを変えたら追従して変える必要があるので、
+     うまく変数化できないかなあ。
+     TODO: てか、狭くない？　　*/
+    max-height: 453px;
+  }
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: #7c7c7c;
+  }
+
+  & .item {
+    border-bottom: solid 1px var(--border-color);
+  }
+  & .url {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+  }
+  & .main-item {
+    padding: 7px;
+
+    & p {
+      margin: 2px;
+    }
+  }
+  & .text {
+    margin-top: 7px !important;
+    font-size: var(--font-size-small);
+  }
+  & .parents-path {
+    font-size: var(--font-size-small);
+    color: var(--text-color-light);
+  }
+  & .highlight {
+    color: black;
+    font-weight: bold;
+  }
+}
+
+/* ----------------------------------------
+  footer
+---------------------------------------- */
+
+.footer {
+  color: var(--text-color-light);
+  font-size: var(--font-size-small);
+  padding: 6px 10px;
+
+  & > .total {
+    font-size: calc(var(--font-size-small) + 0.5px);
+    font-weight: bold;
+  }
+}

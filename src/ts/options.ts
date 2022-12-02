@@ -1,3 +1,4 @@
+import '../postcss/options.pcss';
 import { activate, deactivate, getActivationStatus } from './activation';
 
 declare global {

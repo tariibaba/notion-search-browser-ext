@@ -1,5 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import '../postcss/popup.pcss';
 import Container from './popup/components/Container';
 
 const reactRoot = document.querySelector('.react-root');
