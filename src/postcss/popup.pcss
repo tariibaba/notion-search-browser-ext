@@ -46,17 +46,17 @@ svg {
   justify-content: space-between;
   border-bottom: solid 1px var(--border-color);
 
-  & .icon-search {
+  .icon-search {
     margin: 0px 10px;
     width: 18px;
     height: 18px;
   }
-  & .icon-clear-input {
+  .icon-clear-input {
     margin: 0 15px;
     width: 14px;
     height: 14px;
   }
-  & .search {
+  .search {
     margin-left: 5px;
     border: none;
     outline: none;
@@ -64,7 +64,7 @@ svg {
     font-size: var(--font-size-large);
 
     &::placeholder {
-      color: ;
+      color: var(--text-color-light);
     }
   }
 }
@@ -76,7 +76,7 @@ svg {
 .filters {
   padding: 10px;
 
-  & .filter {
+  .filter {
     padding: 4px 10px;
     border: 1px solid #dcdddd;
     border-radius: 20px;
@@ -91,7 +91,7 @@ svg {
 .sorts {
   padding: 3px 10px;
 
-  & .sort {
+  .sort {
     color: inherit;
     outline: none;
     font-size: var(--font-size-small);
@@ -108,8 +108,8 @@ svg {
   margin: 9px 8px 0 15px;
   font-size: var(--font-size-large);
 
-  & svg,
-  & img {
+  svg,
+  img {
     width: 18px;
     height: 18px;
   }
@@ -119,10 +119,10 @@ svg {
   overflow-y: auto;
   max-height: calc(100vh - 215px);
 
-  @nest .is-popup & {
+  .is-popup & {
     /* TODO: これ、他の要素の高さを変えたら追従して変える必要があるので、
      うまく変数化できないかなあ。
-     TODO: てか、狭くない？　　*/
+     TODO: てか、狭くない？  */
     max-height: 453px;
   }
   &::-webkit-scrollbar {
@@ -133,30 +133,30 @@ svg {
     background-color: #7c7c7c;
   }
 
-  & .item {
+  .item {
     border-bottom: solid 1px var(--border-color);
   }
-  & .url {
+  .url {
     color: inherit;
     text-decoration: none;
     display: flex;
   }
-  & .main-item {
+  .main-item {
     padding: 7px;
 
-    & p {
+    p {
       margin: 2px;
     }
   }
-  & .text {
+  .text {
     margin-top: 7px !important;
     font-size: var(--font-size-small);
   }
-  & .parents-path {
+  .parents-path {
     font-size: var(--font-size-small);
     color: var(--text-color-light);
   }
-  & .highlight {
+  .highlight {
     color: black;
     font-weight: bold;
   }
@@ -171,7 +171,7 @@ svg {
   font-size: var(--font-size-small);
   padding: 6px 10px;
 
-  & > .total {
+  .total {
     font-size: calc(var(--font-size-small) + 0.5px);
     font-weight: bold;
   }

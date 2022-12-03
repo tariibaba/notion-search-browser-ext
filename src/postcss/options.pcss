@@ -1,11 +1,11 @@
-p {
-  margin: 0.5em;
-}
 body {
   font-size: 16px;
 }
 h1 {
   font-size: 30px;
+}
+p {
+  margin: 0.5em;
 }
 .hide {
   display: none;
@@ -14,16 +14,14 @@ h1 {
   color: green;
   font-weight: bold;
 }
-div {
-  .status {
-    font-size: 20px;
-    @nest .activated-block & {
-      color: #00c600;
-      font-weight: bold;
-    }
-    @nest .not-activated-block & {
-      color: red;
-      font-weight: bold;
-    }
+.status {
+  font-size: 20px;
+  .activated-block & {
+    color: #00c600;
+    font-weight: bold;
+  }
+  .not-activated-block & {
+    color: red;
+    font-weight: bold;
   }
 }
