@@ -10,10 +10,10 @@ import Sort from './Sorts';
 
 export default function Container({
   isPopup,
-  spaceId,
+  space,
 }: {
   isPopup: boolean;
-  spaceId: string;
+  space: Space;
 }) {
   const [query, setQuery] = useHashParam('query', '');
   const SortStateAndSetter = useHashParam('sort_by', SortBy.RELEVANCE);
@@ -67,7 +67,7 @@ export default function Container({
           sortBy,
           filtersBy,
           savesLastSearchResult,
-          spaceId,
+          spaceId: space.id,
         }),
       );
     })();
@@ -75,7 +75,7 @@ export default function Container({
 
   return (
     <main {...(isPopup && { className: 'is-popup' })}>
-      <SearchBox query={query} setQuery={setQuery} />
+      <SearchBox query={query} setQuery={setQuery} spaceName={space.name} />
       <Filter filtersBy={filtersBy} setFiltersBy={setFiltersBy} />
       <Sort sortBy={sortBy} setSortBy={setSortBy} />
       {searchResult && (

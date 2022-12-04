@@ -9,13 +9,13 @@ const ACTIVATION_STATUS = {
 } as const;
 
 export default function Container() {
-  const [spaceId, _setSpaceId] = useState<string>('');
+  const [space, _setSpace] = useState<Space | null>(null);
   const [activationStatus, setActivationStatus] = useState<
     valueOf<typeof ACTIVATION_STATUS>
   >(ACTIVATION_STATUS.NOT_ACTIVATED);
 
-  const setSpaceId = (spaceId: string) => {
-    _setSpaceId(spaceId);
+  const setSpace = (space: Space) => {
+    _setSpace(space);
     setActivationStatus(ACTIVATION_STATUS.ACTIVATED);
   };
 
@@ -27,14 +27,14 @@ export default function Container() {
       setActivationStatus(ACTIVATION_STATUS.ABORTED);
       return;
     }
-    setSpaceId(result.space.id);
+    setSpace(result.space);
   };
 
   useEffect(() => {
     (async () => {
       const activationStatus = await getActivationStatus();
       if (activationStatus.hasActivated) {
-        setSpaceId(activationStatus.space.id);
+        setSpace(activationStatus.space);
         return;
       }
       console.log('activate automatically');
@@ -59,6 +59,9 @@ export default function Container() {
         </main>
       );
     case ACTIVATION_STATUS.ACTIVATED:
-      return <SearchContainer isPopup={isPopup} spaceId={spaceId} />;
+      if (space === null)
+        throw new Error('Status is activated, but space is null');
+
+      return <SearchContainer isPopup={isPopup} space={space} />;
   }
 }
