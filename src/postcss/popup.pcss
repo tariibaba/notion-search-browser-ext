@@ -1,5 +1,10 @@
+@import './common.pcss';
+
 body {
   background-color: #6d6d6d;
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Helvetica, 'Apple Color Emoji', Arial, sans-serif, 'Segoe UI Emoji',
+    'Segoe UI Symbol';
 }
 /* TODO: main は actiovation container と共通のものだけを残し
 Search Container 特有のものは別 Div に切り出す
@@ -74,7 +79,7 @@ svg {
 ---------------------------------------- */
 
 .filters {
-  padding: 10px;
+  margin: 10px;
 
   .filter {
     padding: 4px 10px;
@@ -89,7 +94,7 @@ svg {
   }
 }
 .sorts {
-  padding: 3px 10px;
+  margin: 3px 10px;
 
   .sort {
     color: inherit;
@@ -105,13 +110,17 @@ svg {
 ---------------------------------------- */
 
 .page-icon-container {
-  margin: 9px 8px 0 15px;
+  margin: 10px 8px 0 15px;
   font-size: var(--font-size-large);
 
   svg,
   img {
+    color: black;
     width: 18px;
     height: 18px;
+  }
+  svg {
+    fill: #595857;
   }
 }
 .items {
@@ -132,34 +141,34 @@ svg {
     border-radius: 5px;
     background-color: #7c7c7c;
   }
+}
 
-  .item {
-    border-bottom: solid 1px var(--border-color);
-  }
-  .url {
-    color: inherit;
-    text-decoration: none;
-    display: flex;
-  }
-  .main-item {
-    padding: 7px;
+.item {
+  border-bottom: solid 1px var(--border-color);
+}
+.url {
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+}
+.main-item {
+  padding: 5px 7px 7px 7px;
 
-    p {
-      margin: 2px;
-    }
+  p {
+    margin: 2px;
   }
-  .text {
-    margin-top: 7px !important;
-    font-size: var(--font-size-small);
-  }
-  .parents-path {
-    font-size: var(--font-size-small);
-    color: var(--text-color-light);
-  }
-  .highlight {
-    color: black;
-    font-weight: bold;
-  }
+}
+.text {
+  margin-top: 7px !important;
+  font-size: var(--font-size-small);
+}
+.parents-path {
+  font-size: var(--font-size-small);
+  color: var(--text-color-light);
+}
+.highlight {
+  color: black;
+  font-weight: bold;
 }
 
 /* ----------------------------------------
