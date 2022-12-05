@@ -1,30 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { activate, getActivationStatus } from '../../activation';
+import { getLinkedSpace, linkSpace } from '../../linkedSpace';
 import SearchContainer from './SearchContainer';
 
-const ACTIVATION_STATUS = {
-  NOT_ACTIVATED: 'NOT_CHECKED',
+const LINK_STATUS = {
+  NOT_LINKED: 'NOT_CHECKED',
   ABORTED: 'ABORTED',
-  ACTIVATED: 'ACTIVATED',
+  LINKED: 'LINKED',
 } as const;
 
 export default function Container() {
   const [space, _setSpace] = useState<Space | null>(null);
-  const [activationStatus, setActivationStatus] = useState<
-    valueOf<typeof ACTIVATION_STATUS>
-  >(ACTIVATION_STATUS.NOT_ACTIVATED);
+  const [linkStatus, setLinkStatus] = useState<valueOf<typeof LINK_STATUS>>(
+    LINK_STATUS.NOT_LINKED,
+  );
 
   const setSpace = (space: Space) => {
     _setSpace(space);
-    setActivationStatus(ACTIVATION_STATUS.ACTIVATED);
+    setLinkStatus(LINK_STATUS.LINKED);
   };
 
   const isPopup = location.search === '?popup';
 
-  const activateAndSetStatus = async () => {
-    const result = await activate();
+  const linkAndSetStatus = async () => {
+    const result = await linkSpace();
     if (result.aborted) {
-      setActivationStatus(ACTIVATION_STATUS.ABORTED);
+      setLinkStatus(LINK_STATUS.ABORTED);
       return;
     }
     setSpace(result.space);
@@ -32,25 +32,25 @@ export default function Container() {
 
   useEffect(() => {
     (async () => {
-      const activationStatus = await getActivationStatus();
-      if (activationStatus.hasActivated) {
-        setSpace(activationStatus.space);
+      const space = await getLinkedSpace();
+      if (space) {
+        setSpace(space);
         return;
       }
-      console.log('activate automatically');
-      activateAndSetStatus();
+      console.log('link automatically');
+      linkAndSetStatus();
     })();
   }, []);
 
-  switch (activationStatus) {
-    case ACTIVATION_STATUS.NOT_ACTIVATED:
+  switch (linkStatus) {
+    case LINK_STATUS.NOT_LINKED:
       return null;
-    case ACTIVATION_STATUS.ABORTED:
+    case LINK_STATUS.ABORTED:
       return (
         <main style={{ width: '400px', height: '300px', padding: '20px' }}>
           <button
             onClick={(event) => {
-              activateAndSetStatus();
+              linkAndSetStatus();
               event.preventDefault();
             }}
           >
@@ -58,9 +58,9 @@ export default function Container() {
           </button>
         </main>
       );
-    case ACTIVATION_STATUS.ACTIVATED:
+    case LINK_STATUS.LINKED:
       if (space === null)
-        throw new Error('Status is activated, but space is null');
+        throw new Error('Status is linked, but space is null');
 
       return <SearchContainer isPopup={isPopup} space={space} />;
   }

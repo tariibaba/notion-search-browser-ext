@@ -1,5 +1,5 @@
 import '../postcss/options.pcss';
-import { activate, deactivate, getActivationStatus } from './activation';
+import { getLinkedSpace, linkSpace, unlinkSpace } from './linkedSpace';
 
 declare global {
   interface HTMLElement {
@@ -15,40 +15,37 @@ HTMLElement.prototype.hide = function () {
 };
 
 // ========================================
-// Activation Status
+// Link Status
 // ========================================
 
-const activationStatus = await getActivationStatus();
-const activatedBlock = $('.activated-block');
-const notActivatedBlock = $('.not-activated-block');
+const space = await getLinkedSpace();
+const linkedBlock = $('.linked-block');
+const notLinkedBlock = $('.not-linked-block');
 
-let space: Space;
-
-if (activationStatus.hasActivated) {
-  activatedBlock.show();
-  space = activationStatus.space;
+if (space) {
+  linkedBlock.show();
   $('.space-name').textContent = space.name;
 } else {
-  notActivatedBlock.show();
+  notLinkedBlock.show();
 }
 
-$('.activate').addEventListener('click', async () => {
-  const result = await activate();
+$('.link').addEventListener('click', async () => {
+  const result = await linkSpace();
   if (result.aborted) return;
   const space = result.space;
   $('.space-name').textContent = space.name;
 
-  activatedBlock.show();
-  notActivatedBlock.hide();
+  linkedBlock.show();
+  notLinkedBlock.hide();
 });
 
-$('.deactivate').addEventListener('click', async () => {
+$('.unlink').addEventListener('click', async () => {
   const ok = confirm('Disconnect from Notion?');
   if (!ok) return;
 
-  await deactivate();
-  activatedBlock.hide();
-  notActivatedBlock.show();
+  await unlinkSpace();
+  linkedBlock.hide();
+  notLinkedBlock.show();
 });
 
 // ========================================

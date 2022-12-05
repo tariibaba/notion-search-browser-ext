@@ -22,7 +22,7 @@ export const answerToIndex = (str: string) => {
   return parseInt(str);
 };
 
-export const activate = async (): Promise<
+export const linkSpace = async (): Promise<
   { aborted: true } | { aborted: false; space: Space }
 > => {
   const spaces: Space[] = [];
@@ -68,7 +68,7 @@ export const activate = async (): Promise<
   };
 };
 
-export const deactivate = async () => {
+export const unlinkSpace = async () => {
   try {
     await chrome.storage.local.remove(STORAGE_KEY.SPACE);
   } catch (error) {
@@ -76,11 +76,6 @@ export const deactivate = async () => {
   }
 };
 
-export const getActivationStatus = async (): Promise<
-  { hasActivated: false } | { hasActivated: true; space: Space }
-> => {
-  const space = (await chrome.storage.local.get(STORAGE_KEY.SPACE))[
-    STORAGE_KEY.SPACE
-  ];
-  return space ? { hasActivated: true, space } : { hasActivated: false };
+export const getLinkedSpace = async (): Promise<Space> => {
+  return (await chrome.storage.local.get(STORAGE_KEY.SPACE))[STORAGE_KEY.SPACE];
 };
