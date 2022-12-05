@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { setupCache } from 'axios-cache-interceptor';
-import { NOTION_HOST } from '../constants';
+import { NOTION_HOST } from './constants';
 
 const API_BASE_URL = `${NOTION_HOST}/api/v3`;
 const CACHE_TIME = 1 * 60 * 1_000;

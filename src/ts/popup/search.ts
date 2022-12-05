@@ -1,7 +1,7 @@
 import { debounce } from 'throttle-debounce';
+import { axios } from '../axios';
 import { NOTION_HOST } from '../constants';
 import { storage } from '../storage';
-import { axios } from '../utils/axios';
 
 import {
   FiltersBy,

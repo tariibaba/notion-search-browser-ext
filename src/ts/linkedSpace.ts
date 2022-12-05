@@ -1,6 +1,6 @@
+import { axios } from './axios';
 import { STORAGE_KEY } from './constants';
 import { storage } from './storage';
-import { axios } from './utils/axios';
 
 const PATH = '/getSpaces';
 
