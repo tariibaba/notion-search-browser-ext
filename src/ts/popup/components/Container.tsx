@@ -9,7 +9,7 @@ const LINK_STATUS = {
 } as const;
 
 export default function Container() {
-  const [space, _setSpace] = useState<Space | null>(null);
+  const [space, _setSpace] = useState<Space | undefined>(undefined);
   const [linkStatus, setLinkStatus] = useState<valueOf<typeof LINK_STATUS>>(
     LINK_STATUS.NOT_LINKED,
   );
@@ -59,8 +59,7 @@ export default function Container() {
         </main>
       );
     case LINK_STATUS.LINKED:
-      if (space === null)
-        throw new Error('Status is linked, but space is null');
+      if (!space) throw new Error('Status is linked, but space is undefined');
 
       return <SearchContainer isPopup={isPopup} space={space} />;
   }
