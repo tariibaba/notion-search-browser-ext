@@ -43,9 +43,10 @@ export default function Container({
     // get cache
     (async () => {
       if (savesLastSearchResult) {
+        const key = `${space.id}-${STORAGE_KEY.LAST_SEARCHED}`;
         const store: SearchResultCache | undefined = (
-          await chrome.storage.local.get(STORAGE_KEY.LAST_SEARCHED)
-        )[STORAGE_KEY.LAST_SEARCHED];
+          await chrome.storage.local.get(key)
+        )[key];
         if (store) {
           setQuery(store.query);
           setSearchResult(store.searchResult);

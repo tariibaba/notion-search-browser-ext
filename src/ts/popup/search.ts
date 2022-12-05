@@ -177,7 +177,7 @@ const search = async ({
     const data: SearchResultCache = { query, searchResult };
     try {
       await chrome.storage.local.set({
-        [STORAGE_KEY.LAST_SEARCHED]: data,
+        [`${spaceId}-${STORAGE_KEY.LAST_SEARCHED}`]: data,
       });
     } catch (error) {
       throw new Error(`chrome.storage.local.set() failed. error: ${error}`);
