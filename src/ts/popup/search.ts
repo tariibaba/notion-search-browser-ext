@@ -1,5 +1,6 @@
 import { debounce } from 'throttle-debounce';
 import { NOTION_HOST } from '../constants';
+import { storage } from '../storage';
 import { axios } from '../utils/axios';
 
 import {
@@ -175,13 +176,9 @@ const search = async ({
 
   if (savesLastSearchResult) {
     const data: SearchResultCache = { query, searchResult };
-    try {
-      await chrome.storage.local.set({
-        [`${spaceId}-${STORAGE_KEY.LAST_SEARCHED}`]: data,
-      });
-    } catch (error) {
-      throw new Error(`chrome.storage.local.set() failed. error: ${error}`);
-    }
+    await storage.set({
+      [`${spaceId}-${STORAGE_KEY.LAST_SEARCHED}`]: data,
+    });
   }
 
   return searchResult;

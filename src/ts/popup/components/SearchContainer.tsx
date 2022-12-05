@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useHashParam, useObjectHashParam } from 'use-hash-param';
+import { storage } from '../../storage';
 import { SortBy, STORAGE_KEY } from '../constants';
 import { debouncedSearch } from '../search';
 import Filter from './Filters';
@@ -43,10 +44,10 @@ export default function Container({
     // get cache
     (async () => {
       if (savesLastSearchResult) {
-        const key = `${space.id}-${STORAGE_KEY.LAST_SEARCHED}`;
-        const store: SearchResultCache | undefined = (
-          await chrome.storage.local.get(key)
-        )[key];
+        const store = (await storage.get(
+          `${space.id}-${STORAGE_KEY.LAST_SEARCHED}`,
+        )) as SearchResultCache | undefined; // TODO: 型ガード
+
         if (store) {
           setQuery(store.query);
           setSearchResult(store.searchResult);

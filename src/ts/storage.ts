@@ -1,9 +1,16 @@
+class ChromeStorageError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ChromeStorageError';
+  }
+}
+
 export const storage = {
   get: async (key: string) => {
     try {
-      return await chrome.storage.local.get(key);
+      return (await chrome.storage.local.get(key))[key];
     } catch (error) {
-      throw new Error(
+      throw new ChromeStorageError(
         `chrome.storage.local.get(${key}) failed. error: ${error}`,
       );
     }
@@ -13,7 +20,7 @@ export const storage = {
     try {
       return await chrome.storage.local.set(obj);
     } catch (error) {
-      throw new Error(
+      throw new ChromeStorageError(
         `chrome.storage.local.set(${JSON.stringify(
           obj,
         )}) failed. error: ${error}`,

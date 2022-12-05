@@ -1,4 +1,5 @@
 import { STORAGE_KEY } from './constants';
+import { storage } from './storage';
 import { axios } from './utils/axios';
 
 const PATH = '/getSpaces';
@@ -55,13 +56,7 @@ export const linkSpace = async (): Promise<
       }
     }
   }
-  try {
-    await chrome.storage.local.set({
-      [STORAGE_KEY.SPACE]: space,
-    });
-  } catch (error) {
-    throw new Error(`chrome.storage.local.set() failed. error: ${error}`);
-  }
+  await storage.set({ [STORAGE_KEY.SPACE]: space });
   return {
     aborted: false,
     space,
@@ -69,13 +64,9 @@ export const linkSpace = async (): Promise<
 };
 
 export const unlinkSpace = async () => {
-  try {
-    await chrome.storage.local.remove(STORAGE_KEY.SPACE);
-  } catch (error) {
-    throw new Error(`chrome.storage.local.set() failed. error: ${error}`);
-  }
+  await storage.remove(STORAGE_KEY.SPACE);
 };
 
 export const getLinkedSpace = async (): Promise<Space> => {
-  return (await chrome.storage.local.get(STORAGE_KEY.SPACE))[STORAGE_KEY.SPACE];
+  return (await storage.get(STORAGE_KEY.SPACE)) as Space; // TODO: 型ガード
 };

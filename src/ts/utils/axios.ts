@@ -18,12 +18,19 @@ const AxiosInstance = setupCache(
   },
 );
 
+class HttpRequestError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'HttpRequestError';
+  }
+}
+
 AxiosInstance.interceptors.response.use(
   (res) => res,
   (error) => {
-    let message = 'HTTP Request error. ';
+    let message: string;
     if (error instanceof AxiosError) {
-      message += toUpperCaseFirst(
+      message = toUpperCaseFirst(
         error.response?.data?.message || error.message,
       );
       if (error.response?.status === STATUS_CODE_UNAUTHORIZED) {
@@ -36,13 +43,12 @@ AxiosInstance.interceptors.response.use(
         return Promise.reject(e);
       }
     } else if (error instanceof Error) {
-      message += toUpperCaseFirst(error.message);
+      message = toUpperCaseFirst(error.message);
     } else {
-      message += toUpperCaseFirst(error + '');
+      message = toUpperCaseFirst(error + '');
     }
-    alert(message);
-
-    const e = new Error(message);
+    const e = new HttpRequestError(message);
+    alert(e);
     console.trace(e);
     return Promise.reject(e);
   },
