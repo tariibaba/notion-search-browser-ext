@@ -1,4 +1,4 @@
-import { answerToIndex } from '../../src/activation';
+import { answerToIndex } from '../../src/ts/linkedSpace';
 
 it.each([
   ['1', 1],
