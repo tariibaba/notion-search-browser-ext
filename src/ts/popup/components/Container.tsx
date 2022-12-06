@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { getLinkedSpace, linkSpace } from '../../linkedSpace';
 import SearchContainer from './SearchContainer';
 
+// 後から足したくなるかもなので、今のところは boolean にしない
 const LINK_STATUS = {
   NOT_LINKED: 'NOT_CHECKED',
-  ABORTED: 'ABORTED',
   LINKED: 'LINKED',
 } as const;
 
@@ -22,9 +22,9 @@ export default function Container() {
   const isPopup = location.search === '?popup';
 
   const linkAndSetStatus = async () => {
+    // NOTE: axios 側で alert しなくなった場合、ここでユーザーにエラーを通知する必要あり
     const result = await linkSpace();
     if (result.aborted) {
-      setLinkStatus(LINK_STATUS.ABORTED);
       return;
     }
     setSpace(result.space);
@@ -32,20 +32,27 @@ export default function Container() {
 
   useEffect(() => {
     (async () => {
-      const space = await getLinkedSpace();
+      let space: Space | undefined;
+      try {
+        space = await getLinkedSpace();
+      } catch (error) {
+        // TODO: 国際化
+        alert(
+          'Failed to get connected space. Please reload this page.\n' + error,
+        );
+        return;
+      }
       if (space) {
         setSpace(space);
         return;
       }
       console.log('link automatically');
-      linkAndSetStatus();
+      await linkAndSetStatus();
     })();
   }, []);
 
   switch (linkStatus) {
     case LINK_STATUS.NOT_LINKED:
-      return null;
-    case LINK_STATUS.ABORTED:
       return (
         <main style={{ width: '400px', height: '300px', padding: '20px' }}>
           <button

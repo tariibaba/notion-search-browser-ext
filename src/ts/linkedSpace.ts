@@ -67,6 +67,7 @@ export const unlinkSpace = async () => {
   await storage.remove(STORAGE_KEY.SPACE);
 };
 
-export const getLinkedSpace = async (): Promise<Space> => {
-  return (await storage.get(STORAGE_KEY.SPACE)) as Space; // TODO: 型ガード
+export const getLinkedSpace = async (): Promise<Space | undefined> => {
+  const space = await storage.get(STORAGE_KEY.SPACE);
+  return space ? (space as Space) : undefined;
 };
