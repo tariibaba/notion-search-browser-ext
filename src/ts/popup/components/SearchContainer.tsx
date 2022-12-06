@@ -17,9 +17,9 @@ export default function Container({
   space: Space;
 }) {
   const [query, setQuery] = useHashParam('query', '');
-  const SortStateAndSetter = useHashParam('sort_by', SortBy.RELEVANCE);
-  let [sortBy] = SortStateAndSetter;
-  const [, setSortBy] = SortStateAndSetter;
+  const sortStateAndSetter = useHashParam('sort_by', SortBy.RELEVANCE);
+  let [sortBy] = sortStateAndSetter;
+  const [, setSortBy] = sortStateAndSetter;
   const [filtersBy, setFiltersBy] = useObjectHashParam<FiltersBy>(
     'filters_by',
     {},

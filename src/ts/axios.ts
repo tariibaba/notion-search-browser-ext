@@ -25,6 +25,7 @@ class HttpRequestError extends Error {
   }
 }
 
+// TODO: Test
 AxiosInstance.interceptors.response.use(
   (res) => res,
   (error) => {
