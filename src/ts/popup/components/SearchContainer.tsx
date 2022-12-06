@@ -16,10 +16,17 @@ export default function Container({
   isPopup: boolean;
   space: Space;
 }) {
-  const [query, setQuery] = useHashParam('query', '');
+  const [query, _setQuery] = useHashParam('query', '');
+  const setQuery = (query: string) => {
+    if (query.trim() === '')
+      storage.remove(`${space.id}-${STORAGE_KEY.LAST_SEARCHED}`);
+    _setQuery(query);
+  };
+
   const sortStateAndSetter = useHashParam('sort_by', SortBy.RELEVANCE);
   let [sortBy] = sortStateAndSetter;
   const [, setSortBy] = sortStateAndSetter;
+
   const [filtersBy, setFiltersBy] = useObjectHashParam<FiltersBy>(
     'filters_by',
     {},
