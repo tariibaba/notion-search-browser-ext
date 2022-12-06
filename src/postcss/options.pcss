@@ -1,11 +1,33 @@
 @import './common.pcss';
 
+:root {
+  --dangerous-color: red;
+  --successful-color: #00c600;
+}
 h1 {
   font-size: 30px;
 }
 p {
   margin: 0.5em;
 }
+button {
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 5px;
+  border-width: 1px;
+  border-style: solid;
+}
+.unlink {
+  border-color: var(--dangerous-color);
+  color: var(--dangerous-color);
+  background-color: #fef6f6;
+}
+.link {
+  border-color: var(--successful-color);
+  color: var(--successful-color);
+  background-color: #f9fff9;
+}
+
 .hide {
   display: none;
 }
@@ -16,11 +38,11 @@ p {
 .status {
   font-size: 20px;
   .linked-block & {
-    color: #00c600;
+    color: var(--successful-color);
     font-weight: bold;
   }
   .not-linked-block & {
-    color: red;
+    color: var(--dangerous-color);
     font-weight: bold;
   }
 }

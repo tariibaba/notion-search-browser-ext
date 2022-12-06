@@ -24,7 +24,9 @@ const notLinkedBlock = $('.not-linked-block');
 
 if (space) {
   linkedBlock.show();
-  $('.space-name').textContent = space.name;
+  for (const elem of $$('.space-name')) {
+    elem.textContent = space.name;
+  }
 } else {
   notLinkedBlock.show();
 }
@@ -32,8 +34,11 @@ if (space) {
 $('.link').addEventListener('click', async () => {
   const result = await linkSpace();
   if (result.aborted) return;
+
   const space = result.space;
-  $('.space-name').textContent = space.name;
+  for (const elem of $$('.space-name')) {
+    elem.textContent = space.name;
+  }
 
   linkedBlock.show();
   notLinkedBlock.hide();
@@ -65,4 +70,8 @@ function $<T extends Element = HTMLElement>(selector: string) {
   const elem = document.querySelector<T>(selector);
   if (!elem) throw new Error(`element "${selector} is not found"`);
   return elem;
+}
+
+function $$<T extends Element = HTMLElement>(selector: string) {
+  return document.querySelectorAll<T>(selector);
 }
