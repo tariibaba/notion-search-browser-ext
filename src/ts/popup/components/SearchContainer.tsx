@@ -35,8 +35,9 @@ export default function Container({
     undefined,
   );
 
-  const savesLastSearchResult = isPopup;
   const trimmedQuery = query.trim();
+  const hasQuery = trimmedQuery.length > 0;
+  const savesLastSearchResult = isPopup && hasQuery;
 
   // initialize
   useLayoutEffect(() => {
@@ -67,8 +68,7 @@ export default function Container({
   useEffect(() => {
     (async () => {
       // ad hoc: query == '' && sort == 'relevance' is worthless
-      if (trimmedQuery === '' && sortBy === SortBy.RELEVANCE)
-        sortBy = SortBy.CREATED;
+      if (!hasQuery && sortBy === SortBy.RELEVANCE) sortBy = SortBy.CREATED;
 
       setSearchResult(
         await debouncedSearch({
