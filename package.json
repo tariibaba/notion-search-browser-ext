@@ -2,11 +2,12 @@
   "scripts": {
     "build": "NODE_ENV=production webpack",
     "watch": "NODE_ENV=development webpack -w",
-    "eslint": "eslint 'src/**/*.{ts,tsx}'",
-    "eslint:fix": "eslint --fix 'src/**/*.{ts,tsx}'",
-    "prettier": "prettier --write . '!dist/**/*'",
-    "lint": "yarn run eslint:fix && yarn run prettier",
+    "eslint": "eslint './src/**/*.{ts,tsx}'",
+    "eslint:fix": "eslint --fix './src/**/*.{ts,tsx}'",
+    "prettier": "prettier --write . '!./src/postcss/**/*' '!./public/js/**/*'",
+    "lint": "yarn run eslint:fix && yarn run prettier && yarn run lint:css:fix",
     "lint:css": "stylelint ./src/**/*.pcss",
+    "lint:css:fix": "stylelint --fix ./src/**/*.pcss",
     "release": "rm out.zip; yarn run build; zip -r out.zip public"
   },
   "devDependencies": {
@@ -41,7 +42,12 @@
     "prettier": "^2.8.0",
     "style-loader": "^3.3.1",
     "stylelint": "^14.15.0",
+    "stylelint-config-prettier": "^9.0.4",
+    "stylelint-config-recess-order": "^3.0.0",
     "stylelint-config-recommended": "^9.0.0",
+    "stylelint-config-standard": "^29.0.0",
+    "stylelint-declaration-block-no-ignored-properties": "^2.6.0",
+    "stylelint-no-unsupported-browser-features": "^6.0.1",
     "stylelint-value-no-unknown-custom-properties": "^4.0.0",
     "throttle-debounce": "https://github.com/Cside/throttle-debounce",
     "ts-jest": "^29.0.3",
@@ -57,6 +63,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-string-replace": "^1.1.0",
+    "stylelint-csstree-validator": "^2.0.0",
     "use-hash-param": "https://github.com/Cside/use-hash-param"
   },
   "license": "MIT"

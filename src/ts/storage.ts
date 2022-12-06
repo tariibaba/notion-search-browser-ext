@@ -11,7 +11,7 @@ export const storage = {
       return (await chrome.storage.local.get(key))[key];
     } catch (error) {
       throw new ChromeStorageError(
-        `chrome.storage.local.get(${key}) failed. error: ${error}`,
+        `chrome.storage.local.get(${key}) failed. ${error}`,
       );
     }
   },
@@ -21,9 +21,7 @@ export const storage = {
       return await chrome.storage.local.set(obj);
     } catch (error) {
       throw new ChromeStorageError(
-        `chrome.storage.local.set(${JSON.stringify(
-          obj,
-        )}) failed. error: ${error}`,
+        `chrome.storage.local.set(${JSON.stringify(obj)}) failed. ${error}`,
       );
     }
   },
@@ -32,9 +30,7 @@ export const storage = {
     try {
       return await chrome.storage.local.remove(key);
     } catch (error) {
-      throw new Error(
-        `chrome.storage.local.remove(${key}) failed. error: ${error}`,
-      );
+      throw new Error(`chrome.storage.local.remove(${key}) failed. ${error}`);
     }
   },
 };

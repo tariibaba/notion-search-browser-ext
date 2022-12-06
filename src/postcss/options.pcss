@@ -1,48 +1,57 @@
-@import './common.pcss';
+@import url("./common.pcss");
 
 :root {
   --dangerous-color: red;
   --successful-color: #00c600;
 }
+
 h1 {
   font-size: 30px;
 }
+
 p {
   margin: 0.5em;
 }
+
 button {
-  cursor: pointer;
-  border-radius: 6px;
   padding: 5px;
-  border-width: 1px;
+  cursor: pointer;
   border-style: solid;
+  border-width: 1px;
+  border-radius: 6px;
 }
+
 .unlink {
-  border-color: var(--dangerous-color);
   color: var(--dangerous-color);
   background-color: #fef6f6;
+  border-color: var(--dangerous-color);
 }
+
 .link {
-  border-color: var(--successful-color);
   color: var(--successful-color);
   background-color: #f9fff9;
+  border-color: var(--successful-color);
 }
 
 .hide {
   display: none;
 }
+
 .highlight {
-  color: green;
   font-weight: bold;
+  color: green;
 }
+
 .status {
   font-size: 20px;
+
   .linked-block & {
+    font-weight: bold;
     color: var(--successful-color);
-    font-weight: bold;
   }
+
   .not-linked-block & {
-    color: var(--dangerous-color);
     font-weight: bold;
+    color: var(--dangerous-color);
   }
 }

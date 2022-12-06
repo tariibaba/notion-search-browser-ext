@@ -29,7 +29,6 @@ let config = {
                 [
                   '@babel/preset-env',
                   {
-                    targets: ['>= 0.2% and Chrome >= 1'],
                     useBuiltIns: 'usage',
                     corejs: 3,
                   },
