@@ -14,6 +14,6 @@ Just click this extension's icon and your search term in popup.
 ## How to Build
 
 ```
-yarn install
+yarn install 
 yarn run build
 ```
