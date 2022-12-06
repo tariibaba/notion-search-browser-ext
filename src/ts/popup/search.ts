@@ -176,7 +176,8 @@ const search = async ({
 
   if (savesLastSearchResult) {
     const data: SearchResultCache = { query, searchResult };
-    await storage.set({
+    // set に失敗しても致命的ではない (前回の検索結果が表示されなくなるだけ) なので、エラーハンドリングしない
+    storage.set({
       [`${spaceId}-${STORAGE_KEY.LAST_SEARCHED}`]: data,
     });
   }
