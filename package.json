@@ -49,6 +49,7 @@
     "stylelint-declaration-block-no-ignored-properties": "^2.6.0",
     "stylelint-no-unsupported-browser-features": "^6.0.1",
     "stylelint-value-no-unknown-custom-properties": "^4.0.0",
+    "stylelint-csstree-validator": "^2.0.0",
     "throttle-debounce": "https://github.com/Cside/throttle-debounce",
     "ts-jest": "^29.0.3",
     "ts-loader": "^9.4.1",
@@ -63,7 +64,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-string-replace": "^1.1.0",
-    "stylelint-csstree-validator": "^2.0.0",
     "use-hash-param": "https://github.com/Cside/use-hash-param"
   },
   "license": "MIT"

@@ -58,13 +58,11 @@ svg {
 
   .icon-search {
     width: 18px;
-    height: 18px;
     margin: 0 10px;
   }
 
   .icon-clear-input {
     width: 14px;
-    height: 14px;
     margin: 0 15px;
   }
 
@@ -118,13 +116,15 @@ svg {
 ---------------------------------------- */
 
 .page-icon-container {
-  margin: 10px 8px 0 15px;
-  font-size: var(--font-size-large);
+  padding: 7px 8px 0 15px;
+
+  --icon-width: 18px;
+
+  font-size: var(--icon-width);
 
   svg,
   img {
-    width: 18px;
-    height: 18px;
+    width: var(--icon-width);
   }
 
   svg {
@@ -163,7 +163,7 @@ svg {
 }
 
 .main-item {
-  padding: 5px 7px 7px;
+  padding: 5px 7px 7px 5px;
 
   p {
     margin: 2px;
@@ -211,6 +211,5 @@ svg {
 
 .icon-settings {
   width: 14px;
-  height: 14px;
   margin-right: 3px;
 }
