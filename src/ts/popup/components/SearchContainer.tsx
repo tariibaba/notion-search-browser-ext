@@ -34,10 +34,11 @@ export default function Container({
   const [searchResult, setSearchResult] = useState<SearchResult | undefined>(
     undefined,
   );
+  const [isFirstRendering, setIsFirstRendering] = useState<boolean>(true);
 
   const trimmedQuery = query.trim();
   const hasQuery = trimmedQuery.length > 0;
-  const savesLastSearchResult = isPopup && hasQuery;
+  const usesLastSearchResult = isPopup && hasQuery;
 
   // initialize
   useLayoutEffect(() => {
@@ -49,24 +50,26 @@ export default function Container({
     } else {
       document.body.style.margin = '40px 0 0 0';
     }
-    // get cache
-    (async () => {
-      if (savesLastSearchResult) {
-        const store = (await storage.get(
-          `${space.id}-${STORAGE_KEY.LAST_SEARCHED}`,
-        )) as SearchResultCache | undefined; // TODO: 型ガード
-
-        if (store) {
-          setQuery(store.query);
-          setSearchResult(store.searchResult);
-        }
-      }
-    })();
   }, []);
 
   // search
   useEffect(() => {
     (async () => {
+      // get cache
+      if (usesLastSearchResult && isFirstRendering) {
+        const store = (await storage.get(
+          `${space.id}-${STORAGE_KEY.LAST_SEARCHED}`,
+        )) as SearchResultCache | undefined; // TODO: 型ガード
+
+        if (store) {
+          setIsFirstRendering(false);
+          setQuery(store.query);
+          setSearchResult(store.searchResult);
+          return;
+        }
+      }
+      setIsFirstRendering(false);
+
       // ad hoc: query == '' && sort == 'relevance' is worthless
       if (!hasQuery && sortBy === SortBy.RELEVANCE) sortBy = SortBy.CREATED;
 
@@ -75,7 +78,7 @@ export default function Container({
           query: trimmedQuery,
           sortBy,
           filtersBy,
-          savesLastSearchResult,
+          usesLastSearchResult,
           spaceId: space.id,
         }),
       );
