@@ -1,7 +1,7 @@
 import React from 'react';
 import { SEARCH_LIMIT } from '../constants';
 
-export default function Total({ total }: { total: number }) {
+export default function Total({ total }: { total: number | undefined }) {
   const handleClickSettings = async (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
   ) => {
@@ -11,12 +11,16 @@ export default function Total({ total }: { total: number }) {
   return (
     <div className="footer">
       <span className="summary">
-        {total > SEARCH_LIMIT && (
+        {typeof total !== 'undefined' && (
           <>
-            <span className="total">{SEARCH_LIMIT}</span> of{' '}
+            {total > SEARCH_LIMIT && (
+              <>
+                <span className="total">{SEARCH_LIMIT}</span> of{' '}
+              </>
+            )}
+            <span className="total">{total}</span> results
           </>
         )}
-        <span className="total">{total}</span> results
       </span>
       <span className="settings">
         <a href="#" onClick={handleClickSettings}>

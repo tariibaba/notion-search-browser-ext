@@ -90,9 +90,9 @@ export default function Container({
       {searchResult && (
         <>
           <Items items={searchResult.items} opensNewTab={isPopup} />
-          <Footer total={searchResult.total} />
         </>
       )}
+      <Footer total={searchResult && searchResult.total} />
     </main>
   );
 }
