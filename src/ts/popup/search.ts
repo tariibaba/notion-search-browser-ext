@@ -159,15 +159,17 @@ const search = async ({
   // TODO: パースエラーを送信したい（ユーザーはこちらの想定してないタイプのobjectを扱う可能性が高いので）
   // TODO: 空タイトルのページはどうなる？ （考えたくもないが。。。）
   const recordMap = res.recordMap;
-  const searchResult: SearchResult = {
-    items: res.results.map((data) => {
-      const id = data.id;
-      const recordBlock = recordMap.block[id].value;
+  const items: Item[] = [];
+  for (const item of res.results) {
+    let recordBlock: RecordBlock | undefined = undefined;
+    try {
+      const id = item.id;
       const result: Item = { title: '', url: '' };
       const regexpAddsTag = new RegExp(
         `(${query.split(/\s+/).join('|')})`,
         'ig',
       );
+      recordBlock = recordMap.block[id].value;
       const blockType = recordBlock.type;
       if (!Object.values(BLOCK_TYPE).includes(blockType))
         // NOTE: Setnry とかに送りたい ... 。てか、型ガードで一気に検査すべきか
@@ -273,7 +275,7 @@ const search = async ({
       result.url = `${NOTION_HOST}/${id.replaceAll('-', '')}`;
 
       let title: string | undefined =
-        data.highlight?.title ??
+        item.highlight?.title ??
         recordBlock.properties?.title?.map((array) => array[0]).join('');
 
       // TODO: switch
@@ -300,9 +302,9 @@ const search = async ({
         result.title = title;
       }
 
-      if (data.highlight && data.highlightBlockId) {
-        result.url += `#${data.highlightBlockId.replaceAll('-', '')}`;
-        result.text = data.highlight.text;
+      if (item.highlight && item.highlightBlockId) {
+        result.url += `#${item.highlightBlockId.replaceAll('-', '')}`;
+        result.text = item.highlight.text;
       }
       const setStrangeNotionTag = (str: string) =>
         query
@@ -313,8 +315,14 @@ const search = async ({
       if (result.title) result.title = setStrangeNotionTag(result.title);
       if (result.text) result.text = setStrangeNotionTag(result.text);
 
-      return result;
-    }),
+      items.push(result);
+    } catch (error) {
+      console.error(`Failed to parse json. ` + error, { item, recordBlock });
+    }
+  }
+
+  const searchResult: SearchResult = {
+    items,
     total: res.total,
   };
 
