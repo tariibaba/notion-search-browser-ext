@@ -108,6 +108,7 @@ const search = async ({
 }) => {
   if (!spaceId) throw new Error('spaceId is empty');
 
+  // このへんのテストは、UT じゃなくてフォーム含めて一気通貫で見ないと意味ない氣がする
   let sortOptions = {};
   switch (sortBy) {
     case SortBy.RELEVANCE:
@@ -157,11 +158,14 @@ const search = async ({
   ).data;
 
   // TODO: パースエラーを送信したい（ユーザーはこちらの想定してないタイプのobjectを扱う可能性が高いので）
-  // TODO: 空タイトルのページはどうなる？ （考えたくもないが。。。）
+  // TODO: 検証したい異常系
+  //  - 空タイトルのページはどうなる？ （考えたくもないが。。。）
+  //  - DB だけ ... はありえないよね？
+  //  - View Page だけで DB が空 https://www.notion.so/cee680b18c474c9e9b47d246df0db729
   const recordMap = res.recordMap;
   const items: Item[] = [];
   for (const item of res.results) {
-    let recordBlock: RecordBlock | undefined = undefined;
+    let block: RecordBlock | undefined = undefined;
     try {
       const id = item.id;
       const result: Item = { title: '', url: '' };
@@ -169,12 +173,35 @@ const search = async ({
         `(${query.split(/\s+/).join('|')})`,
         'ig',
       );
-      recordBlock = recordMap.block[id].value;
-      const blockType = recordBlock.type;
+      block = recordMap.block[id].value;
+      const blockType = block.type;
       if (!Object.values(BLOCK_TYPE).includes(blockType))
         // NOTE: Setnry とかに送りたい ... 。てか、型ガードで一気に検査すべきか
         console.error(`unknown block type: ${blockType}`);
 
+      const tableType = block.parent_table;
+      if (!Object.values(TABLE_TYPE).includes(tableType))
+        console.error(`unknown table type: ${tableType}`); // NOTE: Setnry とかに送りたい...
+
+      // --------------------------------------------------------------------
+      // NOTE NOTE NOTE クラス化 構想 NOTE NOTE NOTE
+      /*
+        blockType, parentTableType のバリデーション
+         - 型ガード...
+
+        パーサーというよりは、parentPath と共通処理をくくり出したい
+
+        new Record({
+          id,
+          tableType,
+          recordMap,
+        });
+
+        interface RecordBlock {
+          getParent(): { id: tableType };
+          getName(): string;
+        }
+      */
       const getParentPath = (
         paths: string[],
         id: string,
@@ -190,6 +217,8 @@ const search = async ({
             console.error(`id:${id} is not found in recordMap.collection`);
             return paths;
           }
+
+          // collection は parent が同名を持っているので paths に push しない
 
           const parentId = collection.parent_id;
           if (!parentId) return paths;
@@ -208,21 +237,28 @@ const search = async ({
         }
         const type = recordBlock.type;
         if (type === BLOCK_TYPE.COLLECTION_VIEW_PAGE) {
-          // TODO: collection view page も properties.title があって collection_id が無いときがある（クラスカのときに対応。。。）
-          const collection =
-            recordMap.collection?.[recordBlock.collection_id]?.value;
-          if (!collection) {
-            console.error(
-              `id:${recordBlock.collection_id} is not found in recordMap.collection`,
-            );
-            return paths;
-          }
           block = recordMap.block[id].value;
           if (!block) {
             console.error(`id:${id} is not found in recordMap.block`);
             return paths;
           }
-          paths.push(collection.name.map((array) => array[0]).join(''));
+          const title = block.properties?.title
+            ?.map((array) => array[0])
+            .join('');
+
+          if (title) {
+            paths.push(title);
+          } else {
+            const collection =
+              recordMap.collection?.[recordBlock.collection_id]?.value;
+            if (!collection) {
+              console.error(
+                `id:${recordBlock.collection_id} is not found in recordMap.collection`,
+              );
+              return paths;
+            }
+            paths.push(collection.name.map((array) => array[0]).join(''));
+          }
         } else {
           block = recordMap.block[id].value;
           if (!block) {
@@ -243,19 +279,16 @@ const search = async ({
 
         return getParentPath(paths, parentId, parentTableType);
       };
+      // ------------------------------------------------------------------------
 
-      const tableType = recordBlock.parent_table;
-      if (!Object.values(TABLE_TYPE).includes(tableType))
-        console.error(`unknown table type: ${tableType}`); // NOTE: Setnry とかに送りたい...
-
-      if (recordBlock.parent_id && tableType !== TABLE_TYPE.SPACE) {
-        const parentPaths = getParentPath([], recordBlock.parent_id, tableType);
+      if (block.parent_id && tableType !== TABLE_TYPE.SPACE) {
+        const parentPaths = getParentPath([], block.parent_id, tableType);
 
         if (parentPaths.length >= 1)
           result.parentsPath = parentPaths.reverse().join(' / ');
       }
 
-      const pageIcon = recordBlock.format?.page_icon;
+      const pageIcon = block.format?.page_icon;
       if (pageIcon) {
         result.pageIcon = pageIcon.startsWith('http')
           ? {
@@ -276,26 +309,25 @@ const search = async ({
 
       let title: string | undefined =
         item.highlight?.title ??
-        recordBlock.properties?.title?.map((array) => array[0]).join('');
+        block.properties?.title?.map((array) => array[0]).join('');
 
       // TODO: switch
       if (
-        typeof title === 'undefined' &&
-        recordBlock.type === BLOCK_TYPE.COLLECTION_VIEW_PAGE &&
-        recordBlock.collection_id
+        title === undefined &&
+        block.type === BLOCK_TYPE.COLLECTION_VIEW_PAGE &&
+        block.collection_id
       ) {
-        const recordCollection =
-          recordMap.collection?.[recordBlock.collection_id]?.value;
-        if (!recordCollection) {
+        const collection = recordMap.collection?.[block.collection_id]?.value;
+        if (!collection) {
           console.error(
-            `id:${recordBlock.collection_id} is not found in recordMap.collection`,
+            `id:${block.collection_id} is not found in recordMap.collection`,
           );
           title = 'No Title';
         } else {
-          title = recordCollection.name.map((array) => array[0]).join('');
+          title = collection.name.map((array) => array[0]).join('');
         }
       }
-      if (typeof title === 'undefined') {
+      if (title === undefined) {
         console.error(`Title is not defined. id:${id}`);
         result.title = 'No Title';
       } else {
@@ -317,7 +349,11 @@ const search = async ({
 
       items.push(result);
     } catch (error) {
-      console.error(`Failed to parse json. ` + error, { item, recordBlock });
+      alert('Failed to parse json'); // FIXME Do not commit FIXME FIXME
+      console.error(`Failed to parse json. ` + error, {
+        item,
+        recordBlock: block,
+      });
     }
   }
 

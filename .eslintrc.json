@@ -22,7 +22,7 @@
     }
   },
   "rules": {
-    "react-hooks/exhaustive-deps": "off"
-  },
-  "ignorePatterns": ["webpack.config.js"]
+    "react-hooks/exhaustive-deps": "off",
+    "no-trailing-spaces": "error"
+  }
 }
