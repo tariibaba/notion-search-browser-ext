@@ -56,6 +56,7 @@ let config = {
       },
     ],
   },
+  devtool: 'source-map',
   optimization: {
     splitChunks: {
       name: 'vendor',
@@ -74,11 +75,7 @@ let config = {
   // },
 };
 
-if (config.mode === 'development') {
-  config = merge(config, {
-    devtool: 'inline-source-map',
-  });
-} else {
+if (config.mode !== 'development') {
   config = merge(config, {
     plugins: [
       new TerserPlugin({
