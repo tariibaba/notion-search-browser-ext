@@ -4,7 +4,7 @@ import { storage } from './storage';
 
 const PATH = '/getSpaces';
 
-type GetSpacesResponse = {
+type GetSpacesApiResponse = {
   [userId: string]: {
     space: {
       [spaceId: string]: {
@@ -27,7 +27,7 @@ export const linkSpace = async (): Promise<
   { aborted: true } | { aborted: false; space: Space }
 > => {
   const spaces: Space[] = [];
-  const res = (await axios.post<GetSpacesResponse>(PATH)).data;
+  const res = (await axios.post<GetSpacesApiResponse>(PATH)).data;
   for (const { space: spacesObj } of Object.values(res)) {
     for (const [spaceId, value] of Object.entries(spacesObj)) {
       spaces.push({

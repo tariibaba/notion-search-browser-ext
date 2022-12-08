@@ -54,7 +54,7 @@ type RecordBlockCollectionViewPage = RecordValueBase & {
 
 type RecordBlock = RecordBlockPage | RecordBlockCollectionViewPage;
 
-type Res = {
+type SearchApiRes = {
   results: ResItem[];
   recordMap: {
     // TODO 検索結果 0 件のときは無いけど ...

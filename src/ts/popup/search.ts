@@ -62,7 +62,7 @@ const search = async ({
   }
 
   const res = (
-    await axios.post<Res>(PATH, {
+    await axios.post<SearchApiRes>(PATH, {
       type: 'BlocksInSpace',
       query,
       spaceId,
