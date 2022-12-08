@@ -176,7 +176,7 @@ const search = async ({
 
           if (title) {
             paths.push(title);
-          } else {
+          } else if (recordBlock.collection_id) {
             const collection =
               recordMap.collection?.[recordBlock.collection_id]?.value;
             if (!collection) {
@@ -291,7 +291,6 @@ const search = async ({
 
       items.push(result);
     } catch (error) {
-      alert('Failed to parse json'); // FIXME Do not commit FIXME FIXME
       console.error(
         `Failed to parse json.`,
         error instanceof Error ? error.stack : error,
