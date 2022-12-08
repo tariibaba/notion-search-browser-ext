@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiltersBy } from '../constants';
+import { FILTERS_BY } from '../constants';
 
 export default function Filter({
   filtersBy,
@@ -15,12 +15,12 @@ export default function Filter({
           setFiltersBy((prev) => {
             return {
               ...prev,
-              [FiltersBy.TITLE_ONLY]: !prev[FiltersBy.TITLE_ONLY],
+              [FILTERS_BY.TITLE_ONLY]: !prev[FILTERS_BY.TITLE_ONLY],
             };
           });
         }}
         className={`filter ${
-          filtersBy[FiltersBy.TITLE_ONLY] ? 'selected' : ''
+          filtersBy[FILTERS_BY.TITLE_ONLY] ? 'selected' : ''
         }`}
       >
         Only search title

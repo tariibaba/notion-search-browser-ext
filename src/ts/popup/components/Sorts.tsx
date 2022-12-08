@@ -1,5 +1,5 @@
 import React from 'react';
-import { SortBy } from '../constants';
+import { SORT_BY } from '../constants';
 
 export default function Sort({
   sortBy,
@@ -15,9 +15,9 @@ export default function Sort({
         value={sortBy}
         onChange={(event) => setSortBy(event.target.value)}
       >
-        <option value={SortBy.RELEVANCE}>Best matches</option>
-        <option value={SortBy.LAST_EDITED}>Last edited: Newest first</option>
-        <option value={SortBy.CREATED}>Created: Newest first</option>
+        <option value={SORT_BY.RELEVANCE}>Best matches</option>
+        <option value={SORT_BY.LAST_EDITED}>Last edited: Newest first</option>
+        <option value={SORT_BY.CREATED}>Created: Newest first</option>
       </select>
     </div>
   );

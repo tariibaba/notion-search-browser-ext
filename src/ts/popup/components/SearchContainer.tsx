@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useHashParam, useObjectHashParam } from 'use-hash-param';
 import { storage } from '../../storage';
-import { SortBy, STORAGE_KEY } from '../constants';
+import { SORT_BY, STORAGE_KEY } from '../constants';
 import { debouncedSearch } from '../search';
 import Filter from './Filters';
 import Footer from './Footer';
@@ -23,7 +23,7 @@ export default function Container({
     _setQuery(query);
   };
 
-  const sortStateAndSetter = useHashParam('sort_by', SortBy.RELEVANCE);
+  const sortStateAndSetter = useHashParam('sort_by', SORT_BY.RELEVANCE);
   let [sortBy] = sortStateAndSetter;
   const [, setSortBy] = sortStateAndSetter;
 
@@ -71,7 +71,7 @@ export default function Container({
       setIsFirstRendering(false);
 
       // ad hoc: query == '' && sort == 'relevance' is worthless
-      if (!hasQuery && sortBy === SortBy.RELEVANCE) sortBy = SortBy.CREATED;
+      if (!hasQuery && sortBy === SORT_BY.RELEVANCE) sortBy = SORT_BY.CREATED;
 
       setSearchResult(
         await debouncedSearch({
