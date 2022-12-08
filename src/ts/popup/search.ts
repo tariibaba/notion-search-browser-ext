@@ -105,11 +105,11 @@ const search = async ({
       const blockType = block.type;
       if (!Object.values(BLOCK_TYPE).includes(blockType))
         // NOTE: Setnry とかに送りたい ... 。てか、型ガードで一気に検査すべきか
-        console.error(`unknown block type: ${blockType}`);
+        console.error(`unknown block type: ${blockType}`, { item, block });
 
       const tableType = block.parent_table;
       if (!Object.values(TABLE_TYPE).includes(tableType))
-        console.error(`unknown table type: ${tableType}`); // NOTE: Setnry とかに送りたい...
+        console.error(`unknown table type: ${tableType}`, { item, block }); // NOTE: Setnry とかに送りたい...
 
       // --------------------------------------------------------------------
       // NOTE NOTE NOTE クラス化 構想 NOTE NOTE NOTE
@@ -265,7 +265,8 @@ const search = async ({
       }
       if (title === undefined) {
         // タイトルのないドキュメントがこれなので、正常系
-        result.title = 'No Title';
+        console.log({ item, block });
+        result.title = TEXT_NO_TITLE;
       } else {
         result.title = title;
       }

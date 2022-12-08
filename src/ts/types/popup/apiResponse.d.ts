@@ -46,13 +46,18 @@ type RecordBlockPage = RecordValueBase & {
 //     https://www.notion.so/4897c80a8baa4c4d92617e1f627121bf
 type RecordBlockCollectionViewPage = RecordValueBase & {
   type: typeof import('../../popup/constants').BLOCK_TYPE.COLLECTION_VIEW_PAGE;
-  collection_id: string; // view page だけ作って database 未登録の場合に存在しない
-  properties: {
-    title: string[][];
-  };
+  collection_id: string; // FIXME view page だけ作って database 未登録の場合に存在しない
 } & Partial<RecordValueBaseAdditionalProperties>;
 
-type RecordBlock = RecordBlockPage | RecordBlockCollectionViewPage;
+// https://www.notion.so/cside/b5f75eedb90340aeba67f4265517c87c?v=461c4934d00a4d51b35a5537fe938d85
+type RecordBlockCollectionView = RecordValueBase & {
+  type: typeof import('../../popup/constants').BLOCK_TYPE.COLLECTION_VIEW;
+} & Partial<RecordValueBaseAdditionalProperties>;
+
+type RecordBlock =
+  | RecordBlockPage
+  | RecordBlockCollectionViewPage
+  | RecordBlockCollectionView;
 
 type SearchApiRes = {
   results: ResItem[];

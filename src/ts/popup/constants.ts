@@ -21,6 +21,7 @@ export const SORT_BY = {
 export const BLOCK_TYPE = {
   PAGE: 'page',
   COLLECTION_VIEW_PAGE: 'collection_view_page',
+  COLLECTION_VIEW: 'collection_view',
 } as const;
 
 export const TABLE_TYPE = {
