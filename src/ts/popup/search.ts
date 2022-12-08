@@ -18,6 +18,7 @@ const SEARCH_LIMIT = 50;
 const DEBOUNCE_TIME = 150;
 const ICON_WIDTH = 40;
 const REGEXP_REMOVES_TAG = new RegExp(`</?${MATCH_TAG}>`, 'ig');
+const TEXT_NO_TITLE = 'Untitled';
 
 // NOTE: 結合テストくらいは書きたい気がする。。
 const search = async ({
@@ -217,19 +218,27 @@ const search = async ({
 
       const pageIcon = block.format?.page_icon;
       if (pageIcon) {
-        result.pageIcon = pageIcon.startsWith('http')
-          ? {
-              type: ICON_TYPE.IMAGE,
-              value:
-                `${NOTION_HOST}/image/${encodeURIComponent(pageIcon)}` +
-                '?table=block' +
-                `&id=${id}` +
-                `&width=${ICON_WIDTH}`,
-            }
-          : {
-              type: ICON_TYPE.EMOJI,
-              value: pageIcon,
-            };
+        if (pageIcon.startsWith('http')) {
+          result.pageIcon = {
+            type: ICON_TYPE.IMAGE,
+            value:
+              `${NOTION_HOST}/image/${encodeURIComponent(pageIcon)}` +
+              '?table=block' +
+              `&id=${id}` +
+              `&width=${ICON_WIDTH}`,
+          };
+        } else if (pageIcon.startsWith('/')) {
+          // svg
+          result.pageIcon = {
+            type: ICON_TYPE.IMAGE,
+            value: `${NOTION_HOST}${pageIcon}&width=${ICON_WIDTH}`,
+          };
+        } else {
+          result.pageIcon = {
+            type: ICON_TYPE.EMOJI,
+            value: pageIcon,
+          };
+        }
       }
 
       result.url = `${NOTION_HOST}/${id.replaceAll('-', '')}`;
@@ -249,13 +258,13 @@ const search = async ({
           console.error(
             `id:${block.collection_id} is not found in recordMap.collection`,
           );
-          title = 'No Title';
+          title = TEXT_NO_TITLE;
         } else {
           title = collection.name.map((array) => array[0]).join('');
         }
       }
       if (title === undefined) {
-        console.error(`Title is not defined. id:${id}`);
+        // タイトルのないドキュメントがこれなので、正常系
         result.title = 'No Title';
       } else {
         result.title = title;
