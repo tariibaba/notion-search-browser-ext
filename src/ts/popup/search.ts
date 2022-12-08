@@ -63,7 +63,7 @@ const search = async ({
   }
 
   const res = (
-    await axios.post<SearchApiRes>(PATH, {
+    await axios.post<SearchApiResponse>(PATH, {
       type: 'BlocksInSpace',
       query,
       spaceId,
@@ -93,7 +93,7 @@ const search = async ({
   const recordMap = res.recordMap;
   const items: Item[] = [];
   for (const item of res.results) {
-    let block: RecordBlock | undefined = undefined;
+    let block: Block | undefined = undefined;
     try {
       const id = item.id;
       const result: Item = { title: '', url: '' };
@@ -157,7 +157,7 @@ const search = async ({
           return getParentPath(paths, parentId, parentTableType);
         }
 
-        let block: RecordBlock | undefined = undefined;
+        let block: Block | undefined = undefined;
         const recordBlock = recordMap.block[id]?.value;
         if (!recordBlock) {
           console.error(`id:${id} is not found in recordMap.block`);
@@ -185,7 +185,10 @@ const search = async ({
               );
               return paths;
             }
-            paths.push(collection.name.map((array) => array[0]).join(''));
+            const name = collection.name;
+            paths.push(
+              name ? name.map((array) => array[0]).join('') : TEXT_NO_TITLE,
+            );
           }
         } else {
           block = recordMap.block[id].value;
@@ -193,10 +196,11 @@ const search = async ({
             console.error(`id:${id} is not found in recordMap.block`);
             return paths;
           }
+          const properties = (block as BlockPage).properties;
           paths.push(
-            (block as RecordBlockPage).properties.title
-              .map((array) => array[0])
-              .join(''),
+            properties
+              ? properties.title.map((array) => array[0]).join('')
+              : TEXT_NO_TITLE,
           );
         }
         const parentId = block.parent_id;
@@ -260,12 +264,13 @@ const search = async ({
           );
           title = TEXT_NO_TITLE;
         } else {
-          title = collection.name.map((array) => array[0]).join('');
+          title = collection.name
+            ? collection.name.map((array) => array[0]).join('')
+            : TEXT_NO_TITLE;
         }
       }
       if (title === undefined) {
         // タイトルのないドキュメントがこれなので、正常系
-        console.log({ item, block });
         result.title = TEXT_NO_TITLE;
       } else {
         result.title = title;
@@ -287,10 +292,11 @@ const search = async ({
       items.push(result);
     } catch (error) {
       alert('Failed to parse json'); // FIXME Do not commit FIXME FIXME
-      console.error(`Failed to parse json. ` + error, {
-        item,
-        recordBlock: block,
-      });
+      console.error(
+        `Failed to parse json.`,
+        error instanceof Error ? error.stack : error,
+        { item, recordBlock: block },
+      );
     }
   }
 
