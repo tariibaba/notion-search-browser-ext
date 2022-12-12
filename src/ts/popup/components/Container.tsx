@@ -40,13 +40,13 @@ export default function Container() {
         alert(
           'Failed to get connected space. Please reload this page.\n' + error,
         );
-        return;
+        throw error;
       }
       if (space) {
         setSpace(space);
         return;
       }
-      console.log('link automatically');
+      console.info('link automatically');
       await linkAndSetStatus();
     })();
   }, []);

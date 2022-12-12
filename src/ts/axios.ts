@@ -39,19 +39,14 @@ AxiosInstance.interceptors.response.use(
         if (confirm('You must log in to Notion.\nGo to Notion and log in?')) {
           window.open(`${NOTION_HOST}/login`);
         }
-        const e = new Error(message);
-        console.trace(e);
-        return Promise.reject(e);
+        return Promise.reject(new Error(message));
       }
     } else if (error instanceof Error) {
       message = toUpperCaseFirst(error.message);
     } else {
       message = toUpperCaseFirst(error + '');
     }
-    const e = new HttpRequestError(message);
-    alert(e);
-    console.trace(e);
-    return Promise.reject(e);
+    return Promise.reject(new HttpRequestError(message));
   },
 );
 

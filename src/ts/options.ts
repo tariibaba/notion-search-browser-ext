@@ -23,7 +23,7 @@ HTMLElement.prototype.hide = function () {
     space = await getLinkedSpace();
   } catch (error) {
     alert('Failed to get connected space. Please reload this page.\n' + error);
-    return;
+    throw error;
   }
   const linkedBlock = $('.linked-block');
   const notLinkedBlock = $('.not-linked-block');
@@ -44,7 +44,7 @@ HTMLElement.prototype.hide = function () {
     } catch (error) {
       // TODO: 国際化
       alert('Failed to connect space. Please redo the operation.\n' + error);
-      return;
+      throw error;
     }
     if (result.aborted) return;
 
@@ -66,7 +66,7 @@ HTMLElement.prototype.hide = function () {
     } catch (error) {
       // TODO: 国際化
       alert('Failed to disconnect space. Please redo the operation.\n' + error);
-      return;
+      throw error;
     }
     linkedBlock.hide();
     notLinkedBlock.show();

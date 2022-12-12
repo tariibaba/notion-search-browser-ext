@@ -57,18 +57,23 @@ export default function Container({
       }
       setIsFirstRendering(false);
 
-      setSearchResult(
-        await debouncedSearch({
-          query: trimmedQuery,
-          sortBy:
-            !hasQuery && sortBy === SORT_BY.RELEVANCE // ad hoc: worthless condition
-              ? SORT_BY.CREATED
-              : sortBy,
-          filtersBy,
-          savesToStorage: isPopup && hasQuery,
-          spaceId: space.id,
-        }),
-      );
+      try {
+        setSearchResult(
+          await debouncedSearch({
+            query: trimmedQuery,
+            sortBy:
+              !hasQuery && sortBy === SORT_BY.RELEVANCE // ad hoc: worthless condition
+                ? SORT_BY.CREATED
+                : sortBy,
+            filtersBy,
+            savesToStorage: isPopup && hasQuery,
+            spaceId: space.id,
+          }),
+        );
+      } catch (error) {
+        alert(error); // 素のままでそれなりに分かりやすいメッセージになってるので、まぁ...。
+        throw error;
+      }
     })();
   }, [trimmedQuery, sortBy, filtersBy]);
 
