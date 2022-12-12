@@ -56,6 +56,7 @@ export default function Container({
   useEffect(() => {
     (async () => {
       // get cache
+      // TODO: 一気通貫テストしたい（デグレしたので。。）
       if (usesLastSearchResult && isFirstRendering) {
         const store = (await storage.get(
           `${space.id}-${STORAGE_KEY.LAST_SEARCHED}`,

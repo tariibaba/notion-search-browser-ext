@@ -1,3 +1,4 @@
+import escapeRegExp from 'lodash.escaperegexp';
 import { debounce } from 'throttle-debounce';
 import { axios } from '../axios';
 import { NOTION_HOST } from '../constants';
@@ -98,7 +99,10 @@ const search = async ({
       const id = item.id;
       const result: Item = { title: '', url: '' };
       const regexpAddsTag = new RegExp(
-        `(${query.split(/\s+/).join('|')})`,
+        `(${query
+          .split(/\s+/)
+          .map((query) => escapeRegExp(query))
+          .join('|')})`,
         'ig',
       );
       block = recordMap.block[id].value;
@@ -280,6 +284,7 @@ const search = async ({
         result.url += `#${item.highlightBlockId.replaceAll('-', '')}`;
         result.text = item.highlight.text;
       }
+      // TODO: view でやるべきじゃね？
       const setStrangeNotionTag = (str: string) =>
         query
           ? str

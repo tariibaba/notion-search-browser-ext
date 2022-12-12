@@ -1519,6 +1519,13 @@
   dependencies:
     "@types/lodash" "*"
 
+"@types/lodash.escaperegexp@^4.1.7":
+  version "4.1.7"
+  resolved "https://registry.yarnpkg.com/@types/lodash.escaperegexp/-/lodash.escaperegexp-4.1.7.tgz#e65bf79e261503ea44848b1b021c883be42dc8f9"
+  integrity sha512-2TfHizz0jsnyVkV4X1PMyk6KkibXTBHM43X+6BCR3KE6KgADdbirSF+oiEvPQl6mwuHXZjkxar9d4AFYORgfww==
+  dependencies:
+    "@types/lodash" "*"
+
 "@types/lodash@*":
   version "4.14.189"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.189.tgz#975ff8c38da5ae58b751127b19ad5e44b5b7f6d2"
@@ -4251,6 +4258,11 @@ lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
   integrity sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==
+
+lodash.escaperegexp@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/lodash.escaperegexp/-/lodash.escaperegexp-4.1.2.tgz#64762c48618082518ac3df4ccf5d5886dae20347"
+  integrity sha512-TM9YBvyC84ZxE3rgfefxUWiQKLilstD6k7PTGt6wfbtXF8ixIJLOL3VYyV/z+ZiPLsVxAsKAFVwWlWeb2Y8Yyw==
 
 lodash.memoize@4.x:
   version "4.1.2"
