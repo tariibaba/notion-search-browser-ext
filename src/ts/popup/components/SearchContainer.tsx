@@ -11,15 +11,15 @@ import Sort from './Sorts';
 
 export default function Container({
   isPopup,
-  space,
+  workspace,
 }: {
   isPopup: boolean;
-  space: Space;
+  workspace: Workspace;
 }) {
   const [query, _setQuery] = useHashParam('query', '');
   const setQuery = (query: string) => {
     if (query.trim() === '')
-      storage.remove(`${space.id}-${STORAGE_KEY.LAST_SEARCHED}`);
+      storage.remove(`${workspace.id}-${STORAGE_KEY.LAST_SEARCHED}`);
     _setQuery(query);
   };
 
@@ -45,7 +45,7 @@ export default function Container({
       // TODO: 一気通貫テストしたい（デグレしたので。。）
       if (isPopup && isFirstRendering) {
         const store = (await storage.get(
-          `${space.id}-${STORAGE_KEY.LAST_SEARCHED}`,
+          `${workspace.id}-${STORAGE_KEY.LAST_SEARCHED}`,
         )) as SearchResultCache | undefined; // TODO: 型ガード
 
         if (store) {
@@ -67,7 +67,7 @@ export default function Container({
                 : sortBy,
             filtersBy,
             savesToStorage: isPopup && hasQuery,
-            spaceId: space.id,
+            workspaceId: workspace.id,
           }),
         );
       } catch (error) {
@@ -80,7 +80,11 @@ export default function Container({
   return (
     <div className={`wrapper ${isPopup ? 'is-popup' : ''}`}>
       <main>
-        <SearchBox query={query} setQuery={setQuery} spaceName={space.name} />
+        <SearchBox
+          query={query}
+          setQuery={setQuery}
+          workspaceName={workspace.name}
+        />
         <Filter filtersBy={filtersBy} setFiltersBy={setFiltersBy} />
         <Sort sortBy={sortBy} setSortBy={setSortBy} />
         {searchResult && (

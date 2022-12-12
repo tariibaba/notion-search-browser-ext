@@ -1,49 +1,59 @@
 import React, { useEffect, useState } from 'react';
-import { getLinkedSpace, linkSpace } from '../../linkedSpace';
+import { getLinkedWorkspace, linkWorkspace } from '../../workspaces';
 import SearchContainer from './SearchContainer';
 
 // 後から足したくなるかもなので、今のところは boolean にしない
-const LINK_STATUS = {
+const LINKED_STATUS = {
   NOT_LINKED: 'NOT_CHECKED',
   LINKED: 'LINKED',
 } as const;
 
 export default function Container() {
-  const [space, _setSpace] = useState<Space | undefined>(undefined);
-  const [linkStatus, setLinkStatus] = useState<valueOf<typeof LINK_STATUS>>(
-    LINK_STATUS.NOT_LINKED,
-  );
+  const [workspace, _setWorkspace] = useState<Workspace | undefined>(undefined);
+  const [linkedStatus, setLinkedStatus] = useState<
+    valueOf<typeof LINKED_STATUS>
+  >(LINKED_STATUS.NOT_LINKED);
 
-  const setSpace = (space: Space) => {
-    _setSpace(space);
-    setLinkStatus(LINK_STATUS.LINKED);
+  const setSpace = (workspace: Workspace) => {
+    _setWorkspace(workspace);
+    setLinkedStatus(LINKED_STATUS.LINKED);
   };
 
   const isPopup = location.search === '?popup';
 
   const linkAndSetStatus = async () => {
-    // NOTE: axios 側で alert しなくなった場合、ここでユーザーにエラーを通知する必要あり
-    const result = await linkSpace();
+    let result:
+      | {
+          aborted: true;
+        }
+      | {
+          aborted: false;
+          workspace: Workspace;
+        };
+    try {
+      result = await linkWorkspace();
+    } catch (error) {
+      alert(`Failed to connect Notion. Please redo the operation.\n(${error})`);
+      throw error;
+    }
     if (result.aborted) {
       return;
     }
-    setSpace(result.space);
+    setSpace(result.workspace);
   };
 
   useEffect(() => {
     (async () => {
-      let space: Space | undefined;
+      let workspace: Workspace | undefined;
       try {
-        space = await getLinkedSpace();
+        workspace = await getLinkedWorkspace();
       } catch (error) {
         // TODO: 国際化
-        alert(
-          'Failed to get connected space. Please reload this page.\n' + error,
-        );
+        alert('Failed to get workspaces. Please reload this page.\n' + error);
         throw error;
       }
-      if (space) {
-        setSpace(space);
+      if (workspace) {
+        setSpace(workspace);
         return;
       }
       console.info('link automatically');
@@ -51,8 +61,8 @@ export default function Container() {
     })();
   }, []);
 
-  switch (linkStatus) {
-    case LINK_STATUS.NOT_LINKED:
+  switch (linkedStatus) {
+    case LINKED_STATUS.NOT_LINKED:
       return (
         <main style={{ width: '400px', height: '300px', padding: '20px' }}>
           <button
@@ -65,9 +75,10 @@ export default function Container() {
           </button>
         </main>
       );
-    case LINK_STATUS.LINKED:
-      if (!space) throw new Error('Status is linked, but space is undefined');
+    case LINKED_STATUS.LINKED:
+      if (!workspace)
+        throw new Error('Status is linked, but workspace is undefined');
 
-      return <SearchContainer isPopup={isPopup} space={space} />;
+      return <SearchContainer isPopup={isPopup} workspace={workspace} />;
   }
 }

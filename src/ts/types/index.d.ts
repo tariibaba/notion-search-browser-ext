@@ -1,6 +1,6 @@
 type valueOf<T> = T[keyof T]; // util
 
-type Space = {
+type Workspace = {
   id: string;
   name: string;
 };

@@ -27,15 +27,15 @@ const search = async ({
   sortBy,
   filtersBy,
   savesToStorage,
-  spaceId,
+  workspaceId,
 }: {
   query: string;
   sortBy: string;
   filtersBy: FiltersBy;
   savesToStorage: boolean;
-  spaceId: string;
+  workspaceId: string;
 }) => {
-  if (!spaceId) throw new Error('spaceId is empty');
+  if (!workspaceId) throw new Error('spaceId is empty');
 
   // このへんのテストは、UT じゃなくてフォーム含めて一気通貫で見ないと意味ない氣がする
   let sortOptions = {};
@@ -67,7 +67,7 @@ const search = async ({
     await axios.post<SearchApiResponse>(PATH, {
       type: 'BlocksInSpace',
       query,
-      spaceId,
+      spaceId: workspaceId,
       limit: SEARCH_LIMIT,
       filters: {
         isDeletedOnly: false,
@@ -137,7 +137,7 @@ const search = async ({
       const getParentPath = (
         paths: string[],
         id: string,
-        tableType: Exclude<TableType, typeof TABLE_TYPE.SPACE>,
+        tableType: Exclude<TableType, typeof TABLE_TYPE.WORKSPACE>,
       ): string[] => {
         if (!Object.values(TABLE_TYPE).includes(tableType))
           console.error(`unknown table type: ${tableType}`); // NOTE: Setnry とかに送りたい...
@@ -156,7 +156,7 @@ const search = async ({
           if (!parentId) return paths;
 
           const parentTableType = collection.parent_table;
-          if (parentTableType === TABLE_TYPE.SPACE) return paths;
+          if (parentTableType === TABLE_TYPE.WORKSPACE) return paths;
 
           return getParentPath(paths, parentId, parentTableType);
         }
@@ -211,13 +211,13 @@ const search = async ({
         if (!parentId) return paths;
 
         const parentTableType = block.parent_table;
-        if (parentTableType === TABLE_TYPE.SPACE) return paths;
+        if (parentTableType === TABLE_TYPE.WORKSPACE) return paths;
 
         return getParentPath(paths, parentId, parentTableType);
       };
       // ------------------------------------------------------------------------
 
-      if (block.parent_id && tableType !== TABLE_TYPE.SPACE) {
+      if (block.parent_id && tableType !== TABLE_TYPE.WORKSPACE) {
         const parentPaths = getParentPath([], block.parent_id, tableType);
 
         if (parentPaths.length >= 1)
@@ -313,7 +313,7 @@ const search = async ({
     const data: SearchResultCache = { query, searchResult };
     // set に失敗しても致命的ではない (前回の検索結果が表示されなくなるだけ) なので、エラーハンドリングしない
     storage.set({
-      [`${spaceId}-${STORAGE_KEY.LAST_SEARCHED}`]: data,
+      [`${workspaceId}-${STORAGE_KEY.LAST_SEARCHED}`]: data,
     });
   }
 

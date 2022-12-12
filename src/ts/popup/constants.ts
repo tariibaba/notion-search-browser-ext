@@ -25,7 +25,7 @@ export const BLOCK_TYPE = {
 } as const;
 
 export const TABLE_TYPE = {
-  SPACE: 'space',
+  WORKSPACE: 'space',
   BLOCK: 'block',
   COLLECTION: 'collection',
 } as const;

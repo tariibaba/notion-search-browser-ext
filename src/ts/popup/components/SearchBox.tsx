@@ -3,11 +3,11 @@ import React, { useEffect, useRef } from 'react';
 export default function SearchBox({
   query,
   setQuery,
-  spaceName,
+  workspaceName,
 }: {
   query: string;
   setQuery: (value: string) => void;
-  spaceName: string;
+  workspaceName: string;
 }) {
   const clear = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     setQuery('');
@@ -31,7 +31,7 @@ export default function SearchBox({
         ref={inputRef}
         type="text"
         className="search"
-        placeholder={`Search ${spaceName}...`}
+        placeholder={`Search ${workspaceName}...`}
         autoFocus
         onChange={(event) => setQuery(event.target.value)}
       />

@@ -1,5 +1,9 @@
 import '../postcss/options.pcss';
-import { getLinkedSpace, linkSpace, unlinkSpace } from './linkedSpace';
+import {
+  getLinkedWorkspace,
+  linkWorkspace,
+  unlinkWorkspace,
+} from './workspaces';
 
 declare global {
   interface HTMLElement {
@@ -18,39 +22,38 @@ HTMLElement.prototype.hide = function () {
   // ========================================
   // Link Status
   // ========================================
-  let space: Space | undefined;
+  let workspace: Workspace | undefined;
   try {
-    space = await getLinkedSpace();
+    workspace = await getLinkedWorkspace();
   } catch (error) {
-    alert('Failed to get connected space. Please reload this page.\n' + error);
+    alert(`Failed to get workspaces. Please reload this page.\n(${error})`);
     throw error;
   }
   const linkedBlock = $('.linked-block');
   const notLinkedBlock = $('.not-linked-block');
 
-  if (space) {
+  if (workspace) {
     linkedBlock.show();
-    for (const elem of $$('.space-name')) {
-      elem.textContent = space.name;
+    for (const elem of $$('.workspace-name')) {
+      elem.textContent = workspace.name;
     }
   } else {
     notLinkedBlock.show();
   }
 
   $('.link').addEventListener('click', async () => {
-    let result: { aborted: true } | { aborted: false; space: Space };
+    let result: { aborted: true } | { aborted: false; workspace: Workspace };
     try {
-      result = await linkSpace();
+      result = await linkWorkspace();
     } catch (error) {
       // TODO: 国際化
-      alert('Failed to connect space. Please redo the operation.\n' + error);
+      alert(`Failed to connect Notion. Please redo the operation.\n(${error})`);
       throw error;
     }
     if (result.aborted) return;
 
-    const space = result.space;
-    for (const elem of $$('.space-name')) {
-      elem.textContent = space.name;
+    for (const elem of $$('.workspace-name')) {
+      elem.textContent = result.workspace.name;
     }
 
     linkedBlock.show();
@@ -62,10 +65,12 @@ HTMLElement.prototype.hide = function () {
     if (!ok) return;
 
     try {
-      await unlinkSpace();
+      await unlinkWorkspace();
     } catch (error) {
       // TODO: 国際化
-      alert('Failed to disconnect space. Please redo the operation.\n' + error);
+      alert(
+        `Failed to disconnect Notion. Please redo the operation.\n(${error})`,
+      );
       throw error;
     }
     linkedBlock.hide();
