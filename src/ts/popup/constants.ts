@@ -5,7 +5,7 @@ export const SEARCH_LIMIT = 50;
 export const MATCH_TAG = 'gzkNfoUU';
 
 export const FILTERS_BY = {
-  TITLE_ONLY: 'TITLE_ONLY',
+  ONLY_TITLE: 'ONLY_TITLE',
 } as const;
 
 export const SORT_BY = {

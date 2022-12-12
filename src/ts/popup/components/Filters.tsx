@@ -15,12 +15,12 @@ export default function Filter({
           setFiltersBy((prev) => {
             return {
               ...prev,
-              [FILTERS_BY.TITLE_ONLY]: !prev[FILTERS_BY.TITLE_ONLY],
+              [FILTERS_BY.ONLY_TITLE]: !prev[FILTERS_BY.ONLY_TITLE],
             };
           });
         }}
         className={`filter ${
-          filtersBy[FILTERS_BY.TITLE_ONLY] ? 'selected' : ''
+          filtersBy[FILTERS_BY.ONLY_TITLE] ? 'selected' : ''
         }`}
       >
         Only search title

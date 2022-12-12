@@ -55,7 +55,7 @@ const search = async ({
   const filterOptions: { navigableBlockContentOnly?: boolean } = {};
   for (const [key, value] of Object.entries(filtersBy)) {
     switch (key) {
-      case FILTERS_BY.TITLE_ONLY:
+      case FILTERS_BY.ONLY_TITLE:
         if (value) filterOptions.navigableBlockContentOnly = true;
         break;
       default:
