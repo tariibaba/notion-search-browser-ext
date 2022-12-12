@@ -1,10 +1,25 @@
 @import url('./common.pcss');
 
 body {
+  margin: 0;
+}
+
+.wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  padding-top: 40px;
   font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Helvetica, 'Apple Color Emoji', Arial, sans-serif, 'Segoe UI Emoji',
     'Segoe UI Symbol';
   background-color: #6d6d6d;
+
+  &.is-popup {
+    padding-top: 0;
+  }
+
+  &:not(.is-popup) {
+    height: 100vh;
+  }
 }
 
 /* TODO: main は actiovation container と共通のものだけを残し
@@ -25,6 +40,10 @@ main {
   color: var(--text-color);
   background-color: white;
   border-radius: 8px;
+
+  .is-popup & {
+    width: 662px;
+  }
 }
 
 a {
@@ -133,7 +152,8 @@ svg {
 }
 
 .items {
-  max-height: calc(100vh - 215px);
+  box-sizing: border-box;
+  max-height: calc(100vh - 225px);
   overflow-y: auto;
   overflow-wrap: anywhere;
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHashParam, useObjectHashParam } from 'use-hash-param';
 import { storage } from '../../storage';
 import { SORT_BY, STORAGE_KEY } from '../constants';
@@ -40,18 +40,6 @@ export default function Container({
   const hasQuery = trimmedQuery.length > 0;
   const usesLastSearchResult = isPopup && hasQuery;
 
-  // initialize
-  useLayoutEffect(() => {
-    // set style
-    if (isPopup) {
-      // css ファイルを append した方が見通しは良くなるが、同期的なスタイル適用が出来ない
-      document.body.style.width = '662px';
-      document.body.style.margin = '0px';
-    } else {
-      document.body.style.margin = '40px 0 0 0';
-    }
-  }, []);
-
   // search
   useEffect(() => {
     (async () => {
@@ -87,16 +75,18 @@ export default function Container({
   }, [trimmedQuery, sortBy, filtersBy]);
 
   return (
-    <main {...(isPopup && { className: 'is-popup' })}>
-      <SearchBox query={query} setQuery={setQuery} spaceName={space.name} />
-      <Filter filtersBy={filtersBy} setFiltersBy={setFiltersBy} />
-      <Sort sortBy={sortBy} setSortBy={setSortBy} />
-      {searchResult && (
-        <>
-          <Items items={searchResult.items} opensNewTab={isPopup} />
-        </>
-      )}
-      <Footer total={searchResult && searchResult.total} />
-    </main>
+    <div className={`wrapper ${isPopup ? 'is-popup' : ''}`}>
+      <main>
+        <SearchBox query={query} setQuery={setQuery} spaceName={space.name} />
+        <Filter filtersBy={filtersBy} setFiltersBy={setFiltersBy} />
+        <Sort sortBy={sortBy} setSortBy={setSortBy} />
+        {searchResult && (
+          <>
+            <Items items={searchResult.items} opensNewTab={isPopup} />
+          </>
+        )}
+        <Footer total={searchResult && searchResult.total} />
+      </main>
+    </div>
   );
 }
