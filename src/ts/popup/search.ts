@@ -26,13 +26,13 @@ const search = async ({
   query,
   sortBy,
   filtersBy,
-  usesLastSearchResult,
+  savesToStorage,
   spaceId,
 }: {
   query: string;
   sortBy: string;
   filtersBy: FiltersBy;
-  usesLastSearchResult: boolean;
+  savesToStorage: boolean;
   spaceId: string;
 }) => {
   if (!spaceId) throw new Error('spaceId is empty');
@@ -309,7 +309,7 @@ const search = async ({
     total: res.total,
   };
 
-  if (usesLastSearchResult) {
+  if (savesToStorage) {
     const data: SearchResultCache = { query, searchResult };
     // set に失敗しても致命的ではない (前回の検索結果が表示されなくなるだけ) なので、エラーハンドリングしない
     storage.set({

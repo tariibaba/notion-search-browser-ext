@@ -24,8 +24,7 @@ export default function Container({
   };
 
   const sortStateAndSetter = useHashParam('sort_by', SORT_BY.RELEVANCE);
-  let [sortBy] = sortStateAndSetter;
-  const [, setSortBy] = sortStateAndSetter;
+  const [sortBy, setSortBy] = sortStateAndSetter;
 
   const [filtersBy, setFiltersBy] = useObjectHashParam<FiltersBy>(
     'filters_by',
@@ -38,14 +37,13 @@ export default function Container({
 
   const trimmedQuery = query.trim();
   const hasQuery = trimmedQuery.length > 0;
-  const usesLastSearchResult = isPopup && hasQuery;
 
   // search
   useEffect(() => {
     (async () => {
       // get cache
       // TODO: 一気通貫テストしたい（デグレしたので。。）
-      if (usesLastSearchResult && isFirstRendering) {
+      if (isPopup && isFirstRendering) {
         const store = (await storage.get(
           `${space.id}-${STORAGE_KEY.LAST_SEARCHED}`,
         )) as SearchResultCache | undefined; // TODO: 型ガード
@@ -59,15 +57,15 @@ export default function Container({
       }
       setIsFirstRendering(false);
 
-      // ad hoc: query == '' && sort == 'relevance' is worthless
-      if (!hasQuery && sortBy === SORT_BY.RELEVANCE) sortBy = SORT_BY.CREATED;
-
       setSearchResult(
         await debouncedSearch({
           query: trimmedQuery,
-          sortBy,
+          sortBy:
+            !hasQuery && sortBy === SORT_BY.RELEVANCE // ad hoc: worthless condition
+              ? SORT_BY.CREATED
+              : sortBy,
           filtersBy,
-          usesLastSearchResult,
+          savesToStorage: isPopup && hasQuery,
           spaceId: space.id,
         }),
       );
