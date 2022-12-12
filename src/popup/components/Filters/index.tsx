@@ -2,10 +2,10 @@ import React from 'react';
 import './styles.pcss';
 
 export const Filter = ({
-  filterOnlyTitles,
+  filterByOnlyTitles,
   setFilterOnlyTitles,
 }: {
-  filterOnlyTitles: boolean;
+  filterByOnlyTitles: boolean;
   setFilterOnlyTitles: SetQueryParam<boolean>;
 }) => {
   return (
@@ -15,10 +15,10 @@ export const Filter = ({
           setFilterOnlyTitles((prev) => !prev);
         }}
         className={`filter test-filter-only-title clickable ${
-          filterOnlyTitles ? 'selected' : ''
+          filterByOnlyTitles ? 'selected' : ''
         }`}
       >
-        Only search titles
+        {chrome.i18n.getMessage('filterBy_onlyTitles')}
       </span>
     </div>
   );

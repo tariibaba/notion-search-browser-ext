@@ -1,5 +1,29 @@
 {
-  "description": {
+  "DESCRIPTION": {
     "message": "Search Notion pages on the popup"
+  },
+  "searchPlaceholder": {
+    "message": "Search $1..."
+  },
+  "filterBy_onlyTitles": {
+    "message": "Only search title"
+  },
+  "sortBy_relevance": {
+    "message": "Best matches"
+  },
+  "sortBy_lastEdited": {
+    "message": "Last Edited:"
+  },
+  "sortBy_created": {
+    "message": "Created:"
+  },
+  "sortBy_newestFirst": {
+    "message": "Newest first"
+  },
+  "summaryOfResult": {
+    "message": "<em>$1</em> results"
+  },
+  "summaryOfResultOverLimit": {
+    "message": "<em>$2</em> of <em>$1</em> results"
   }
 }

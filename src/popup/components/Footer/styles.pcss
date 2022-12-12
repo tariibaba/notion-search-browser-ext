@@ -1,21 +1,26 @@
 .footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   height: 30px;
   padding: 0 12px;
-  font-size: var(--font-size-small);
-  color: var(--font-color-light);
   border-top: var(--border);
 }
 
-.total {
-  font-weight: bold;
+.summary {
+  margin-right: auto;
+  font-size: var(--font-size-small);
+  color: var(--font-color-x-light);
+
+  em {
+    color: var(--font-color-light);
+  }
 }
 
 .icons {
   display: flex;
   align-items: center;
+  margin-left: auto;
+  font-size: var(--font-size-small);
 
   img {
     width: 16px;

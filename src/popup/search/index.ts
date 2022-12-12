@@ -17,13 +17,13 @@ const TEXT_NO_TITLE = 'Untitled';
 export const search = async ({
   query,
   sortBy,
-  filterOnlyTitles,
+  filterByOnlyTitles,
   savesToStorage,
   workspaceId,
 }: {
   query: string;
   sortBy: string;
-  filterOnlyTitles: boolean;
+  filterByOnlyTitles: boolean;
   savesToStorage: boolean;
   workspaceId: string;
 }) => {
@@ -62,7 +62,7 @@ export const search = async ({
         editedBy: [],
         lastEditedTime: {},
         createdTime: {},
-        ...(filterOnlyTitles ? { navigableBlockContentOnly: true } : {}),
+        ...(filterByOnlyTitles ? { navigableBlockContentOnly: true } : {}),
       },
       sort: sortOptions,
       source: 'quick_find_input_change',

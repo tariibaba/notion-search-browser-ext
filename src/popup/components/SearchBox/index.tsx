@@ -36,7 +36,7 @@ export const SearchBox = ({
       <input
         type="search"
         className={INPUT_CLASS_NAME}
-        placeholder={`Search ${workspaceName}...`}
+        placeholder={chrome.i18n.getMessage('searchPlaceholder', workspaceName)}
         autoFocus
         onChange={(event) => setQuery(event.target.value)}
         value={query}

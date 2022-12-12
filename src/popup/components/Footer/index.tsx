@@ -26,22 +26,27 @@ export const Footer = ({
     event.preventDefault();
   };
 
+  console.log(total);
   return (
     <div className="footer">
-      <div className="summary">
-        {showsSummary && (
-          <>
-            {total > SEARCH_LIMIT && (
-              <>
-                <span className="total">{SEARCH_LIMIT}</span> of{' '}
-              </>
-            )}
-            <span className="total">{total}</span> results
-          </>
-        )}
-      </div>
+      {showsSummary && (
+        <div
+          className="summary"
+          dangerouslySetInnerHTML={{
+            __html:
+              total > SEARCH_LIMIT
+                ? chrome.i18n.getMessage('summaryOfResultOverLimit', [
+                    total.toLocaleString(),
+                    SEARCH_LIMIT.toLocaleString(),
+                  ])
+                : chrome.i18n.getMessage(
+                    'summaryOfResult',
+                    total.toLocaleString(),
+                  ),
+          }}
+        ></div>
+      )}
       <div className="icons">
-        {/* TODO: i18n */}
         {isPopup && (
           <a
             href="#"
