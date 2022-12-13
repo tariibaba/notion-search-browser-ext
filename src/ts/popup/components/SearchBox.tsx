@@ -22,7 +22,7 @@ export default function SearchBox({
   }, [query]);
 
   return (
-    <div className="search-container">
+    <div className="search-box">
       <img
         className="icon-search"
         src={chrome.runtime.getURL('./images/search.svg')}

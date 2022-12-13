@@ -92,7 +92,10 @@ export default function Container({
             <Items items={searchResult.items} opensNewTab={isPopup} />
           </>
         )}
-        <Footer total={searchResult && searchResult.total} />
+        <Footer
+          total={searchResult?.total || 0}
+          showsSummary={!!searchResult && hasQuery}
+        />
       </main>
     </div>
   );

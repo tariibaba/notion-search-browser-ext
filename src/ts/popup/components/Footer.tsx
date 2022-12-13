@@ -1,7 +1,13 @@
 import React from 'react';
 import { SEARCH_LIMIT } from '../constants';
 
-export default function Total({ total }: { total: number | undefined }) {
+export default function Total({
+  total,
+  showsSummary,
+}: {
+  total: number;
+  showsSummary: boolean;
+}) {
   const handleClickSettings = async (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
   ) => {
@@ -11,7 +17,7 @@ export default function Total({ total }: { total: number | undefined }) {
   return (
     <div className="footer">
       <div className="summary">
-        {typeof total !== 'undefined' && (
+        {showsSummary && (
           <>
             {total > SEARCH_LIMIT && (
               <>
@@ -28,7 +34,6 @@ export default function Total({ total }: { total: number | undefined }) {
             className="icon-settings"
             src={chrome.runtime.getURL('./images/settings.svg')}
           />
-          <span>Settings</span>
         </a>
       </div>
     </div>
