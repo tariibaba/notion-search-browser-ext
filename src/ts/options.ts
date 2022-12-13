@@ -47,7 +47,9 @@ HTMLElement.prototype.hide = function () {
       result = await linkWorkspace();
     } catch (error) {
       // TODO: 国際化
-      alert(`Failed to connect Notion. Please redo the operation.\n(${error})`);
+      alert(
+        `Failed to connect Notion. Please redo the operation later.\n(${error})`,
+      );
       throw error;
     }
     if (result.aborted) return;
@@ -69,7 +71,7 @@ HTMLElement.prototype.hide = function () {
     } catch (error) {
       // TODO: 国際化
       alert(
-        `Failed to disconnect Notion. Please redo the operation.\n(${error})`,
+        `Failed to disconnect Notion. Please redo the operation later.\n(${error})`,
       );
       throw error;
     }

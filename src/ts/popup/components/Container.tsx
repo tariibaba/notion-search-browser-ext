@@ -33,7 +33,9 @@ export default function Container() {
     try {
       result = await linkWorkspace();
     } catch (error) {
-      alert(`Failed to connect Notion. Please redo the operation.\n(${error})`);
+      alert(
+        `Failed to connect Notion. Please redo the operation later.\n(${error})`,
+      );
       throw error;
     }
     if (result.aborted) {

@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { setupCache } from 'axios-cache-interceptor';
 import { NOTION_HOST } from './constants';
+import { errorToString, toUpperCaseFirst } from './utils';
 
 const API_BASE_URL = `${NOTION_HOST}/api/v3`;
 const CACHE_TIME = 1 * 60 * 1_000;
@@ -41,10 +42,8 @@ AxiosInstance.interceptors.response.use(
         }
         return Promise.reject(new Error(message));
       }
-    } else if (error instanceof Error) {
-      message = toUpperCaseFirst(error.message);
     } else {
-      message = toUpperCaseFirst(error + '');
+      message = errorToString(error);
     }
     return Promise.reject(new HttpRequestError(message));
   },
@@ -55,7 +54,3 @@ export { AxiosInstance as axios };
 // ========================================
 // Utils
 // ========================================
-
-function toUpperCaseFirst(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
