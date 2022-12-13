@@ -143,6 +143,8 @@ const search = async ({
           console.error(`unknown table type: ${tableType}`); // NOTE: Setnry とかに送りたい...
 
         // TODO: switch
+        // https://www.notion.so/cside/53429b98c9324f4995bab2abc54a4a24
+        // - https://www.notion.so/cside/340ad8d205b041f1ae637da33b807896 の親
         if (tableType === TABLE_TYPE.COLLECTION) {
           const collection = recordMap.collection?.[id]?.value;
           if (!collection) {
