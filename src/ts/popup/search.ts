@@ -36,6 +36,7 @@ const search = async ({
   workspaceId: string;
 }) => {
   if (!workspaceId) throw new Error('spaceId is empty');
+  const trimmedQuery = query.trim();
 
   // このへんのテストは、UT じゃなくてフォーム含めて一気通貫で見ないと意味ない氣がする
   let sortOptions = {};
@@ -66,7 +67,7 @@ const search = async ({
   const res = (
     await axios.post<SearchApiResponse>(PATH, {
       type: 'BlocksInSpace',
-      query,
+      query: trimmedQuery,
       spaceId: workspaceId,
       limit: SEARCH_LIMIT,
       filters: {
@@ -99,7 +100,7 @@ const search = async ({
       const id = item.id;
       const result: Item = { title: '', url: '' };
       const regexpAddsTag = new RegExp(
-        `(${query
+        `(${trimmedQuery
           .split(/\s+/)
           .map((query) => escapeRegExp(query))
           .join('|')})`,
@@ -288,7 +289,7 @@ const search = async ({
       }
       // TODO: view でやるべきじゃね？
       const setStrangeNotionTag = (str: string) =>
-        query
+        trimmedQuery
           ? str
               .replace(REGEXP_REMOVES_TAG, '')
               .replace(regexpAddsTag, `<${MATCH_TAG}>$1</${MATCH_TAG}>`)

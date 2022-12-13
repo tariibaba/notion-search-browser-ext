@@ -61,7 +61,7 @@ export default function Container({
       try {
         setSearchResult(
           await debouncedSearch({
-            query: trimmedQuery,
+            query,
             sortBy:
               !hasQuery && sortBy === SORT_BY.RELEVANCE // ad hoc: worthless condition
                 ? SORT_BY.CREATED
