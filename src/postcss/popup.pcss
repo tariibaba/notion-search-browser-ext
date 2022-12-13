@@ -31,10 +31,10 @@ main {
   --font-size-large: 1.2rem;
   --font-size-medium: 0.9rem;
   --font-size-small: 0.78rem;
-  --border-color: #eae5e3;
+  --border: 1px solid #eae5e3;
 
   max-width: 662px;
-  padding: 2px;
+  padding: 0;
   margin: 0 auto;
   font-size: var(--font-size-medium);
   color: var(--text-color);
@@ -61,12 +61,13 @@ a {
   Search
 ---------------------------------------- */
 
-.search-container {
+.search-box {
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 45px;
-  border-bottom: solid 1px var(--border-color);
+  padding: 2px;
+  border-bottom: var(--border);
 
   .icon-search {
     width: 18px;
@@ -163,7 +164,7 @@ a {
 }
 
 .item {
-  border-bottom: solid 1px var(--border-color);
+  border-bottom: var(--border);
 }
 
 .url {
@@ -201,9 +202,10 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 10px;
+  padding: 6px 10px 8px 12px;
   font-size: calc(var(--font-size-small) + 0.5px);
   color: var(--text-color-light);
+  border-top: var(--border);
 }
 
 .summary {
@@ -219,6 +221,6 @@ a {
 }
 
 .icon-settings {
-  width: 14px;
+  width: 16px;
   margin-right: 3px;
 }
