@@ -90,7 +90,11 @@ export default function Container({
         <Sort sortBy={sortBy} setSortBy={setSortBy} />
         {searchResult && (
           <>
-            <Items items={searchResult.items} opensNewTab={isPopup} />
+            <Items
+              items={searchResult.items}
+              query={query}
+              opensNewTab={isPopup}
+            />
           </>
         )}
         <Footer

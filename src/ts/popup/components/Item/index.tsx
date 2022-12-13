@@ -1,17 +1,10 @@
 import React from 'react';
-import reactStringReplace from 'react-string-replace';
-import { ICON_TYPE, MATCH_TAG } from '../constants';
-
-const regexp = new RegExp(`<${MATCH_TAG}>(.+?)</${MATCH_TAG}>`, 'g');
-const addHighlight = (str: string) =>
-  reactStringReplace(str, regexp, (match, i) => (
-    <span key={i} className="highlight">
-      {match}
-    </span>
-  ));
+import { ICON_TYPE } from '../../constants';
+import { setHighlight } from './utils';
 
 export default function Item({
   opensNewTab,
+  query,
   pageIcon,
   title,
   url,
@@ -19,6 +12,7 @@ export default function Item({
   text,
 }: {
   opensNewTab: boolean;
+  query: string;
 } & Item) {
   let icon: JSX.Element;
   switch (pageIcon?.type) {
@@ -29,11 +23,7 @@ export default function Item({
       icon = <>{pageIcon.value}</>;
       break;
     case ICON_TYPE.IMAGE:
-      icon = (
-        <>
-          <img src={pageIcon.value} />
-        </>
-      );
+      icon = <img src={pageIcon.value} />;
       break;
     default:
       throw new Error(`unknown pageIcon.type: ${pageIcon?.type}`);
@@ -44,9 +34,9 @@ export default function Item({
       <a className="url" {...(opensNewTab && { target: '_blank' })} href={url}>
         <div className="page-icon-container">{icon}</div>
         <div className="main-item">
-          <p className="title">{addHighlight(title)}</p>
+          <p className="title">{setHighlight(title, query)}</p>
           {parentsPath && <p className="parents-path">{parentsPath}</p>}
-          {text && <p className="text">{addHighlight(text)}</p>}
+          {text && <p className="text">{setHighlight(text, query)}</p>}
         </div>
       </a>
     </div>
