@@ -19,9 +19,11 @@ export default function Filter({
             };
           });
         }}
-        className={`filter ${
-          filtersBy[FILTERS_BY.ONLY_TITLE] ? 'selected' : ''
-        }`}
+        className={[
+          'filter',
+          'clickable',
+          filtersBy[FILTERS_BY.ONLY_TITLE] ? 'selected' : '',
+        ].join(' ')}
       >
         Only search title
       </span>

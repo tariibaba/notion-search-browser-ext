@@ -11,7 +11,7 @@ export default function Sort({
   return (
     <div className="sorts">
       <select
-        className="sort"
+        className="sort clickable"
         value={sortBy}
         onChange={(event) => setSortBy(event.target.value)}
       >
