@@ -1,8 +1,9 @@
 # Notion Search
 
-<a href="https://chrome.google.com/webstore/detail/notion-search/nelmlmaelgfcpjgknkidapfnoddpjfee"><img src="https://user-images.githubusercontent.com/315510/205478541-6242f40e-9921-425d-bb08-fddd47a2ad00.png" width="800px" /></a>
+[Chrome Web Store](https://chrome.google.com/webstore/detail/notion-search/nelmlmaelgfcpjgknkidapfnoddpjfee)
 
-[Notion Search - Chrome Web Store](https://chrome.google.com/webstore/detail/notion-search/nelmlmaelgfcpjgknkidapfnoddpjfee)
+<video src="https://user-images.githubusercontent.com/315510/207333686-1f0789ed-8a9e-41ed-978d-a2ab8557cd84.mov" width="400" autoplay></video>
+
 
 Notion search on the popup.
 
