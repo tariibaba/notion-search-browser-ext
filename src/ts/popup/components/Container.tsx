@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { alertError } from '../../utils';
 import { getLinkedWorkspace, linkWorkspace } from '../../workspaces';
 import SearchContainer from './SearchContainer';
 
@@ -33,8 +34,9 @@ export default function Container() {
     try {
       result = await linkWorkspace();
     } catch (error) {
-      alert(
-        `Failed to connect Notion. Please redo the operation later.\n(${error})`,
+      alertError(
+        'Failed to connect Notion. Please redo the operation later.',
+        error,
       );
       throw error;
     }
@@ -51,7 +53,7 @@ export default function Container() {
         workspace = await getLinkedWorkspace();
       } catch (error) {
         // TODO: 国際化
-        alert('Failed to get workspaces. Please reload this page.\n' + error);
+        alertError('Failed to get workspaces. Please reload this page.', error);
         throw error;
       }
       if (workspace) {

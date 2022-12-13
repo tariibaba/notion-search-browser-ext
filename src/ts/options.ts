@@ -1,4 +1,5 @@
 import '../postcss/options.pcss';
+import { alertError } from './utils';
 import {
   getLinkedWorkspace,
   linkWorkspace,
@@ -26,7 +27,7 @@ HTMLElement.prototype.hide = function () {
   try {
     workspace = await getLinkedWorkspace();
   } catch (error) {
-    alert(`Failed to get workspaces. Please reload this page.\n(${error})`);
+    alertError('Failed to get workspaces. Please reload this page.', error);
     throw error;
   }
   const linkedBlock = $('.linked-block');
@@ -47,8 +48,9 @@ HTMLElement.prototype.hide = function () {
       result = await linkWorkspace();
     } catch (error) {
       // TODO: 国際化
-      alert(
-        `Failed to connect Notion. Please redo the operation later.\n(${error})`,
+      alertError(
+        'Failed to connect Notion. Please redo the operation later.',
+        error,
       );
       throw error;
     }
@@ -70,8 +72,9 @@ HTMLElement.prototype.hide = function () {
       await unlinkWorkspace();
     } catch (error) {
       // TODO: 国際化
-      alert(
-        `Failed to disconnect Notion. Please redo the operation later.\n(${error})`,
+      alertError(
+        'Failed to disconnect Notion. Please redo the operation later.',
+        error,
       );
       throw error;
     }

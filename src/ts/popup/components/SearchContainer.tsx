@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHashParam, useObjectHashParam } from 'use-hash-param';
 import { storage } from '../../storage';
+import { alertError } from '../../utils';
 import { SORT_BY, STORAGE_KEY } from '../constants';
 import { debouncedSearch } from '../search';
 import Filter from './Filters';
@@ -71,7 +72,7 @@ export default function Container({
           }),
         );
       } catch (error) {
-        alert(error); // 素のままでそれなりに分かりやすいメッセージになってるので、まぁ...。
+        alertError('Faled to search.', error);
         throw error;
       }
     })();

@@ -1,11 +1,6 @@
 import CustomError from './CustomError';
 
-class ChromeStorageError extends CustomError {
-  constructor(message: string, error: unknown) {
-    super(message, error);
-    this.name = 'ChromeStorageError'; // minify されると型名がかるので、これは自動取得してはいけない
-  }
-}
+export class ChromeStorageError extends CustomError {}
 
 export const storage = {
   get: async (key: string) => {
