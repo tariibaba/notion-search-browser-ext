@@ -1,21 +1,24 @@
+import escapeRegExp from 'lodash.escaperegexp';
 import { debounce } from 'throttle-debounce';
-import { axios } from '../../axios';
-import { NOTION_HOST } from '../../constants';
-import { storage } from '../../storage';
+import { axios } from '../axios';
+import { NOTION_HOST } from '../constants';
+import { storage } from '../storage';
 
 import {
   BLOCK_TYPE,
   FILTERS_BY,
   ICON_TYPE,
+  MATCH_TAG,
   SORT_BY,
   STORAGE_KEY,
   TABLE_TYPE,
-} from '../constants';
+} from './constants';
 
 const PATH = '/search';
 const SEARCH_LIMIT = 50;
 const DEBOUNCE_TIME = 150;
 const ICON_WIDTH = 40;
+const REGEXP_REMOVES_TAG = new RegExp(`</?${MATCH_TAG}>`, 'ig');
 const TEXT_NO_TITLE = 'Untitled';
 
 // NOTE: 結合テストくらいは書きたい気がする。。
@@ -96,6 +99,13 @@ const search = async ({
     try {
       const id = item.id;
       const result: Item = { title: '', url: '' };
+      const regexpAddsTag = new RegExp(
+        `(${trimmedQuery
+          .split(/\s+/)
+          .map((query) => escapeRegExp(query))
+          .join('|')})`,
+        'ig',
+      );
       block = recordMap.block[id].value;
       const blockType = block.type;
       if (!Object.values(BLOCK_TYPE).includes(blockType))
@@ -109,8 +119,21 @@ const search = async ({
       // --------------------------------------------------------------------
       // NOTE NOTE NOTE クラス化 構想 NOTE NOTE NOTE
       /*
+        blockType, parentTableType のバリデーション
+         - 型ガード...
 
+        パーサーというよりは、parentPath と共通処理をくくり出したい
 
+        new Record({
+          id,
+          tableType,
+          recordMap,
+        });
+
+        interface RecordBlock {
+          getParent(): { id: tableType };
+          getName(): string;
+        }
       */
       const getParentPath = (
         paths: string[],
@@ -264,6 +287,15 @@ const search = async ({
         result.url += `#${item.highlightBlockId.replaceAll('-', '')}`;
         result.text = item.highlight.text;
       }
+      // TODO: view でやるべきじゃね？
+      const setStrangeNotionTag = (str: string) =>
+        trimmedQuery
+          ? str
+              .replace(REGEXP_REMOVES_TAG, '')
+              .replace(regexpAddsTag, `<${MATCH_TAG}>$1</${MATCH_TAG}>`)
+          : str;
+      if (result.title) result.title = setStrangeNotionTag(result.title);
+      if (result.text) result.text = setStrangeNotionTag(result.text);
 
       items.push(result);
     } catch (error) {
@@ -281,7 +313,7 @@ const search = async ({
   };
 
   if (savesToStorage) {
-    const data: SearchResultCache = { query: query.trim(), searchResult };
+    const data: SearchResultCache = { query, searchResult };
     // set に失敗しても致命的ではない (前回の検索結果が表示されなくなるだけ) なので、エラーハンドリングしない
     storage.set({
       [`${workspaceId}-${STORAGE_KEY.LAST_SEARCHED}`]: data,
