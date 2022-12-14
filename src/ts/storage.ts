@@ -1,6 +1,6 @@
-import CustomError from './CustomError';
+import MergeableError from './MergeableError';
 
-export class ChromeStorageError extends CustomError {}
+export class ChromeStorageError extends MergeableError {}
 
 export const storage = {
   get: async (key: string) => {

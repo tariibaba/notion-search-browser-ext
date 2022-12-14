@@ -18,17 +18,45 @@ export const SORT_BY = {
 // API response
 // ========================================
 
-export const BLOCK_TYPE = {
-  PAGE: 'page',
-  COLLECTION_VIEW_PAGE: 'collection_view_page',
-  COLLECTION_VIEW: 'collection_view',
-} as const;
+/*
+  table type | block type
+  -----------|----------------------
+  collection |
+  block -----┬- page
+             ├- collection_view_page
+             ├- collection_view
+             └- ...
+*/
 
 export const TABLE_TYPE = {
   WORKSPACE: 'space',
   BLOCK: 'block',
   COLLECTION: 'collection',
 } as const;
+
+export const BLOCK_TYPE = {
+  PAGE: 'page',
+  COLLECTION_VIEW_PAGE: 'collection_view_page',
+  COLLECTION_VIEW: 'collection_view',
+  COLUMN_LIST: 'column_list',
+  COLUMN: 'column',
+} as const;
+
+export const CAN_BE_DIR: {
+  COLLECTION: boolean;
+  BLOCK: {
+    [key in valueOf<typeof BLOCK_TYPE>]: boolean;
+  };
+} = {
+  COLLECTION: false,
+  BLOCK: {
+    [BLOCK_TYPE.PAGE]: true,
+    [BLOCK_TYPE.COLLECTION_VIEW_PAGE]: true,
+    [BLOCK_TYPE.COLLECTION_VIEW]: true,
+    [BLOCK_TYPE.COLUMN_LIST]: false,
+    [BLOCK_TYPE.COLUMN]: false,
+  },
+};
 
 // ========================================
 // Others

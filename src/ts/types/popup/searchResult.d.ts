@@ -2,11 +2,11 @@ type Item = {
   title: string;
   url: string;
   text?: string;
-  pageIcon?: {
+  icon: {
     type: valueOf<typeof import('../../popup/constants').ICON_TYPE>;
     value: string;
   };
-  parentsPath?: string;
+  dirs?: string;
 };
 
 type SearchResult = {
