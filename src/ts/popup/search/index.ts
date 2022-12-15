@@ -107,6 +107,7 @@ const search = async ({
         title: '',
         url: '',
         icon: { type: ICON_TYPE.IMAGE, value: '' },
+        dirs: [],
       };
       block = createBlock(id, recordMap);
 
@@ -142,10 +143,9 @@ const search = async ({
       // ------------------------------------------------------------------------
 
       if (!block.parent.isWorkspace) {
-        const parentPaths = getDir([], block.parent.id, block.parent.tableType);
-
-        if (parentPaths.length >= 1)
-          result.dirs = parentPaths.reverse().join(' / ');
+        result.dirs.push(
+          ...getDir([], block.parent.id, block.parent.tableType).reverse(),
+        );
       }
 
       result.title = block.getTitle() || TEXT_NO_TITLE;

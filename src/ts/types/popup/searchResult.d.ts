@@ -6,7 +6,7 @@ type Item = {
     type: valueOf<typeof import('../../popup/constants').ICON_TYPE>;
     value: string;
   };
-  dirs?: string;
+  dirs: string[];
 };
 
 type SearchResult = {
