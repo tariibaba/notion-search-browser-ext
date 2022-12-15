@@ -96,7 +96,7 @@ class BlockCollectionViewClass extends BlockClass {
     collection?: CollectionClass;
   }) {
     super({ block });
-    if (collection) this.collection = collection;
+    this.collection = collection;
   }
   public getTitle() {
     return super.getTitle() ?? this.collection?.getTitle();

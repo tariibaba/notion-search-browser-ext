@@ -35,7 +35,9 @@ export default function Item({
           {dirs.length > 0 && (
             <p className="dirs">
               {dirs
-                .map<React.ReactNode>((dir) => <span key={dir}>{dir}</span>)
+                .map<React.ReactNode>((dir) => (
+                  <span key={dir.title}>{dir.title}</span>
+                ))
                 .reduce((prev, current) => [prev, ' / ', current])}
             </p>
           )}

@@ -112,14 +112,15 @@ const search = async ({
       block = createBlock(id, recordMap);
 
       const getDir = (
-        paths: string[],
+        paths: Dir[],
         id: string,
         tableType: TableType,
-      ): string[] => {
+      ): Dir[] => {
         let record: RecordClass | undefined;
         try {
           record = createRecord(id, tableType, recordMap);
-          if (record.canBeDir) paths.push(record.getTitle() || TEXT_NO_TITLE);
+          if (record.canBeDir)
+            paths.push({ title: record.getTitle() || TEXT_NO_TITLE });
 
           const parent = record.parent;
           if (parent.isWorkspace) return paths;
@@ -140,15 +141,12 @@ const search = async ({
           return paths;
         }
       };
-      // ------------------------------------------------------------------------
 
       if (!block.parent.isWorkspace) {
         result.dirs.push(
           ...getDir([], block.parent.id, block.parent.tableType).reverse(),
         );
       }
-
-      result.title = block.getTitle() || TEXT_NO_TITLE;
 
       const icon = block.getIcon();
       if (icon) {
@@ -168,6 +166,7 @@ const search = async ({
             value: `${NOTION_HOST}${icon}&width=${ICON_WIDTH}`,
           };
         } else {
+          // NOTE: 本気でやるなら、ここで絵文字以外のものが来た場合にエラーにする
           result.icon = {
             type: ICON_TYPE.EMOJI,
             value: icon,
@@ -180,12 +179,14 @@ const search = async ({
         };
       }
 
-      result.url = `${NOTION_HOST}/${id.replaceAll('-', '')}`;
+      result.url =
+        `${NOTION_HOST}/${id.replaceAll('-', '')}` +
+        (item.highlightBlockId
+          ? `#${item.highlightBlockId.replaceAll('-', '')}`
+          : '');
 
-      if (item.highlight && item.highlightBlockId) {
-        result.url += `#${item.highlightBlockId.replaceAll('-', '')}`;
-        result.text = item.highlight.text;
-      }
+      result.text = item.highlight?.text;
+      result.title = block.getTitle() || TEXT_NO_TITLE;
 
       // view でやるとカクつくのでここでやるしかない
       // see commit:f127999eaccfff4c1c91d98f35cbdf18f6dedf63
@@ -202,6 +203,7 @@ const search = async ({
               .replace(REGEXP_REMOVES_TAG, '')
               .replace(regexpAddsTag, `<${MATCH_TAG}>$1</${MATCH_TAG}>`)
           : str;
+
       if (result.title) result.title = setStrangeNotionTag(result.title);
       if (result.text) result.text = setStrangeNotionTag(result.text);
 

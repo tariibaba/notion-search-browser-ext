@@ -11,8 +11,8 @@ type ResItem = {
 type TableType = valueOf<typeof import('../../popup/constants').TABLE_TYPE>;
 type BlockType = valueOf<typeof import('../../popup/constants').BLOCK_TYPE>;
 
-type RecordValueBase = {
-  // block type: space 出ない限り必ず存在する
+type RecordBase = {
+  id: string;
   parent_id: string;
   parent_table: TableType;
   format?: {
@@ -23,12 +23,12 @@ type RecordValueBase = {
   };
 };
 
-type Collection = RecordValueBase & {
+type Collection = RecordBase & {
   name?: string[][];
   icon?: string;
 };
 
-type BlockBase = RecordValueBase & {
+type BlockBase = RecordBase & {
   format?: {
     page_icon?: string;
   };
