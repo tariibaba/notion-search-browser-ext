@@ -1,5 +1,7 @@
 type Dir = {
   title: string;
+  record: RecordBase;
+  tableType: TableTypeWithoutWorkspace;
 };
 
 type Item = {
@@ -11,6 +13,8 @@ type Item = {
     value: string;
   };
   dirs: Dir[];
+  record: RecordBase;
+  tableType: TableTypeWithoutWorkspace;
 };
 
 type SearchResult = {

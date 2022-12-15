@@ -10,6 +10,7 @@ import {
   MATCH_TAG,
   SORT_BY,
   STORAGE_KEY,
+  TABLE_TYPE,
 } from '../constants';
 import {
   BlockClass,
@@ -101,52 +102,90 @@ const search = async ({
   const items: Item[] = [];
   for (const item of res.results) {
     let block: BlockClass | undefined = undefined;
-    try {
-      const id = item.id;
-      const result: Item = {
-        title: '',
-        url: '',
-        icon: { type: ICON_TYPE.IMAGE, value: '' },
-        dirs: [],
-      };
-      block = createBlock(id, recordMap);
+    const getDir = (
+      paths: Dir[],
+      id: string,
+      tableType: TableTypeWithoutWorkspace,
+    ): Dir[] => {
+      let record: RecordClass | undefined;
+      try {
+        record = createRecord(id, tableType, recordMap);
+        if (record.canBeDir)
+          paths.push({
+            title: record.getTitle() || TEXT_NO_TITLE,
+            record: record.record,
+            tableType,
+          });
 
-      const getDir = (
-        paths: Dir[],
-        id: string,
-        tableType: TableType,
-      ): Dir[] => {
-        let record: RecordClass | undefined;
-        try {
-          record = createRecord(id, tableType, recordMap);
-          if (record.canBeDir)
-            paths.push({ title: record.getTitle() || TEXT_NO_TITLE });
+        const parent = record.parent;
+        if (parent.isWorkspace) return paths;
 
-          const parent = record.parent;
-          if (parent.isWorkspace) return paths;
-
-          return getDir(paths, parent.id, parent.tableType);
-        } catch (error) {
-          console.error(
-            error,
-            error instanceof RecordError
-              ? error.data
-              : {
-                  id,
-                  tableType,
-                  record,
-                  recordMap,
-                },
-          );
-          return paths;
-        }
-      };
-
-      if (!block.parent.isWorkspace) {
-        result.dirs.push(
-          ...getDir([], block.parent.id, block.parent.tableType).reverse(),
+        return getDir(
+          paths,
+          parent.id,
+          parent.tableType as TableTypeWithoutWorkspace,
         );
+      } catch (error) {
+        console.error(
+          error,
+          error instanceof RecordError
+            ? error.data
+            : {
+                id,
+                tableType,
+                record,
+                recordMap,
+              },
+        );
+        return paths;
       }
+    };
+
+    // view でやるとカクつくのでここでやるしかない
+    // see commit:f127999eaccfff4c1c91d98f35cbdf18f6dedf63
+    const regexpAddsTag = new RegExp(
+      `(${trimmedQuery
+        .split(/\s+/)
+        .map((query) => escapeRegExp(query))
+        .join('|')})`,
+      'ig',
+    );
+    const setMatchTag = (str: string) => {
+      return trimmedQuery && str.length > 1
+        ? str
+            .replace(REGEXP_REMOVES_TAG, '')
+            .replace(regexpAddsTag, `<${MATCH_TAG}>$1</${MATCH_TAG}>`)
+        : str;
+    };
+
+    const id = item.id;
+
+    try {
+      block = createBlock(id, recordMap);
+      const title = block.getTitle();
+
+      const result: Item = {
+        title: title === undefined ? TEXT_NO_TITLE : setMatchTag(title),
+        text: setMatchTag(item.highlight?.text ?? ''),
+        record: block.record,
+        tableType: TABLE_TYPE.BLOCK,
+        dirs: block.parent.isWorkspace
+          ? []
+          : getDir(
+              [],
+              block.parent.id,
+              block.parent.tableType as TableTypeWithoutWorkspace,
+            ).reverse(),
+        url:
+          `${NOTION_HOST}/${id.replaceAll('-', '')}` +
+          (item.highlightBlockId
+            ? `#${item.highlightBlockId.replaceAll('-', '')}`
+            : ''),
+        icon: {
+          type: ICON_TYPE.IMAGE,
+          value: chrome.runtime.getURL('./images/page.svg'),
+        },
+      };
 
       const icon = block.getIcon();
       if (icon) {
@@ -167,45 +206,13 @@ const search = async ({
           };
         } else {
           // NOTE: 本気でやるなら、ここで絵文字以外のものが来た場合にエラーにする
+          // icon は length 2 なので判定が単純ではない
           result.icon = {
             type: ICON_TYPE.EMOJI,
             value: icon,
           };
         }
-      } else {
-        result.icon = {
-          type: ICON_TYPE.IMAGE,
-          value: chrome.runtime.getURL('./images/page.svg'),
-        };
       }
-
-      result.url =
-        `${NOTION_HOST}/${id.replaceAll('-', '')}` +
-        (item.highlightBlockId
-          ? `#${item.highlightBlockId.replaceAll('-', '')}`
-          : '');
-
-      result.text = item.highlight?.text;
-      result.title = block.getTitle() || TEXT_NO_TITLE;
-
-      // view でやるとカクつくのでここでやるしかない
-      // see commit:f127999eaccfff4c1c91d98f35cbdf18f6dedf63
-      const regexpAddsTag = new RegExp(
-        `(${trimmedQuery
-          .split(/\s+/)
-          .map((query) => escapeRegExp(query))
-          .join('|')})`,
-        'ig',
-      );
-      const setStrangeNotionTag = (str: string) =>
-        trimmedQuery
-          ? str
-              .replace(REGEXP_REMOVES_TAG, '')
-              .replace(regexpAddsTag, `<${MATCH_TAG}>$1</${MATCH_TAG}>`)
-          : str;
-
-      if (result.title) result.title = setStrangeNotionTag(result.title);
-      if (result.text) result.text = setStrangeNotionTag(result.text);
 
       items.push(result);
     } catch (error) {

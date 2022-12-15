@@ -3,12 +3,16 @@
 type ResItem = {
   id: string;
   highlight?: {
-    text: string;
+    text?: string;
   };
   highlightBlockId?: string;
 };
 
 type TableType = valueOf<typeof import('../../popup/constants').TABLE_TYPE>;
+type TableTypeWithoutWorkspace = Exclude<
+  TableType,
+  typeof import('../../popup/constants').TABLE_TYPE.WORKSPACE
+>;
 type BlockType = valueOf<typeof import('../../popup/constants').BLOCK_TYPE>;
 
 type RecordBase = {
@@ -28,19 +32,16 @@ type Collection = RecordBase & {
   icon?: string;
 };
 
-type BlockBase = RecordBase & {
-  format?: {
-    page_icon?: string;
-  };
-};
-
 type BLOCK_TYPE_COLLECTION_VIEW_PAGE =
   typeof import('../../popup/constants').BLOCK_TYPE.COLLECTION_VIEW_PAGE;
 type BLOCK_TYPE_COLLECTION_VIEW =
   typeof import('../../popup/constants').BLOCK_TYPE.COLLECTION_VIEW;
 
-type Block = BlockBase &
-  (
+type Block = RecordBase & {
+  format?: {
+    page_icon?: string;
+  };
+} & (
     | {
         type: Exclude<
           BlockType,

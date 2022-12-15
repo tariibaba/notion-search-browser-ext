@@ -31,9 +31,10 @@ export const SORT_BY = {
 export const TABLE_TYPE = {
   WORKSPACE: 'space',
   BLOCK: 'block',
-  COLLECTION: 'collection',
+  COLLECTION: 'collection', // parent のみ
 } as const;
 
+// NOTE: ここに追加したら、popup.pcss のクラスにも一応追加する
 export const BLOCK_TYPE = {
   PAGE: 'page',
   COLLECTION_VIEW_PAGE: 'collection_view_page',
@@ -42,6 +43,7 @@ export const BLOCK_TYPE = {
   COLUMN: 'column',
 } as const;
 
+// default is true
 export const CAN_BE_DIR: {
   COLLECTION: boolean;
   BLOCK: {
