@@ -132,17 +132,29 @@ a {
   Items
 ---------------------------------------- */
 
+/* icon -------------------------------- */
+
 .page-icon-container {
-  padding: 7px 8px 0 15px;
+  width: 25px;
+  padding-left: 15px; /* TODO: これも左右中央寄せに変えるべき */
+  font-size: 16.5px;
+}
 
-  --icon-width: 18px;
+.page-icon-wrapper {
+  display: flex;
+  align-items: center;
+  height: 34px;
+}
 
-  font-size: var(--icon-width);
+.page-icon {
+  width: 18px;
 
-  img {
-    width: var(--icon-width);
+  &.svg {
+    width: 19.5px;
   }
 }
+
+/* items ------------------------------- */
 
 .items {
   box-sizing: border-box;

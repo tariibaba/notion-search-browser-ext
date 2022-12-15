@@ -43,11 +43,16 @@ export default function Item({
         onClick={() => console.log(record)}
       >
         <div className="page-icon-container">
-          {icon.type === ICON_TYPE.EMOJI ? (
-            <>{icon.value}</>
-          ) : (
-            <img src={icon.value} />
-          )}
+          <div className="page-icon-wrapper">
+            {icon.type === ICON_TYPE.EMOJI ? (
+              <>{icon.value}</>
+            ) : (
+              <img
+                className={`page-icon ${icon.className ? icon.className : ''}`}
+                src={icon.value}
+              />
+            )}
+          </div>
         </div>
         <div className="main-item">
           <p className="title">{addHighlight(title)}</p>
