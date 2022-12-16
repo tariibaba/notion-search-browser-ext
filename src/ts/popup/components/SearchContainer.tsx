@@ -17,13 +17,7 @@ export default function Container({
   isPopup: boolean;
   workspace: Workspace;
 }) {
-  const [query, _setQuery] = useHashParam('query', '');
-  // TODO: 外部化したいかも? ... いやほとんど抽象化できないか。。
-  const setQuery = (query: string) => {
-    if (query.trim() === '')
-      storage.remove(`${workspace.id}-${STORAGE_KEY.LAST_SEARCHED}`);
-    _setQuery(query);
-  };
+  const [query, setQuery] = useHashParam('query', '');
 
   const sortStateAndSetter = useHashParam('sort_by', SORT_BY.RELEVANCE);
   const [sortBy, setSortBy] = sortStateAndSetter;
@@ -58,6 +52,9 @@ export default function Container({
         }
       }
       setIsFirstRendering(false);
+
+      if (query.trim() === '')
+        storage.remove(`${workspace.id}-${STORAGE_KEY.LAST_SEARCHED}`);
 
       try {
         setSearchResult(
