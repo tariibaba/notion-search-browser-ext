@@ -1,4 +1,3 @@
-import escapeRegExp from 'lodash.escaperegexp';
 import { debounce } from 'throttle-debounce';
 import { axios } from '../../axios';
 import { NOTION_HOST } from '../../constants';
@@ -7,7 +6,6 @@ import { storage } from '../../storage';
 import {
   FILTERS_BY,
   ICON_TYPE,
-  MATCH_TAG,
   SORT_BY,
   STORAGE_KEY,
   TABLE_TYPE,
@@ -24,7 +22,6 @@ const PATH = '/search';
 const SEARCH_LIMIT = 50;
 const DEBOUNCE_TIME = 150;
 const ICON_WIDTH = 40;
-const REGEXP_REMOVES_TAG = new RegExp(`</?${MATCH_TAG}>`, 'ig');
 const TEXT_NO_TITLE = 'Untitled';
 
 // NOTE: 結合テストくらいは書きたい気がする。。
@@ -141,32 +138,14 @@ const search = async ({
       }
     };
 
-    // view でやるとカクつくのでここでやるしかない
-    // see commit:f127999eaccfff4c1c91d98f35cbdf18f6dedf63
-    const regexpAddsTag = new RegExp(
-      `(${trimmedQuery
-        .split(/\s+/)
-        .map((query) => escapeRegExp(query))
-        .join('|')})`,
-      'ig',
-    );
-    const setMatchTag = (str: string) => {
-      return trimmedQuery && str.length > 1
-        ? str
-            .replace(REGEXP_REMOVES_TAG, '')
-            .replace(regexpAddsTag, `<${MATCH_TAG}>$1</${MATCH_TAG}>`)
-        : str;
-    };
-
     const id = item.id;
 
     try {
       block = createBlock(id, recordMap);
-      const title = block.getTitle();
 
       const result: Item = {
-        title: title === undefined ? TEXT_NO_TITLE : setMatchTag(title),
-        text: setMatchTag(item.highlight?.text ?? ''),
+        title: block.getTitle() ?? TEXT_NO_TITLE,
+        text: item.highlight?.text,
         record: block.record,
         tableType: TABLE_TYPE.BLOCK,
         dirs: block.parent.isWorkspace

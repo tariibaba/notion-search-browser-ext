@@ -18,6 +18,8 @@ export default function Container({
   workspace: Workspace;
 }) {
   const [query, setQuery] = useHashParam('query', '');
+  const [usedQuery, setUsedQuery] = useState('');
+  const [isFirstRendering, setIsFirstRendering] = useState<boolean>(true);
 
   const sortStateAndSetter = useHashParam('sort_by', SORT_BY.RELEVANCE);
   const [sortBy, setSortBy] = sortStateAndSetter;
@@ -29,7 +31,6 @@ export default function Container({
   const [searchResult, setSearchResult] = useState<SearchResult | undefined>(
     undefined,
   );
-  const [isFirstRendering, setIsFirstRendering] = useState<boolean>(true);
 
   const trimmedQuery = query.trim();
   const hasQuery = trimmedQuery.length > 0;
@@ -47,6 +48,7 @@ export default function Container({
         if (store) {
           setIsFirstRendering(false);
           setQuery(store.query);
+          setUsedQuery(query);
           setSearchResult(store.searchResult);
           return;
         }
@@ -69,6 +71,7 @@ export default function Container({
             workspaceId: workspace.id,
           }),
         );
+        setUsedQuery(query);
       } catch (error) {
         alertError('Faled to search.', error);
         throw error;
@@ -88,7 +91,11 @@ export default function Container({
         <Sort sortBy={sortBy} setSortBy={setSortBy} />
         {searchResult && (
           <>
-            <Items items={searchResult.items} opensNewTab={isPopup} />
+            <Items
+              items={searchResult.items}
+              opensNewTab={isPopup}
+              query={usedQuery}
+            />
           </>
         )}
         <Footer

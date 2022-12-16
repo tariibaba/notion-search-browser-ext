@@ -1,14 +1,7 @@
 import React from 'react';
-import reactStringReplace from 'react-string-replace';
-import { ICON_TYPE, MATCH_TAG, TABLE_TYPE } from '../constants';
+import { ICON_TYPE, TABLE_TYPE } from '../../constants';
+import { setHighlight } from './utils';
 
-const regexp = new RegExp(`<${MATCH_TAG}>(.+?)</${MATCH_TAG}>`, 'g');
-const addHighlight = (str: string) =>
-  reactStringReplace(str, regexp, (match, i) => (
-    <span key={i} className="highlight">
-      {match}
-    </span>
-  ));
 const getType = (tableType: TableTypeWithoutWorkspace, record: RecordBase) =>
   'debug-' +
   (() => {
@@ -24,6 +17,7 @@ const getType = (tableType: TableTypeWithoutWorkspace, record: RecordBase) =>
 
 export default function Item({
   opensNewTab,
+  query,
   tableType,
   icon,
   title,
@@ -33,6 +27,7 @@ export default function Item({
   record,
 }: {
   opensNewTab: boolean;
+  query: string;
 } & Item) {
   return (
     <div className={`item debug-record ${getType(tableType, record)}`}>
@@ -40,7 +35,7 @@ export default function Item({
         className="url"
         {...(opensNewTab && { target: '_blank' })}
         href={url}
-        onClick={() => console.log(record)}
+        onClick={() => console.info(record)}
       >
         <div className="page-icon-container">
           <div className="page-icon-wrapper">
@@ -59,7 +54,7 @@ export default function Item({
         </div>
         <div className="texts-container">
           <div className="texts">
-            <p className="title">{addHighlight(title)}</p>
+            <p className="title">{setHighlight(title, query)}</p>
             {dirs.length > 0 && (
               <p className="dirs">
                 {dirs
@@ -68,7 +63,7 @@ export default function Item({
                       key={dir.record.id}
                       className={getType(dir.tableType, record)}
                       onClick={(event) => {
-                        console.log(dir.record);
+                        console.info(dir.record);
                         event.stopPropagation();
                       }}
                     >
@@ -78,7 +73,9 @@ export default function Item({
                   .reduce((prev, current) => [prev, ' / ', current])}
               </p>
             )}
-            {text && <p className="text">{addHighlight(text)}</p>}
+            {text !== undefined && (
+              <p className="text">{setHighlight(text, query)}</p>
+            )}
           </div>
         </div>
       </a>
