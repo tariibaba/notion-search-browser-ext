@@ -36,7 +36,7 @@ export default function SearchBox({
         onChange={(event) => setQuery(event.target.value)}
       />
       {query.trim() && (
-        <a href="#" className="icon-clear-query-container" onClick={clear}>
+        <a href="#" onClick={clear}>
           <img
             className="icon-clear-query"
             src={chrome.runtime.getURL('./images/clear-query.svg')}

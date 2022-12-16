@@ -54,27 +54,29 @@ export default function Item({
             )}
           </div>
         </div>
-        <div className="main-item">
-          <p className="title">{addHighlight(title)}</p>
-          {dirs.length > 0 && (
-            <p className="dirs">
-              {dirs
-                .map<React.ReactNode>((dir) => (
-                  <span
-                    key={dir.record.id}
-                    className={getType(dir.tableType, record)}
-                    onClick={(event) => {
-                      console.log(dir.record);
-                      event.stopPropagation();
-                    }}
-                  >
-                    {dir.title}
-                  </span>
-                ))
-                .reduce((prev, current) => [prev, ' / ', current])}
-            </p>
-          )}
-          {text && <p className="text">{addHighlight(text)}</p>}
+        <div className="texts-container">
+          <div className="texts">
+            <p className="title">{addHighlight(title)}</p>
+            {dirs.length > 0 && (
+              <p className="dirs">
+                {dirs
+                  .map<React.ReactNode>((dir) => (
+                    <span
+                      key={dir.record.id}
+                      className={getType(dir.tableType, record)}
+                      onClick={(event) => {
+                        console.log(dir.record);
+                        event.stopPropagation();
+                      }}
+                    >
+                      {dir.title}
+                    </span>
+                  ))
+                  .reduce((prev, current) => [prev, ' / ', current])}
+              </p>
+            )}
+            {text && <p className="text">{addHighlight(text)}</p>}
+          </div>
         </div>
       </a>
     </div>

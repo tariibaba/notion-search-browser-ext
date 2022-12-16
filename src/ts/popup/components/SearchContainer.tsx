@@ -18,6 +18,7 @@ export default function Container({
   workspace: Workspace;
 }) {
   const [query, _setQuery] = useHashParam('query', '');
+  // TODO: 外部化したいかも? ... いやほとんど抽象化できないか。。
   const setQuery = (query: string) => {
     if (query.trim() === '')
       storage.remove(`${workspace.id}-${STORAGE_KEY.LAST_SEARCHED}`);

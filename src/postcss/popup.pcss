@@ -1,7 +1,25 @@
 @import url('./common.pcss');
 
+:root {
+  --font-color-base: 55 53 47;
+  --font-color-dark: black;
+  --font-color-medium: rgb(var(--font-color-base));
+  --font-color-light: rgb(var(--font-color-base) / 65%);
+  --font-color-x-light: rgb(var(--font-color-base) / 50%);
+  --font-size-large: 1.1rem;
+  --font-size-medium: 0.9rem;
+  --font-size-small: 0.78rem;
+  --font-weight-bold: 500;
+  --border: 1px solid #eae5e3;
+}
+
 body {
   margin: 0;
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Helvetica, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans GB',
+    'メイリオ', Meiryo, 'Apple Color Emoji', Arial, sans-serif, 'Segoe UI Emoji';
+  font-size: var(--font-size-medium);
+  color: var(--font-color-medium);
 }
 
 .clickable {
@@ -12,9 +30,6 @@ body {
   box-sizing: border-box;
   width: 100%;
   padding-top: 40px;
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Helvetica, 'Apple Color Emoji', Arial, sans-serif, 'Segoe UI Emoji',
-    'Segoe UI Symbol';
   background-color: #6d6d6d;
 
   &.is-popup {
@@ -30,20 +45,11 @@ body {
 Search Container 特有のものは別 Div に切り出す
 */
 main {
-  --text-color: #595857;
-  --text-color-light: #949495;
-  --font-size-large: 1.2rem;
-  --font-size-medium: 0.9rem;
-  --font-size-small: 0.78rem;
-  --border: 1px solid #eae5e3;
-
   max-width: 662px;
   padding: 0;
   margin: 0 auto;
-  font-size: var(--font-size-medium);
-  color: var(--text-color);
   background-color: white;
-  border-radius: 8px;
+  border-radius: 6px;
 
   .is-popup & {
     width: 662px;
@@ -62,99 +68,80 @@ a {
 }
 
 /* ----------------------------------------
-  Search
+Search
 ---------------------------------------- */
 
 .search-box {
+  --search-box-space: 14px;
+
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  height: 45px;
-  padding: 2px;
+  height: 48px;
+  padding: 0 var(--search-box-space);
   border-bottom: var(--border);
 
   .icon-search {
     width: 18px;
-    margin: 0 8px 0 12px;
   }
 
   .icon-clear-query {
     width: 14px;
-    margin: 0 15px;
   }
 
   .search {
     width: 100%;
-    margin-left: 5px;
+    margin-left: var(--search-box-space);
     font-size: var(--font-size-large);
+    color: var(--font-color-medium);
     border: none;
     outline: none;
 
     &::placeholder {
-      color: var(--text-color-light);
+      color: var(--font-color-x-light);
     }
   }
 }
 
 /* ----------------------------------------
-  Filter & Sort
+Filter & Sort
 ---------------------------------------- */
 
 .filters {
   margin: 10px;
+  color: var(--font-color-light);
+}
 
-  .filter {
-    padding: 4px 10px;
-    border: 1px solid #dcdddd;
-    border-radius: 20px;
+.filter {
+  padding: 4px 10px;
+  border: 1px solid #dcdddd;
+  border-radius: 20px;
 
-    &.selected {
-      color: rgb(35 131 226);
-      background-color: rgb(35 131 226 / 3%);
-      border-color: rgb(35 131 226 / 35%);
-    }
+  &.selected {
+    color: rgb(35 131 226);
+    background-color: rgb(35 131 226 / 3%);
+    border-color: rgb(35 131 226 / 35%);
   }
 }
 
 .sorts {
   margin: 3px 10px;
+  color: var(--font-color-light);
+}
 
-  .sort {
-    padding: 3px;
-    font-size: var(--font-size-small);
-    color: inherit;
-    border: none;
-    outline: none;
-  }
+.sort {
+  padding: 3px;
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  color: inherit;
+  border: none;
+  outline: none;
 }
 
 /* ----------------------------------------
-  Items
+Items
 ---------------------------------------- */
 
-/* icon -------------------------------- */
-
-.page-icon-container {
-  width: 25px;
-  padding-left: 15px; /* TODO: これも左右中央寄せに変えるべき */
-  font-size: 16.5px;
-}
-
-.page-icon-wrapper {
-  display: flex;
-  align-items: center;
-  height: 34px;
-}
-
-.page-icon {
-  width: 18px;
-
-  &.svg {
-    width: 19.5px;
-  }
-}
-
-/* items ------------------------------- */
+/* items, item ------------------------------- */
 
 .items {
   box-sizing: border-box;
@@ -164,8 +151,8 @@ a {
 
   .is-popup & {
     /* TODO: これ、他の要素の高さを変えたら追従して変える必要があるので、
-     うまく変数化できないかなあ。
-     TODO: てか、狭くない？  */
+ うまく変数化できないかなあ。
+ TODO: てか、狭くない？  */
     max-height: 453px;
   }
 
@@ -180,60 +167,89 @@ a {
 }
 
 .item {
+  --min-height: 34px;
+
+  min-height: var(--min-height);
   border-bottom: var(--border);
-}
 
-.url {
-  display: flex;
-}
+  .url {
+    display: flex;
+  }
 
-.main-item {
-  padding: 5px 7px 7px 5px;
+  /* icon -------------------------------- */
 
-  p {
-    margin: 2px;
+  .page-icon-container {
+    width: 50px;
+    font-size: 16.5px;
+  }
+
+  .page-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: var(--min-height);
+  }
+
+  .page-icon {
+    width: 18px;
+
+    &.svg {
+      width: 19.5px;
+    }
+  }
+
+  /* texts -------------------------------- */
+
+  .texts-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 7px 7px 7px 0;
+    color: var(--font-color-light);
+
+    p {
+      margin: 3px;
+    }
+  }
+
+  .title {
+    font-weight: var(--font-weight-bold);
+  }
+
+  .dirs {
+    font-size: var(--font-size-small);
+    color: var(--font-color-x-light);
+  }
+
+  .text {
+    margin-top: 5px !important;
+    font-size: var(--font-size-small);
+  }
+
+  .highlight {
+    font-weight: var(--font-weight-bold);
+    color: var(--font-color-dark);
   }
 }
 
-.text {
-  margin-top: 7px !important;
-  font-size: var(--font-size-small);
-}
-
-.dirs {
-  font-size: var(--font-size-small);
-  color: var(--text-color-light);
-}
-
-.highlight {
-  font-weight: bold;
-  color: black;
-}
-
 /* ----------------------------------------
-  footer
+footer
 ---------------------------------------- */
 
 .footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 10px 8px 12px;
-  font-size: calc(var(--font-size-small) + 0.5px);
-  color: var(--text-color-light);
-  border-top: var(--border);
-}
-
-.summary {
+  height: 30px;
+  padding: 0 12px;
   font-size: var(--font-size-small);
+  color: var(--font-color-light);
+  border-top: var(--border);
 }
 
 .total {
   font-weight: bold;
-}
-
-.settings * {
-  vertical-align: middle;
 }
 
 .icon-settings {
@@ -242,32 +258,32 @@ a {
 }
 
 /* ----------------------------------------
-  debug
+debug
 ---------------------------------------- */
 
 /*
 .debug-block-collection-view-page {
-  border: 1px solid #3498db;
+border: 1px solid #3498db;
 }
 
 .debug-block-collection-view {
-  border: 1px solid #f39c12;
+border: 1px solid #f39c12;
 }
 
 .debug-record:not(
-    .debug-block-page,
-    .debug-block-collection-view-page,
-    .debug-block-collection-view
-  ) {
-  background-color: #f0908d;
+.debug-block-page,
+.debug-block-collection-view-page,
+.debug-block-collection-view
+) {
+background-color: #f0908d;
 }
 */
 
 /*
-  .debug-collection
-  .debug-block-page
-  .debug-block-collection_view_page
-  .debug-block-collection_view
-  .debug-block-column_list
-  .debug-block-column
+.debug-collection
+.debug-block-page
+.debug-block-collection_view_page
+.debug-block-collection_view
+.debug-block-column_list
+.debug-block-column
 */

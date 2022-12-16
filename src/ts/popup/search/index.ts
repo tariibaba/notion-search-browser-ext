@@ -25,7 +25,7 @@ const SEARCH_LIMIT = 50;
 const DEBOUNCE_TIME = 150;
 const ICON_WIDTH = 40;
 const REGEXP_REMOVES_TAG = new RegExp(`</?${MATCH_TAG}>`, 'ig');
-const TEXT_NO_TITLE = 'Untitled'; // FIXME
+const TEXT_NO_TITLE = 'Untitled';
 
 // NOTE: 結合テストくらいは書きたい気がする。。
 const search = async ({
