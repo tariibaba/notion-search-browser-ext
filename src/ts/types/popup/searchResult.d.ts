@@ -11,7 +11,6 @@ type Item = {
   icon: {
     type: valueOf<typeof import('../../popup/constants').ICON_TYPE>;
     value: string;
-    className?: string;
   };
   dirs: Dir[];
   record: RecordBase;

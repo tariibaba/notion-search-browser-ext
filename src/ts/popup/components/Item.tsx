@@ -48,7 +48,10 @@ export default function Item({
               <>{icon.value}</>
             ) : (
               <img
-                className={`page-icon ${icon.className ? icon.className : ''}`}
+                className={[
+                  'page-icon',
+                  icon.value.match(/^https?:\/\/.+\.svg/) ? 'svg' : '',
+                ].join(' ')}
                 src={icon.value}
               />
             )}

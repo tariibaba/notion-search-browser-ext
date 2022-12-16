@@ -189,7 +189,6 @@ const search = async ({
 
       const icon = block.getIcon();
       if (icon) {
-        const isSvg = icon.endsWith('.svg');
         if (icon.startsWith('http')) {
           result.icon = {
             type: ICON_TYPE.IMAGE,
@@ -200,11 +199,9 @@ const search = async ({
               `&width=${ICON_WIDTH}`,
           };
         } else if (icon.startsWith('/')) {
-          // svg
           result.icon = {
             type: ICON_TYPE.IMAGE,
             value: `${NOTION_HOST}${icon}&width=${ICON_WIDTH}`,
-            ...(isSvg ? { className: 'svg' } : {}),
           };
         } else {
           // NOTE: 本気でやるなら、ここで絵文字以外のものが来た場合にエラーにする
