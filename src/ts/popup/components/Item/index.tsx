@@ -54,7 +54,14 @@ export default function Item({
         </div>
         <div className="texts-container">
           <div className="texts">
-            <p className="title">{setHighlight(title, query)}</p>
+            <p
+              className={[
+                'title',
+                query.trim().length > 0 ? '' : 'no-query',
+              ].join(' ')}
+            >
+              {setHighlight(title, query)}
+            </p>
             {dirs.length > 0 && (
               <p className="dirs">
                 {dirs
