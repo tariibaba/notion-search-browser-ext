@@ -25,7 +25,7 @@ export default function Filter({
           filtersBy[FILTERS_BY.ONLY_TITLE] ? 'selected' : '',
         ].join(' ')}
       >
-        Only search title
+        Only search titles
       </span>
     </div>
   );

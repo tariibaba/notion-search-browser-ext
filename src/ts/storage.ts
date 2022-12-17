@@ -10,10 +10,9 @@ export const storage = {
       throw new ChromeStorageError(`get(${key}) failed`, error);
     }
   },
-  /* eslint @typescript-eslint/no-explicit-any: 0 */
   set: async (obj: any) => {
     try {
-      return await chrome.storage.local.set(obj);
+      await chrome.storage.local.set(obj);
     } catch (error) {
       throw new ChromeStorageError(`set(${JSON.stringify(obj)}) failed`, error);
     }

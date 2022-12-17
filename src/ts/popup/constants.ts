@@ -34,7 +34,7 @@ export const TABLE_TYPE = {
   COLLECTION: 'collection', // parent のみ
 } as const;
 
-// NOTE: ここに追加したら、popup.pcss のクラスにも一応追加する
+// NOTE: ここに追加したら、テストも追加。あと popup.pcss のクラスにも一応追加
 export const BLOCK_TYPE = {
   PAGE: 'page',
   COLLECTION_VIEW_PAGE: 'collection_view_page',
