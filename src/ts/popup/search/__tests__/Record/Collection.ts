@@ -15,7 +15,7 @@ describe('getTitle()', () => {
       expected: 'foo',
     },
     {
-      name: 'gets a undefined title',
+      name: 'no title',
       input: {},
       expected: undefined,
     },
@@ -39,7 +39,7 @@ describe('getIcon()', () => {
       expected: 'https://example.com/icon.png',
     },
     {
-      name: 'gets a undefined icon',
+      name: 'no icon',
       input: {},
       expected: undefined,
     },

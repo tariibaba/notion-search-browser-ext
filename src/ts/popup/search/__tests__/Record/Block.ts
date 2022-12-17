@@ -1,5 +1,5 @@
 import { BLOCK_TYPE, TABLE_TYPE } from '../../../constants';
-import { BlockClass } from '../../Record';
+import { BlockClass, BlockCollectionViewClass } from '../../Record';
 
 const BLOCK: Block = {
   id: 'xxx',
@@ -8,23 +8,46 @@ const BLOCK: Block = {
   type: BLOCK_TYPE.PAGE,
 };
 
-it('detects unknown block type', () => {
-  /* eslint @typescript-eslint/no-empty-function: 0 */
-  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-  expect(
-    () =>
-      new BlockClass({
-        block: {
-          ...BLOCK,
-          type: 'unknown type' as BlockType,
-        },
-      }),
-  ).not.toThrow();
-  expect(spy).toHaveBeenCalledWith(
-    expect.stringMatching(/Unknown block type:/),
-    expect.anything(), // 省略できなそうにない、、 https://www.google.com/search?q=tohaveBeenCalledWith+first+argument
-  );
-});
+for (const className of [BlockClass, BlockCollectionViewClass]) {
+  describe(className.name as string, () => {
+    it('detects an unknown block type', () => {
+      /* eslint @typescript-eslint/no-empty-function: 0 */
+      const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      expect(
+        () =>
+          new className({
+            block: {
+              ...BLOCK,
+              type: 'unknown type' as BlockType,
+            },
+          }),
+      ).not.toThrow();
+      expect(spy).toHaveBeenCalledWith(
+        expect.stringMatching(/Unknown block type:/),
+        expect.anything(), // 省略できなそうにない、、 https://www.google.com/search?q=tohaveBeenCalledWith+first+argument
+      );
+    });
+    describe('canBeDir', () => {
+      it.each([
+        { input: BLOCK_TYPE.PAGE, expected: true },
+        { input: BLOCK_TYPE.COLLECTION_VIEW_PAGE, expected: true },
+        { input: BLOCK_TYPE.COLLECTION_VIEW, expected: true },
+        { input: BLOCK_TYPE.COLUMN_LIST, expected: false },
+        { input: BLOCK_TYPE.COLUMN, expected: false },
+        { input: 'unknown type' as BlockType, expected: false },
+      ])('$input → $expected', ({ input, expected }) => {
+        expect(
+          new className({
+            block: {
+              ...BLOCK,
+              type: input,
+            },
+          }).canBeDir,
+        ).toBe(expected);
+      });
+    });
+  });
+}
 
 describe('getTitle()', () => {
   it.each([
@@ -34,7 +57,7 @@ describe('getTitle()', () => {
       expected: 'foo',
     },
     {
-      name: 'gets a undefined title',
+      name: 'no title',
       input: {},
       expected: undefined,
     },
@@ -58,12 +81,12 @@ describe('getIcon()', () => {
       expected: 'https://example.com/icon.png',
     },
     {
-      name: "gets a undefined icon (.format.page_icon doesn't exist)",
+      name: "no icon (.format.page_icon doesn't exist)",
       input: { format: {} },
       expected: undefined,
     },
     {
-      name: "gets a undefined icon (.format doesn't exist)",
+      name: "no icon (.format doesn't exist)",
       input: {},
       expected: undefined,
     },
@@ -75,26 +98,6 @@ describe('getIcon()', () => {
           ...input,
         },
       }).getIcon(),
-    ).toBe(expected);
-  });
-});
-
-describe('canBeDir', () => {
-  it.each([
-    { input: BLOCK_TYPE.PAGE, expected: true },
-    { input: BLOCK_TYPE.COLLECTION_VIEW_PAGE, expected: true },
-    { input: BLOCK_TYPE.COLLECTION_VIEW, expected: true },
-    { input: BLOCK_TYPE.COLUMN_LIST, expected: false },
-    { input: BLOCK_TYPE.COLUMN, expected: false },
-    { input: 'unknown type' as BlockType, expected: false },
-  ])('$input → $expected', ({ input, expected }) => {
-    expect(
-      new BlockClass({
-        block: {
-          ...BLOCK,
-          type: input,
-        },
-      }).canBeDir,
     ).toBe(expected);
   });
 });

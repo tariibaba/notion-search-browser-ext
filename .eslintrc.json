@@ -23,6 +23,7 @@
   },
   "rules": {
     "react-hooks/exhaustive-deps": "off",
-    "no-trailing-spaces": "error"
+    "no-trailing-spaces": "error",
+    "jest/valid-title": "off"
   }
 }

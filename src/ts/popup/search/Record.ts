@@ -85,7 +85,7 @@ export class BlockClass extends RecordClass {
 }
 
 // combines collection view page and collection view
-class BlockCollectionViewClass extends BlockClass {
+export class BlockCollectionViewClass extends BlockClass {
   collection?: CollectionClass;
   constructor({
     block,
