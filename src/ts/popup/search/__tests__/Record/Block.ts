@@ -78,6 +78,7 @@ describe('getIcon()', () => {
     ).toBe(expected);
   });
 });
+
 describe('canBeDir', () => {
   it.each([
     { input: BLOCK_TYPE.PAGE, expected: true },
