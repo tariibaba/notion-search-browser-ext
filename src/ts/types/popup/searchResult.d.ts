@@ -1,7 +1,6 @@
 type Dir = {
   title: string;
-  record: RecordBase;
-  tableType: TableTypeWithoutWorkspace;
+  block: Block; // workspace, collection は dir から除外してるので
 };
 
 type Item = {
@@ -13,8 +12,8 @@ type Item = {
     value: string;
   };
   dirs: Dir[];
-  record: RecordBase;
-  tableType: TableTypeWithoutWorkspace;
+  // type: BlocksInSpace と API に指定している限り workspace, collection は含まれないため
+  block: Block;
 };
 
 type SearchResult = {

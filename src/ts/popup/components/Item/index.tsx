@@ -1,41 +1,30 @@
 import React from 'react';
-import { ICON_TYPE, TABLE_TYPE } from '../../constants';
+import { ICON_TYPE } from '../../constants';
 import { setHighlight } from './utils';
 
-const getType = (tableType: TableTypeWithoutWorkspace, record: RecordBase) =>
-  'debug-' +
-  (() => {
-    switch (tableType) {
-      case TABLE_TYPE.COLLECTION:
-        return TABLE_TYPE.COLLECTION;
-      case TABLE_TYPE.BLOCK:
-        return `block-${(record as Block).type}`;
-      default:
-        throw new Error(`unknown tableType: ${tableType}`);
-    }
-  })().replaceAll('_', '-');
+const getType = (block: Block) =>
+  'debug-block-' + block.type.replaceAll('_', '-');
 
 export default function Item({
   opensNewTab,
   query,
-  tableType,
   icon,
   title,
   url,
   dirs,
   text,
-  record,
+  block,
 }: {
   opensNewTab: boolean;
   query: string;
 } & Item) {
   return (
-    <div className={`item debug-record ${getType(tableType, record)}`}>
+    <div className={`item debug-record ${getType(block)}`}>
       <a
         className="url"
         {...(opensNewTab && { target: '_blank' })}
         href={url}
-        onClick={() => console.info(record)}
+        onClick={() => console.info(block)}
       >
         <div className="page-icon-container">
           <div className="page-icon-wrapper">
@@ -67,10 +56,10 @@ export default function Item({
                 {dirs
                   .map<React.ReactNode>((dir) => (
                     <span
-                      key={dir.record.id}
-                      className={getType(dir.tableType, record)}
+                      key={dir.block.id}
+                      className={getType(block)}
                       onClick={(event) => {
-                        console.info(dir.record);
+                        console.info(dir.block);
                         event.stopPropagation();
                       }}
                     >

@@ -7,10 +7,10 @@ import {
   createRecord,
 } from '../../Record';
 
-const BLOCK_ID = 'xxx';
+const BLOCK_ID = 'block-id';
 const BLOCK: Block = {
   id: BLOCK_ID,
-  parent_id: 'parent-xxx',
+  parent_id: 'parent-block-id',
   parent_table: TABLE_TYPE.BLOCK,
   type: BLOCK_TYPE.PAGE,
 };
@@ -18,7 +18,7 @@ const BLOCK: Block = {
 const COLLECTION_ID = 'yyy';
 const COLLECTION: Collection = {
   id: COLLECTION_ID,
-  parent_id: 'parent-yyy',
+  parent_id: 'parent-collection-id',
   parent_table: TABLE_TYPE.BLOCK,
 };
 
@@ -49,7 +49,7 @@ describe('createRecord()', () => {
       BLOCK_TYPE.COLLECTION_VIEW_PAGE,
     ]) {
       describe(`gets a block (${type})`, () => {
-        it('has a collection', () => {
+        it('a block has a collection', () => {
           const block = createRecord(BLOCK_ID, TABLE_TYPE.BLOCK, {
             ...RECORD_MAP,
             block: {
@@ -65,7 +65,7 @@ describe('createRecord()', () => {
           expect(block).toBeInstanceOf(BlockCollectionViewClass);
           expect((block as BlockCollectionViewClass).collection).toBeDefined();
         });
-        it("doesn't have a collection", () => {
+        it("a block doesn't have a collection", () => {
           const block = createRecord(BLOCK_ID, TABLE_TYPE.BLOCK, {
             ...RECORD_MAP,
             block: {
@@ -102,7 +102,7 @@ describe('createRecord()', () => {
         createRecord(BLOCK_ID, TABLE_TYPE.WORKSPACE, RECORD_MAP),
       ).toThrow(/^Can't handle a workspace/));
 
-    it("block id doesn't exist", () =>
+    it("block-id doesn't exist", () =>
       expect(() =>
         createRecord("id that doesn't exist", TABLE_TYPE.BLOCK, RECORD_MAP),
       ).toThrow(/^Block .+ is not found/));

@@ -4,8 +4,8 @@ import { NOTION_HOST } from '../../../../constants';
 import { BLOCK_TYPE, ICON_TYPE, SORT_BY, TABLE_TYPE } from '../../../constants';
 import { BlockClass } from '../../Record';
 
-const BLOCK_ID = 'xxx';
-const PARENT_BLOCK_ID = 'parent-xxx';
+const BLOCK_ID = 'block-id';
+const PARENT_BLOCK_ID = 'parent-id';
 const BLOCK: Block = {
   id: BLOCK_ID,
   parent_id: PARENT_BLOCK_ID,
@@ -14,7 +14,7 @@ const BLOCK: Block = {
 };
 const PARENT_BLOCK: Block = {
   id: PARENT_BLOCK_ID,
-  parent_id: 'yyy',
+  parent_id: 'parent-id',
   parent_table: TABLE_TYPE.WORKSPACE,
   type: BLOCK_TYPE.PAGE,
 };

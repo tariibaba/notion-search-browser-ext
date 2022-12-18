@@ -9,7 +9,7 @@ export const setHighlight = (text: string, query: string) => {
   const replacedText = text.replace(REGEXP_REMOVES_TAG, '');
 
   const trimmedQuery = query.trim();
-  if (trimmedQuery === '') return [<>{replacedText}</>];
+  if (trimmedQuery === '') return [<span key={0}>{replacedText}</span>];
 
   return reactStringReplace(
     replacedText,

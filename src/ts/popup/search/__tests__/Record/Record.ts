@@ -2,8 +2,8 @@ import { BLOCK_TYPE, TABLE_TYPE } from '../../../constants';
 import { BlockClass } from '../../Record';
 
 const BLOCK: Block = {
-  id: 'xxx',
-  parent_id: 'parent-xxx',
+  id: 'block-id',
+  parent_id: 'parent-id',
   parent_table: TABLE_TYPE.BLOCK,
   type: BLOCK_TYPE.PAGE,
 };
@@ -14,7 +14,7 @@ describe('parent', () => {
   }).parent;
 
   it('gets an id', () => {
-    expect(parent.id).toBe('parent-xxx');
+    expect(parent.id).toBe('parent-id');
   });
 
   it('gets a table type', () => {

@@ -3,13 +3,7 @@ import { axios } from '../../axios';
 import { NOTION_HOST } from '../../constants';
 import { storage } from '../../storage';
 
-import {
-  FILTERS_BY,
-  ICON_TYPE,
-  SORT_BY,
-  STORAGE_KEY,
-  TABLE_TYPE,
-} from '../constants';
+import { FILTERS_BY, ICON_TYPE, SORT_BY, STORAGE_KEY } from '../constants';
 import {
   BlockClass,
   createBlock,
@@ -109,8 +103,7 @@ export const search = async ({
         if (record.canBeDir)
           paths.push({
             title: record.getTitle() || TEXT_NO_TITLE,
-            record: record.record,
-            tableType,
+            block: record.record as Block, // Collection は canBeDir == false なので問題ない
           });
 
         const parent = record.parent;
@@ -145,8 +138,7 @@ export const search = async ({
       const result: Item = {
         title: block.getTitle() ?? TEXT_NO_TITLE,
         text: item.highlight?.text,
-        record: block.record,
-        tableType: TABLE_TYPE.BLOCK,
+        block: block.record,
         dirs: block.parent.isWorkspace
           ? []
           : getDir(

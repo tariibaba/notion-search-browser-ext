@@ -16,7 +16,7 @@ export default function Items({
         <div className="items">
           {items.map((item) => (
             <Item
-              key={item.url}
+              key={item.block.id}
               opensNewTab={opensNewTab}
               query={query}
               {...item}

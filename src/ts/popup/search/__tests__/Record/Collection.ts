@@ -2,8 +2,8 @@ import { TABLE_TYPE } from '../../../constants';
 import { CollectionClass } from '../../Record';
 
 const COLLECTION: Collection = {
-  id: 'xxx',
-  parent_id: 'parent-xxx',
+  id: 'block-id',
+  parent_id: 'parent-id',
   parent_table: TABLE_TYPE.BLOCK,
 };
 

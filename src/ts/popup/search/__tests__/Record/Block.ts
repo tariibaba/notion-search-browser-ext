@@ -2,8 +2,8 @@ import { BLOCK_TYPE, TABLE_TYPE } from '../../../constants';
 import { BlockClass, BlockCollectionViewClass } from '../../Record';
 
 const BLOCK: Block = {
-  id: 'xxx',
-  parent_id: 'parent-xxx',
+  id: 'block-id',
+  parent_id: 'parent-id',
   parent_table: TABLE_TYPE.BLOCK,
   type: BLOCK_TYPE.PAGE,
 };

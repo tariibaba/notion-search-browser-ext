@@ -27,7 +27,7 @@ it.each([
       text: 'foo bar baz',
       query: '',
     },
-    expected: [<>foo bar baz</>],
+    expected: [<span key="0">foo bar baz</span>],
   },
   {
     name: 'rm match tag',
@@ -35,7 +35,7 @@ it.each([
       text: `foo <${MATCH_TAG}>bar</${MATCH_TAG}> <${MATCH_TAG}>baz</${MATCH_TAG}>`,
       query: '',
     },
-    expected: [<>foo bar baz</>],
+    expected: [<span key="0">foo bar baz</span>],
   },
   {
     name: 'multiple queries',
