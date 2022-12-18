@@ -10,6 +10,8 @@ export class RecordError extends Error {
     this.data = data;
   }
 }
+class RecordNotFoundError extends RecordError {}
+class RecordTypeError extends RecordError {}
 
 const getBlock = (recordMap: RecordMap, id: string): Block | undefined =>
   recordMap.block[id]?.value;
@@ -114,7 +116,7 @@ export const createRecord = (
 ): RecordClass => {
   switch (tableType) {
     case TABLE_TYPE.WORKSPACE:
-      throw new RecordError(`Can't handle a workspace`, {
+      throw new RecordTypeError(`Can't handle a workspace`, {
         id,
         tableType,
         recordMap,
@@ -124,7 +126,7 @@ export const createRecord = (
     case TABLE_TYPE.COLLECTION: {
       const collection = getCollection(recordMap, id);
       if (!collection) {
-        throw new RecordError(
+        throw new RecordNotFoundError(
           `Collection (id:${id}) is not found in recordMap.collection`,
           {
             id,
@@ -138,7 +140,7 @@ export const createRecord = (
     case TABLE_TYPE.BLOCK: {
       const block = getBlock(recordMap, id);
       if (!block) {
-        throw new RecordError(
+        throw new RecordNotFoundError(
           `Block (id:${id}) is not found in recordMap.block`,
           {
             id,
@@ -165,7 +167,7 @@ export const createRecord = (
           if (block.collection_id) {
             collection = getCollection(recordMap, block.collection_id);
             if (!collection) {
-              throw new RecordError(
+              throw new RecordNotFoundError(
                 `block.collection_id exists, but collection_id:${block.collection_id} is not found in recordMap.collection`,
                 {
                   id,
@@ -188,7 +190,7 @@ export const createRecord = (
       }
     }
     default:
-      throw new RecordError(`Unknown table type: ${tableType}`, {
+      throw new RecordTypeError(`Unknown table type: ${tableType}`, {
         id,
         tableType,
         recordMap,
@@ -199,6 +201,7 @@ export const createRecord = (
 export const createBlock = (id: string, recordMap: RecordMap) => {
   const record = createRecord(id, TABLE_TYPE.BLOCK, recordMap);
   if (!(record instanceof BlockClass))
+    // 今の実装では起こり得ない。保険
     throw new RecordError('Not a block', {
       id,
       record,
