@@ -8,6 +8,8 @@ const BLOCK: Block = {
   type: BLOCK_TYPE.PAGE,
 };
 
+afterEach(() => jest.restoreAllMocks());
+
 for (const className of [BlockClass, BlockCollectionViewClass]) {
   describe(className.name as string, () => {
     it('detects an unknown block type', () => {
@@ -36,6 +38,7 @@ for (const className of [BlockClass, BlockCollectionViewClass]) {
         { input: BLOCK_TYPE.COLUMN, expected: false },
         { input: 'unknown type' as BlockType, expected: false },
       ])('$input → $expected', ({ input, expected }) => {
+        jest.spyOn(console, 'warn').mockImplementation(() => {});
         expect(
           new className({
             block: {

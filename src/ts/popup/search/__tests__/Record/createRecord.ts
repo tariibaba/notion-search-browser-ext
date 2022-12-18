@@ -35,6 +35,8 @@ const RECORD_MAP: RecordMap = {
   },
 };
 
+afterEach(() => jest.restoreAllMocks());
+
 describe('createRecord()', () => {
   describe('normal', () => {
     it('gets a block', () =>

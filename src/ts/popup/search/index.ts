@@ -24,8 +24,7 @@ const DEBOUNCE_TIME = 150;
 const ICON_WIDTH = 40;
 const TEXT_NO_TITLE = 'Untitled';
 
-// NOTE: 結合テストくらいは書きたい気がする。。
-const search = async ({
+export const search = async ({
   query,
   sortBy,
   filtersBy,
@@ -180,7 +179,7 @@ const search = async ({
         } else if (icon.startsWith('/')) {
           result.icon = {
             type: ICON_TYPE.IMAGE,
-            value: `${NOTION_HOST}${icon}&width=${ICON_WIDTH}`,
+            value: `${NOTION_HOST}${icon}`,
           };
         } else {
           // NOTE: 本気でやるなら、ここで絵文字以外のものが来た場合にエラーにする
