@@ -23,6 +23,7 @@ export const answerToIndex = (str: string) => {
   return parseInt(str);
 };
 
+// TODO: テストどうする...? ( prompt() の stub が少々だるいが)
 export const linkWorkspace = async (): Promise<
   { aborted: true } | { aborted: false; workspace: Workspace }
 > => {

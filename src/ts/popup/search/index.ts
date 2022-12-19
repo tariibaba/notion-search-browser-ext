@@ -3,7 +3,13 @@ import { axios } from '../../axios';
 import { NOTION_HOST } from '../../constants';
 import { storage } from '../../storage';
 
-import { FILTERS_BY, ICON_TYPE, SORT_BY, STORAGE_KEY } from '../constants';
+import {
+  FILTERS_BY,
+  ICON_TYPE,
+  SEARCH_LIMIT,
+  SORT_BY,
+  STORAGE_KEY,
+} from '../constants';
 import {
   BlockClass,
   createBlock,
@@ -13,7 +19,6 @@ import {
 } from './Record';
 
 const PATH = '/search';
-const SEARCH_LIMIT = 50;
 const DEBOUNCE_TIME = 150;
 const ICON_WIDTH = 40;
 const TEXT_NO_TITLE = 'Untitled';
@@ -47,7 +52,7 @@ export const search = async ({
       sortOptions = { field: 'created', direction: 'desc' };
       break;
     default:
-      throw new Error(`unknown sortBy: ${sortBy}`);
+      throw new Error(`Unknown sort option: ${sortBy}`);
   }
   const filterOptions: { navigableBlockContentOnly?: boolean } = {};
   for (const [key, value] of Object.entries(filtersBy)) {
@@ -56,7 +61,7 @@ export const search = async ({
         if (value) filterOptions.navigableBlockContentOnly = true;
         break;
       default:
-        throw new Error(`unknown key: ${key}`);
+        throw new Error(`Unknown filter opition: ${key}`);
     }
   }
 

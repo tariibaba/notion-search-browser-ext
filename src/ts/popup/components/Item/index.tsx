@@ -19,7 +19,9 @@ export default function Item({
   query: string;
 } & Item) {
   return (
-    <div className={`item debug-record ${getType(block)}`}>
+    <div
+      className={`item test-item-${block.id} debug-record ${getType(block)}`}
+    >
       <a
         className="url"
         {...(opensNewTab && { target: '_blank' })}

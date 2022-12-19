@@ -24,7 +24,7 @@ afterEach(() => jest.restoreAllMocks());
 describe('gets an icon', () => {
   it.each([
     {
-      name: 'image (^http)',
+      name: ' image (^http)',
       input: 'https://exmaple.com/icon.svg',
       expected: {
         type: ICON_TYPE.IMAGE,

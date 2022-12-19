@@ -21,6 +21,7 @@ export default function Filter({
         }}
         className={[
           'filter',
+          'test-filter-only-title',
           'clickable',
           filtersBy[FILTERS_BY.ONLY_TITLE] ? 'selected' : '',
         ].join(' ')}

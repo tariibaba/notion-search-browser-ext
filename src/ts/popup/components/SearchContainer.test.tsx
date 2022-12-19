@@ -1,0 +1,182 @@
+import { act, render } from '@testing-library/react';
+import React from 'react';
+import { findBySelector, userEventSetup } from '../../../../test/helpers';
+import { axios } from '../../axios';
+import { BLOCK_TYPE, SORT_BY, TABLE_TYPE } from '../constants';
+import SearchContainer from './SearchContainer';
+
+beforeAll(() => {
+  jest.useFakeTimers(); // debounce 対策
+  // Object のインスタンスは spy できないので
+});
+afterAll(() => {
+  jest.useRealTimers();
+  jest.restoreAllMocks();
+});
+
+it('filter options', async () => {
+  const user = userEventSetup();
+  const spy = jest
+    .spyOn(axios, 'post')
+    .mockResolvedValue({ data: { results: [], total: 0 } });
+
+  await act(() => {
+    render(
+      <SearchContainer
+        isPopup={false}
+        workspace={{ id: 'space-id', name: 'space-name' }}
+      />,
+    );
+  });
+  await act(() => {
+    // debounce 対策。await act が待てるのは setState と非同期処理だけで、タイマーまでは進めない
+    jest.runOnlyPendingTimers();
+  });
+
+  const elem = await findBySelector('.test-filter-only-title');
+  expect(elem).not.toHaveClass('selected');
+
+  // やや冗長だが、spy.mock.lastCall を比較するよりも、コケた場合の出力が親切（そもそも何回呼ばれたとか教えてくれる）
+  expect(spy).toHaveBeenLastCalledWith(
+    expect.any(String),
+    expect.not.objectContaining({
+      filters: expect.objectContaining({ navigableBlockContentOnly: true }),
+    }),
+  );
+
+  await user.click(elem);
+  expect(elem).toHaveClass('selected');
+
+  expect(spy).toHaveBeenLastCalledWith(
+    expect.any(String),
+    expect.objectContaining({
+      filters: expect.objectContaining({ navigableBlockContentOnly: true }),
+    }),
+  );
+});
+
+it('sort options', async () => {
+  const user = userEventSetup();
+  const spy = jest
+    .spyOn(axios, 'post')
+    .mockResolvedValue({ data: { results: [], total: 0 } });
+
+  await act(() =>
+    render(
+      <SearchContainer
+        isPopup={false}
+        workspace={{ id: 'space-id', name: 'space-name' }}
+      />,
+    ),
+  );
+  await act(() => {
+    // debounce 対策。await act が待てるのは setState と非同期処理だけで、タイマーまでは進めない
+    jest.runOnlyPendingTimers();
+  });
+
+  const input = await findBySelector<HTMLInputElement>('.query');
+  const select = await findBySelector<HTMLSelectElement>('.sorts');
+  expect(select.value).toBe(SORT_BY.RELEVANCE);
+
+  for (const {
+    input: { query, selection },
+    expected,
+  } of [
+    {
+      input: {
+        query: 'test',
+        selection: SORT_BY.LAST_EDITED,
+      },
+      expected: { field: 'lastEdited', direction: 'desc' },
+    },
+    {
+      input: {
+        query: 'test',
+        selection: SORT_BY.CREATED,
+      },
+      expected: { field: 'created', direction: 'desc' },
+    },
+    {
+      input: {
+        query: 'test',
+        selection: SORT_BY.RELEVANCE,
+      },
+      expected: { field: 'relevance' },
+    },
+    {
+      input: {
+        query: '',
+        selection: SORT_BY.RELEVANCE,
+      },
+      expected: { field: 'created', direction: 'desc' },
+    },
+  ]) {
+    if (query === '') {
+      await user.clear(input);
+    } else {
+      await user.type(input, query);
+    }
+    await user.selectOptions(select, selection);
+    expect(select).toHaveValue(selection);
+    expect(spy).toHaveBeenLastCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        sort: expect.objectContaining(expected),
+      }),
+    );
+  }
+});
+
+describe('gets last search result', () => {
+  const query = 'test';
+  const user = userEventSetup();
+  const blockId = 'block-id';
+
+  it.each([
+    // { input: false, expected: '' },
+    { input: true, expected: query },
+  ])('isPopup: $input', async ({ input, expected }) => {
+    jest.spyOn(axios, 'post').mockResolvedValue({
+      data: {
+        results: [{ id: blockId }],
+        recordMap: {
+          block: {
+            [blockId]: {
+              value: {
+                id: blockId,
+                parent_id: 'parent-id',
+                parent_table: TABLE_TYPE.WORKSPACE,
+                type: BLOCK_TYPE.PAGE,
+              },
+            },
+          },
+        },
+        total: 1,
+      },
+    });
+    const container = (
+      <SearchContainer
+        isPopup={input}
+        workspace={{ id: 'space-id', name: 'space-name' }}
+      />
+    );
+
+    const { unmount } = await act(() => render(container));
+    let inputElem = await findBySelector<HTMLInputElement>('.query');
+    expect(inputElem).toHaveValue('');
+
+    await user.type(inputElem, query);
+    unmount();
+
+    location.hash = ''; // TODO: useURLParams に移行したら消す
+    await act(() => render(container));
+    inputElem = await findBySelector<HTMLInputElement>('.query');
+    expect(inputElem).toHaveValue(expected);
+    /* eslint  jest/no-conditional-expect: 0 */
+    if (expected) {
+      expect(
+        await findBySelector<HTMLInputElement>(`.test-item-${blockId}`),
+      ).toBeInTheDocument();
+    }
+  });
+});

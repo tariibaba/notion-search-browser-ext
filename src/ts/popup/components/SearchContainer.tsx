@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useHashParam, useObjectHashParam } from 'use-hash-param';
 import { storage } from '../../storage';
 import { alertError } from '../../utils';
@@ -19,7 +19,6 @@ export default function Container({
 }) {
   const [query, setQuery] = useHashParam('query', '');
   const [usedQuery, setUsedQuery] = useState('');
-  const [isFirstRendering, setIsFirstRendering] = useState<boolean>(true);
 
   const sortStateAndSetter = useHashParam('sort_by', SORT_BY.RELEVANCE);
   const [sortBy, setSortBy] = sortStateAndSetter;
@@ -34,26 +33,26 @@ export default function Container({
 
   const trimmedQuery = query.trim();
   const hasQuery = trimmedQuery.length > 0;
+  const isFirstRendering = useRef(true);
 
   // search
   useEffect(() => {
     (async () => {
       // get cache
-      // TODO: 一気通貫テストしたい（デグレしたので。。）
-      if (isPopup && isFirstRendering) {
+      if (isPopup && isFirstRendering.current) {
+        isFirstRendering.current = false;
+
         const store = (await storage.get(
           `${workspace.id}-${STORAGE_KEY.LAST_SEARCHED}`,
         )) as SearchResultCache | undefined; // TODO: 型ガード
 
         if (store) {
-          setIsFirstRendering(false);
           setQuery(store.query);
           setUsedQuery(query);
           setSearchResult(store.searchResult);
           return;
         }
       }
-      setIsFirstRendering(false);
 
       if (query.trim() === '')
         storage.remove(`${workspace.id}-${STORAGE_KEY.LAST_SEARCHED}`);
@@ -64,7 +63,7 @@ export default function Container({
             query,
             sortBy:
               !hasQuery && sortBy === SORT_BY.RELEVANCE // ad hoc: worthless condition
-                ? SORT_BY.CREATED
+                ? SORT_BY.CREATED // 別に last edited でも良いのだが
                 : sortBy,
             filtersBy,
             savesToStorage: isPopup && hasQuery,

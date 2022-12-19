@@ -9,9 +9,9 @@ export default function Sort({
   setSortBy: (value: string) => void;
 }) {
   return (
-    <div className="sorts">
+    <div className="sorts-container">
       <select
-        className="sort clickable"
+        className="sorts clickable"
         value={sortBy}
         onChange={(event) => setSortBy(event.target.value)}
       >

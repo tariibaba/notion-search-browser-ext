@@ -5,13 +5,13 @@ export const SEARCH_LIMIT = 50;
 export const MATCH_TAG = 'gzkNfoUU';
 
 export const FILTERS_BY = {
-  ONLY_TITLE: 'ONLY_TITLE',
+  ONLY_TITLE: 'only-title',
 } as const;
 
 export const SORT_BY = {
-  RELEVANCE: 'RELEVANCE',
-  LAST_EDITED: 'LAST_EDITED',
-  CREATED: 'CREATED',
+  RELEVANCE: 'relevance',
+  LAST_EDITED: 'last-edited',
+  CREATED: 'created',
 } as const;
 
 // ========================================
@@ -69,6 +69,6 @@ export const STORAGE_KEY = {
 } as const;
 
 export const ICON_TYPE = {
-  IMAGE: 'IMAGE',
-  EMOJI: 'EMOJI',
+  IMAGE: 'image',
+  EMOJI: 'emoji',
 } as const;
