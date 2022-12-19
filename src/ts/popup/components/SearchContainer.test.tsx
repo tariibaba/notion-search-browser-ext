@@ -1,6 +1,6 @@
 import { act, render } from '@testing-library/react';
 import React from 'react';
-import { findBySelector, userEventSetup } from '../../../../test/helpers';
+import { $, userEventSetup } from '../../../../test/helpers';
 import { axios } from '../../axios';
 import { BLOCK_TYPE, SORT_BY, TABLE_TYPE } from '../constants';
 import SearchContainer from './SearchContainer';
@@ -14,26 +14,29 @@ afterAll(() => {
   jest.restoreAllMocks();
 });
 
+const renderAndWaitEffect = async (component: JSX.Element) => {
+  const result = await act(() => render(component));
+  // debounce 対策。await act が待てるのは setState と非同期処理だけで、タイマーまでは進めない
+  await act(() => jest.runOnlyPendingTimers());
+  return result;
+};
+
 it('filter options', async () => {
-  const user = userEventSetup();
+  const user = userEventSetup({
+    advanceTimers: jest.runOnlyPendingTimers,
+  });
   const spy = jest
     .spyOn(axios, 'post')
     .mockResolvedValue({ data: { results: [], total: 0 } });
 
-  await act(() => {
-    render(
-      <SearchContainer
-        isPopup={false}
-        workspace={{ id: 'space-id', name: 'space-name' }}
-      />,
-    );
-  });
-  await act(() => {
-    // debounce 対策。await act が待てるのは setState と非同期処理だけで、タイマーまでは進めない
-    jest.runOnlyPendingTimers();
-  });
+  await renderAndWaitEffect(
+    <SearchContainer
+      isPopup={false}
+      workspace={{ id: 'space-id', name: 'space-name' }}
+    />,
+  );
 
-  const elem = await findBySelector('.test-filter-only-title');
+  const elem = $('.test-filter-only-title');
   expect(elem).not.toHaveClass('selected');
 
   // やや冗長だが、spy.mock.lastCall を比較するよりも、コケた場合の出力が親切（そもそも何回呼ばれたとか教えてくれる）
@@ -56,26 +59,22 @@ it('filter options', async () => {
 });
 
 it('sort options', async () => {
-  const user = userEventSetup();
+  const user = userEventSetup({
+    advanceTimers: jest.runOnlyPendingTimers,
+  });
   const spy = jest
     .spyOn(axios, 'post')
     .mockResolvedValue({ data: { results: [], total: 0 } });
 
-  await act(() =>
-    render(
-      <SearchContainer
-        isPopup={false}
-        workspace={{ id: 'space-id', name: 'space-name' }}
-      />,
-    ),
+  await renderAndWaitEffect(
+    <SearchContainer
+      isPopup={false}
+      workspace={{ id: 'space-id', name: 'space-name' }}
+    />,
   );
-  await act(() => {
-    // debounce 対策。await act が待てるのは setState と非同期処理だけで、タイマーまでは進めない
-    jest.runOnlyPendingTimers();
-  });
 
-  const input = await findBySelector<HTMLInputElement>('.query');
-  const select = await findBySelector<HTMLSelectElement>('.sorts');
+  const input = $<HTMLInputElement>('.query');
+  const select = $<HTMLSelectElement>('.sorts');
   expect(select.value).toBe(SORT_BY.RELEVANCE);
 
   for (const {
@@ -129,13 +128,12 @@ it('sort options', async () => {
 
 describe('gets last search result', () => {
   const query = 'test';
-  const user = userEventSetup();
+  const user = userEventSetup({
+    advanceTimers: jest.runOnlyPendingTimers,
+  });
   const blockId = 'block-id';
 
-  it.each([
-    // { input: false, expected: '' },
-    { input: true, expected: query },
-  ])('isPopup: $input', async ({ input, expected }) => {
+  beforeEach(() => {
     jest.spyOn(axios, 'post').mockResolvedValue({
       data: {
         results: [{ id: blockId }],
@@ -154,6 +152,12 @@ describe('gets last search result', () => {
         total: 1,
       },
     });
+  });
+
+  it.each([
+    { input: false, expected: '' },
+    { input: true, expected: query },
+  ])('isPopup: $input', async ({ input, expected }) => {
     const container = (
       <SearchContainer
         isPopup={input}
@@ -161,8 +165,8 @@ describe('gets last search result', () => {
       />
     );
 
-    const { unmount } = await act(() => render(container));
-    let inputElem = await findBySelector<HTMLInputElement>('.query');
+    const { unmount } = await act(() => renderAndWaitEffect(container));
+    let inputElem = $<HTMLInputElement>('.query');
     expect(inputElem).toHaveValue('');
 
     await user.type(inputElem, query);
@@ -170,13 +174,11 @@ describe('gets last search result', () => {
 
     location.hash = ''; // TODO: useURLParams に移行したら消す
     await act(() => render(container));
-    inputElem = await findBySelector<HTMLInputElement>('.query');
+    inputElem = $<HTMLInputElement>('.query');
     expect(inputElem).toHaveValue(expected);
     /* eslint  jest/no-conditional-expect: 0 */
     if (expected) {
-      expect(
-        await findBySelector<HTMLInputElement>(`.test-item-${blockId}`),
-      ).toBeInTheDocument();
+      expect($<HTMLInputElement>(`.test-item-${blockId}`)).toBeInTheDocument();
     }
   });
 });
