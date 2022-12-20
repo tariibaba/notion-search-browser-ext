@@ -1,5 +1,5 @@
-import { TABLE_TYPE } from '../../../constants';
-import { CollectionClass } from '../../Record';
+import { TABLE_TYPE } from '../../constants';
+import { CollectionClass } from '../Record/Collection';
 
 const COLLECTION: Collection = {
   id: 'block-id',
@@ -55,7 +55,7 @@ describe('getIcon()', () => {
   });
 });
 
-it('canBeDir', () => {
+test('canBeDir', () => {
   expect(
     new CollectionClass({
       collection: COLLECTION,

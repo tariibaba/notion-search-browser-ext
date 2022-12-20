@@ -1,5 +1,7 @@
-import { BLOCK_TYPE, TABLE_TYPE } from '../../../constants';
-import { BlockCollectionViewClass, CollectionClass } from '../../Record';
+import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
+import { BlockCollectionViewClass } from '../Record/BlockCollectionView';
+import { CollectionClass } from '../Record/Collection';
+
 const BLOCK: Block = {
   id: 'block-id',
   parent_id: 'parent-block-id',

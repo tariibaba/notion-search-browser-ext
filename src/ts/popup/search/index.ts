@@ -10,13 +10,10 @@ import {
   SORT_BY,
   STORAGE_KEY,
 } from '../constants';
-import {
-  BlockClass,
-  createBlock,
-  createRecord,
-  RecordClass,
-  RecordError,
-} from './Record';
+import { RecordClass } from './Record';
+import { BlockClass } from './Record/Block';
+import { RecordError } from './Record/errors';
+import { createBlock, createRecord } from './Record/factory';
 
 const PATH = '/search';
 const DEBOUNCE_TIME = 150;

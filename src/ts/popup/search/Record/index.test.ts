@@ -1,5 +1,5 @@
-import { BLOCK_TYPE, TABLE_TYPE } from '../../../constants';
-import { BlockClass } from '../../Record';
+import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
+import { BlockClass } from '../Record/Block';
 
 const BLOCK: Block = {
   id: 'block-id',

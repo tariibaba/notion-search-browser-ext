@@ -1,11 +1,8 @@
-import { BLOCK_TYPE, TABLE_TYPE } from '../../../constants';
-import {
-  BlockClass,
-  BlockCollectionViewClass,
-  CollectionClass,
-  createBlock,
-  createRecord,
-} from '../../Record';
+import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
+import { BlockClass } from './Block';
+import { BlockCollectionViewClass } from './BlockCollectionView';
+import { CollectionClass } from './Collection';
+import { createBlock, createRecord } from './factory';
 
 const BLOCK_ID = 'block-id';
 const BLOCK: Block = {

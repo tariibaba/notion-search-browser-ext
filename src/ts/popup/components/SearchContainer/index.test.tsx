@@ -21,7 +21,7 @@ const renderAndWaitEffect = async (component: JSX.Element) => {
   return result;
 };
 
-it('filter options', async () => {
+test('filter options', async () => {
   const user = userEventSetup({
     advanceTimers: jest.runOnlyPendingTimers,
   });
@@ -58,7 +58,7 @@ it('filter options', async () => {
   );
 });
 
-it('sort options', async () => {
+test('sort options', async () => {
   const user = userEventSetup({
     advanceTimers: jest.runOnlyPendingTimers,
   });

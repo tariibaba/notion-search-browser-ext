@@ -1,11 +1,25 @@
 import { axios } from './axios';
-import { selectAndLinkWorkspace } from './workspaces';
+import { answerToIndex, selectAndLinkWorkspace } from './workspaces';
 
-beforeEach(() => {
-  jest.restoreAllMocks();
+describe('answerToIndex', () => {
+  it.each([
+    { input: '1', expected: 1 },
+    { input: '01', expected: 1 },
+    { input: '0', expected: 0 },
+    { input: '', expected: NaN },
+    { input: 'x', expected: NaN },
+    { input: '１', expected: 1 },
+    { input: '　１09  ', expected: 109 },
+  ])("'$input' -> $expected", ({ input, expected }) => {
+    expect(answerToIndex(input)).toBe(expected);
+  });
 });
 
 describe('selectAndLinkWorkspace', () => {
+  beforeEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('no spaces', async () => {
     jest.spyOn(axios, 'post').mockResolvedValue({ data: {} });
     await expect(selectAndLinkWorkspace()).rejects.toThrow(

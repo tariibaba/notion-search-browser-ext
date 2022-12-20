@@ -1,11 +1,12 @@
-import { search } from '../..';
-import { axios } from '../../../../axios';
-import { BLOCK_TYPE, SORT_BY, TABLE_TYPE } from '../../../constants';
-import { BlockClass } from '../../Record';
+import { search } from '.';
+import { axios } from '../../axios';
+import { NOTION_HOST } from '../../constants';
+import { BLOCK_TYPE, ICON_TYPE, SORT_BY, TABLE_TYPE } from '../constants';
+import { BlockClass } from './Record/Block';
 
 afterEach(() => jest.restoreAllMocks());
 
-const CHILD_ID = 'block-id';
+const BLOCK_ID = 'block-id';
 const PARENT_ID = 'parent-id';
 const GRANDPARENT_ID = 'grandparent-id';
 
@@ -15,9 +16,9 @@ describe('gets dirs', () => {
       name: 'no ancestors',
       input: {
         block: {
-          [CHILD_ID]: {
+          [BLOCK_ID]: {
             value: {
-              id: CHILD_ID,
+              id: BLOCK_ID,
               parent_id: PARENT_ID,
               parent_table: TABLE_TYPE.WORKSPACE,
               type: BLOCK_TYPE.PAGE,
@@ -31,9 +32,9 @@ describe('gets dirs', () => {
       name: 'single ancestor',
       input: {
         block: {
-          [CHILD_ID]: {
+          [BLOCK_ID]: {
             value: {
-              id: CHILD_ID,
+              id: BLOCK_ID,
               parent_id: PARENT_ID,
               parent_table: TABLE_TYPE.BLOCK,
               type: BLOCK_TYPE.PAGE,
@@ -55,9 +56,9 @@ describe('gets dirs', () => {
       name: 'multiple ancestors',
       input: {
         block: {
-          [CHILD_ID]: {
+          [BLOCK_ID]: {
             value: {
-              id: CHILD_ID,
+              id: BLOCK_ID,
               parent_id: PARENT_ID,
               parent_table: TABLE_TYPE.BLOCK,
               type: BLOCK_TYPE.PAGE,
@@ -87,9 +88,9 @@ describe('gets dirs', () => {
       name: 'skipped blocks',
       input: {
         block: {
-          [CHILD_ID]: {
+          [BLOCK_ID]: {
             value: {
-              id: CHILD_ID,
+              id: BLOCK_ID,
               parent_id: PARENT_ID,
               parent_table: TABLE_TYPE.BLOCK,
               type: BLOCK_TYPE.PAGE,
@@ -124,7 +125,7 @@ describe('gets dirs', () => {
 
     jest.spyOn(axios, 'post').mockResolvedValue({
       data: {
-        results: [{ id: CHILD_ID }],
+        results: [{ id: BLOCK_ID }],
         recordMap: input,
         total: 0,
       },
@@ -139,5 +140,78 @@ describe('gets dirs', () => {
       })
     ).items[0];
     expect(items.dirs.map((dir) => dir.title)).toEqual(expected);
+  });
+});
+
+const BLOCK: Block = {
+  id: BLOCK_ID,
+  parent_id: PARENT_ID,
+  parent_table: TABLE_TYPE.BLOCK,
+  type: BLOCK_TYPE.PAGE,
+};
+const PARENT_BLOCK: Block = {
+  id: PARENT_ID,
+  parent_id: GRANDPARENT_ID,
+  parent_table: TABLE_TYPE.WORKSPACE,
+  type: BLOCK_TYPE.PAGE,
+};
+
+describe('gets an icon', () => {
+  it.each([
+    {
+      name: ' image (^http)',
+      input: 'https://exmaple.com/icon.svg',
+      expected: {
+        type: ICON_TYPE.IMAGE,
+        value: `${NOTION_HOST}/image/${encodeURIComponent(
+          'https://exmaple.com/icon.svg',
+        )}?table=block&id=${BLOCK_ID}&width=40`,
+      },
+    },
+    {
+      name: 'image (^/)',
+      input: '/icon.svg',
+      expected: {
+        type: ICON_TYPE.IMAGE,
+        value: `${NOTION_HOST}/icon.svg`,
+      },
+    },
+    {
+      name: 'emoji',
+      input: '👌',
+      expected: {
+        type: ICON_TYPE.EMOJI,
+        value: '👌',
+      },
+    },
+  ])('$name', async ({ input, expected }) => {
+    jest.spyOn(BlockClass.prototype, 'getIcon').mockReturnValue(input);
+    jest.spyOn(axios, 'post').mockResolvedValue({
+      data: {
+        results: [{ id: BLOCK_ID }],
+        recordMap: {
+          block: {
+            [BLOCK_ID]: {
+              value: BLOCK,
+            },
+            [PARENT_ID]: {
+              value: PARENT_BLOCK,
+            },
+          },
+        },
+        total: 0,
+      },
+    });
+    expect(
+      (
+        await search({
+          query: '',
+          sortBy: SORT_BY.RELEVANCE,
+          filtersBy: {},
+          savesToStorage: false,
+          workspaceId: 'spaceId',
+        })
+      ).items[0].icon,
+    ).toEqual(expected);
   });
 });

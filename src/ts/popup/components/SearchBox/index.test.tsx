@@ -14,7 +14,7 @@ const Container = () => {
   );
 };
 
-it('clears query', async () => {
+test('clears query', async () => {
   const user = userEventSetup();
 
   render(<Container />);
