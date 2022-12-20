@@ -21,6 +21,7 @@ export const useWorkspace = () => {
       try {
         workspace = await getLinkedWorkspace();
       } catch (error) {
+        /* TODO: cause を使う */
         setError({
           message: 'Failed to get workspaces. Please reload this page.',
           error,

@@ -86,10 +86,6 @@ export const search = async ({
   ).data;
 
   // TODO: パースエラーを送信したい（ユーザーはこちらの想定してないタイプのobjectを扱う可能性が高いので）
-  // TODO: 検証したい異常系
-  //  - 空タイトルのページはどうなる？ （考えたくもないが。。。）
-  //  - DB だけ ... はありえないよね？
-  //  - View Page だけで DB が空 https://www.notion.so/cee680b18c474c9e9b47d246df0db729
   const recordMap = res.recordMap;
   const items: Item[] = [];
   for (const item of res.results) {
@@ -117,6 +113,8 @@ export const search = async ({
           parent.tableType as TableTypeWithoutWorkspace,
         );
       } catch (error) {
+        // parent_id が生えてることはまず無い(エラーのほぼ全てはクラス生成前のバリデーションなので)
+        // ので、これ以上親は探索しない
         console.error(
           error,
           error instanceof RecordError

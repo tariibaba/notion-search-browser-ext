@@ -44,12 +44,7 @@ export const BLOCK_TYPE = {
 } as const;
 
 // default is true
-export const CAN_BE_DIR: {
-  COLLECTION: boolean;
-  BLOCK: {
-    [key in valueOf<typeof BLOCK_TYPE>]: boolean;
-  };
-} = {
+export const CAN_BE_DIR = {
   COLLECTION: false,
   BLOCK: {
     [BLOCK_TYPE.PAGE]: true,
@@ -58,6 +53,11 @@ export const CAN_BE_DIR: {
     [BLOCK_TYPE.COLUMN_LIST]: false,
     [BLOCK_TYPE.COLUMN]: false,
   },
+} as const satisfies {
+  COLLECTION: boolean;
+  BLOCK: {
+    [key in valueOf<typeof BLOCK_TYPE>]: boolean;
+  };
 };
 
 // ========================================
