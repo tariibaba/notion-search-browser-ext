@@ -1,7 +1,7 @@
 import React from 'react';
-import Item from './Item';
+import Item from '../Item';
 
-export default function Items({
+export const Items = ({
   opensNewTab,
   query,
   items,
@@ -9,7 +9,7 @@ export default function Items({
   opensNewTab: boolean;
   query: string;
   items: Item[];
-}) {
+}) => {
   return (
     <>
       {items.length >= 0 && (
@@ -26,4 +26,4 @@ export default function Items({
       )}
     </>
   );
-}
+};

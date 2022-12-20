@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import React, { useState } from 'react';
-import { $, userEventSetup } from '../../../../test/helpers';
-import SearchBox from './SearchBox';
+import { $, userEventSetup } from '../../../../../test/helpers';
+import { SearchBox } from '../SearchBox';
 
 const Container = () => {
   const [query, setQuery] = useState('');

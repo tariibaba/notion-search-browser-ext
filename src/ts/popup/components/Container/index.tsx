@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { useWorkspace } from '../../hooks';
-import { alertError } from '../../utils';
-import SearchContainer from './SearchContainer';
+import { useWorkspace } from '../../../hooks';
+import { alertError } from '../../../utils';
+import { SearchContainer } from '../SearchContainer';
 
-export default function Container() {
+export const Container = () => {
   const { workspace, isInitialized, error, selectAndLinkWorkspace } =
     useWorkspace();
 
@@ -41,4 +41,4 @@ export default function Container() {
       </button>
     </main>
   );
-}
+};

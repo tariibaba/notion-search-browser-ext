@@ -1,13 +1,13 @@
 import React from 'react';
-import { FILTERS_BY } from '../constants';
+import { FILTERS_BY } from '../../constants';
 
-export default function Filter({
+export const Filter = ({
   filtersBy,
   setFiltersBy,
 }: {
   filtersBy: FiltersBy;
   setFiltersBy: (value: FiltersBy | ((prev: FiltersBy) => FiltersBy)) => void;
-}) {
+}) => {
   return (
     <div className="filters">
       <span
@@ -30,4 +30,4 @@ export default function Filter({
       </span>
     </div>
   );
-}
+};

@@ -1,22 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useHashParam, useObjectHashParam } from 'use-hash-param';
-import { storage } from '../../storage';
-import { alertError } from '../../utils';
-import { SORT_BY, STORAGE_KEY } from '../constants';
-import { debouncedSearch } from '../search';
-import Filter from './Filters';
-import Footer from './Footer';
-import Items from './Items';
-import SearchBox from './SearchBox';
-import Sort from './Sorts';
+import { storage } from '../../../storage';
+import { alertError } from '../../../utils';
+import { SORT_BY, STORAGE_KEY } from '../../constants';
+import { debouncedSearch } from '../../search';
+import { SearchBox } from '../SearchBox';
+import { Sort } from '../Sorts';
+import { Filter } from './../Filters';
+import { Footer } from './../Footer';
+import { Items } from './../Items';
 
-export default function Container({
+export const SearchContainer = ({
   isPopup,
   workspace,
 }: {
   isPopup: boolean;
   workspace: Workspace;
-}) {
+}) => {
   const [query, setQuery] = useHashParam('query', '');
   const [usedQuery, setUsedQuery] = useState('');
 
@@ -104,4 +104,4 @@ export default function Container({
       </main>
     </div>
   );
-}
+};

@@ -1,13 +1,13 @@
 import React from 'react';
-import { SORT_BY } from '../constants';
+import { SORT_BY } from '../../constants';
 
-export default function Sort({
+export const Sort = ({
   sortBy,
   setSortBy,
 }: {
   sortBy: string;
   setSortBy: (value: string) => void;
-}) {
+}) => {
   return (
     <div className="sorts-container">
       <select
@@ -21,4 +21,4 @@ export default function Sort({
       </select>
     </div>
   );
-}
+};

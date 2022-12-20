@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-export default function SearchBox({
+export const SearchBox = ({
   query,
   setQuery,
   workspaceName,
@@ -8,7 +8,7 @@ export default function SearchBox({
   query: string;
   setQuery: (value: string) => void;
   workspaceName: string;
-}) {
+}) => {
   const clear = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     setQuery('');
     event.preventDefault();
@@ -46,4 +46,4 @@ export default function SearchBox({
       )}
     </div>
   );
-}
+};

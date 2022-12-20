@@ -1,9 +1,9 @@
 import { act, render } from '@testing-library/react';
 import React from 'react';
-import { $, userEventSetup } from '../../../../test/helpers';
-import { axios } from '../../axios';
-import { BLOCK_TYPE, SORT_BY, TABLE_TYPE } from '../constants';
-import SearchContainer from './SearchContainer';
+import { $, userEventSetup } from '../../../../../test/helpers';
+import { axios } from '../../../axios';
+import { BLOCK_TYPE, SORT_BY, TABLE_TYPE } from '../../constants';
+import { SearchContainer } from '../SearchContainer';
 
 beforeAll(() => {
   jest.useFakeTimers(); // debounce 対策

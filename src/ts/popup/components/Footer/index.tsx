@@ -1,13 +1,13 @@
 import React from 'react';
-import { SEARCH_LIMIT } from '../constants';
+import { SEARCH_LIMIT } from '../../constants';
 
-export default function Total({
+export const Footer = ({
   total,
   showsSummary,
 }: {
   total: number;
   showsSummary: boolean;
-}) {
+}) => {
   const handleClickSettings = async (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
   ) => {
@@ -38,4 +38,4 @@ export default function Total({
       </div>
     </div>
   );
-}
+};
