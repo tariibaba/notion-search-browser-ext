@@ -6,9 +6,9 @@ const TerserPlugin = require('terser-webpack-plugin');
 let config = {
   mode: process.env.NODE_ENV || 'development',
   entry: {
-    background: './src/ts/background.ts',
-    popup: './src/ts/popup.tsx',
-    options: './src/ts/options.ts',
+    background: './src/ts/background/index.ts',
+    popup: './src/ts/popup/index.tsx',
+    options: './src/ts/options/index.tsx',
   },
   output: {
     path: `${__dirname}/public/js`,

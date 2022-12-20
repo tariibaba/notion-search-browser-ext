@@ -1,11 +1,11 @@
-import '../postcss/options.pcss';
-import { alertError } from './utils';
+import '../../postcss/options.pcss';
+import { alertError } from '../utils';
 import {
   getLinkedWorkspace,
   LinkWorkspaceResult,
   selectAndLinkWorkspace,
   unlinkWorkspace,
-} from './workspaces';
+} from '../workspaces';
 
 declare global {
   interface HTMLElement {

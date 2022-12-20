@@ -10,6 +10,6 @@ chrome.commands.onCommand.addListener((command) => {
       break;
     }
     default:
-      throw new Error(`unknown command: ${command}`);
+      throw new Error(`Unknown command: ${command}`);
   }
 });
