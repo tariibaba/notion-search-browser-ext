@@ -2,8 +2,8 @@ import '../postcss/options.pcss';
 import { alertError } from './utils';
 import {
   getLinkedWorkspace,
-  linkWorkspace,
   LinkWorkspaceResult,
+  selectAndLinkWorkspace,
   unlinkWorkspace,
 } from './workspaces';
 
@@ -46,7 +46,7 @@ HTMLElement.prototype.hide = function () {
   $('.link').addEventListener('click', async () => {
     let result: LinkWorkspaceResult;
     try {
-      result = await linkWorkspace();
+      result = await selectAndLinkWorkspace();
     } catch (error) {
       // TODO: 国際化
       alertError(

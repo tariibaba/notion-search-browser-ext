@@ -28,45 +28,46 @@ export type LinkWorkspaceResult =
   | { aborted: true }
   | { aborted: false; workspace: Workspace };
 
-export const linkWorkspace = async (): Promise<LinkWorkspaceResult> => {
-  const workspaces: Workspace[] = [];
-  const res = (await axios.post<GetWorkspacesApiResponse>(PATH)).data;
-  for (const { space: workspacesObj } of Object.values(res)) {
-    for (const [workspaceId, value] of Object.entries(workspacesObj)) {
-      workspaces.push({
-        id: workspaceId,
-        name: value.value.name,
-      });
-    }
-  }
-  let workspace: Workspace | undefined = undefined;
-  switch (workspaces.length) {
-    case 0:
-      throw new Error('No spaces are found');
-    case 1:
-      workspace = workspaces[0];
-      break;
-    default: {
-      while (!workspace) {
-        const answer = prompt(
-          'Select your workspace by number:\n' +
-            workspaces
-              .map((workspace, i) => `    ${i + 1}. ${workspace.name}`)
-              .join('\n'),
-          '1',
-        );
-        if (answer === null) return { aborted: true };
-
-        workspace = workspaces[answerToIndex(answer) - 1];
+export const selectAndLinkWorkspace =
+  async (): Promise<LinkWorkspaceResult> => {
+    const workspaces: Workspace[] = [];
+    const res = (await axios.post<GetWorkspacesApiResponse>(PATH)).data;
+    for (const { space: workspacesObj } of Object.values(res)) {
+      for (const [workspaceId, value] of Object.entries(workspacesObj)) {
+        workspaces.push({
+          id: workspaceId,
+          name: value.value.name,
+        });
       }
     }
-  }
-  await storage.set({ [STORAGE_KEY.WORKSPACE]: workspace });
-  return {
-    aborted: false,
-    workspace: workspace,
+    let workspace: Workspace | undefined = undefined;
+    switch (workspaces.length) {
+      case 0:
+        throw new Error('No spaces are found');
+      case 1:
+        workspace = workspaces[0];
+        break;
+      default: {
+        while (!workspace) {
+          const answer = prompt(
+            'Select your workspace by number:\n' +
+              workspaces
+                .map((workspace, i) => `    ${i + 1}. ${workspace.name}`)
+                .join('\n'),
+            '1',
+          );
+          if (answer === null) return { aborted: true };
+
+          workspace = workspaces[answerToIndex(answer) - 1];
+        }
+      }
+    }
+    await storage.set({ [STORAGE_KEY.WORKSPACE]: workspace });
+    return {
+      aborted: false,
+      workspace: workspace,
+    };
   };
-};
 
 export const unlinkWorkspace = async () => {
   await storage.remove(STORAGE_KEY.WORKSPACE);

@@ -1,14 +1,16 @@
 import { axios } from './axios';
-import { linkWorkspace } from './workspaces';
+import { selectAndLinkWorkspace } from './workspaces';
 
 beforeEach(() => {
   jest.restoreAllMocks();
 });
 
-describe('linkWorkspace', () => {
+describe('selectAndLinkWorkspace', () => {
   it('no spaces', async () => {
     jest.spyOn(axios, 'post').mockResolvedValue({ data: {} });
-    await expect(linkWorkspace()).rejects.toThrow(/^No spaces are found/);
+    await expect(selectAndLinkWorkspace()).rejects.toThrow(
+      /^No spaces are found/,
+    );
 
     jest.spyOn(axios, 'post').mockResolvedValue({
       data: {
@@ -17,7 +19,9 @@ describe('linkWorkspace', () => {
         },
       },
     });
-    await expect(linkWorkspace()).rejects.toThrow(/^No spaces are found/);
+    await expect(selectAndLinkWorkspace()).rejects.toThrow(
+      /^No spaces are found/,
+    );
   });
   it('1 space', async () => {
     jest.spyOn(axios, 'post').mockResolvedValue({
@@ -33,7 +37,7 @@ describe('linkWorkspace', () => {
         },
       },
     });
-    await expect(linkWorkspace()).resolves.toEqual({
+    await expect(selectAndLinkWorkspace()).resolves.toEqual({
       aborted: false,
       workspace: {
         id: 'space1-id',
@@ -81,7 +85,7 @@ describe('linkWorkspace', () => {
       },
     ])('$name', async ({ input, expected }) => {
       const spy = jest.spyOn(global, 'prompt').mockReturnValue(input);
-      await expect(linkWorkspace()).resolves.toEqual(expected);
+      await expect(selectAndLinkWorkspace()).resolves.toEqual(expected);
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy).toHaveBeenLastCalledWith(
         'Select your workspace by number:\n' +
