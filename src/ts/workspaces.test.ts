@@ -52,7 +52,7 @@ describe('selectAndLinkWorkspace', () => {
       },
     });
     await expect(selectAndLinkWorkspace()).resolves.toEqual({
-      aborted: false,
+      hasAborted: false,
       workspace: {
         id: 'space1-id',
         name: 'space1-name',
@@ -85,7 +85,7 @@ describe('selectAndLinkWorkspace', () => {
         name: 'select one',
         input: '2',
         expected: {
-          aborted: false,
+          hasAborted: false,
           workspace: {
             id: 'space2-id',
             name: 'space2-name',
@@ -95,7 +95,7 @@ describe('selectAndLinkWorkspace', () => {
       {
         name: 'abort',
         input: null,
-        expected: { aborted: true },
+        expected: { hasAborted: true },
       },
     ])('$name', async ({ input, expected }) => {
       const spy = jest.spyOn(global, 'prompt').mockReturnValue(input);

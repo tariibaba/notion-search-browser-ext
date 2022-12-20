@@ -25,8 +25,8 @@ export const answerToIndex = (str: string) => {
 
 // TODO: テストどうする...? ( prompt() の stub が少々だるいが)
 export type LinkWorkspaceResult =
-  | { aborted: true }
-  | { aborted: false; workspace: Workspace };
+  | { hasAborted: true }
+  | { hasAborted: false; workspace: Workspace };
 
 export const selectAndLinkWorkspace =
   async (): Promise<LinkWorkspaceResult> => {
@@ -56,7 +56,7 @@ export const selectAndLinkWorkspace =
                 .join('\n'),
             '1',
           );
-          if (answer === null) return { aborted: true };
+          if (answer === null) return { hasAborted: true };
 
           workspace = workspaces[answerToIndex(answer) - 1];
         }
@@ -64,7 +64,7 @@ export const selectAndLinkWorkspace =
     }
     await storage.set({ [STORAGE_KEY.WORKSPACE]: workspace });
     return {
-      aborted: false,
+      hasAborted: false,
       workspace: workspace,
     };
   };

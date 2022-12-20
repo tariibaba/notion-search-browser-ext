@@ -4,7 +4,7 @@ import { alertError } from '../../../utils';
 import { SearchContainer } from '../SearchContainer';
 
 export const Container = () => {
-  const { workspace, isInitialized, error, selectAndLinkWorkspace } =
+  const { workspace, hasGotWorkspace, error, selectAndLinkWorkspace } =
     useWorkspace();
 
   if (error) {
@@ -18,7 +18,7 @@ export const Container = () => {
 
   useEffect(() => {
     (async () => {
-      if (isInitialized && !workspace) {
+      if (hasGotWorkspace && !workspace) {
         console.info('will link automatically');
         await selectAndLinkWorkspace();
       }

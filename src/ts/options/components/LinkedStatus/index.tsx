@@ -5,7 +5,7 @@ import { alertError } from '../../../utils';
 export const LinkedStatus = () => {
   const {
     workspace,
-    isInitialized,
+    hasGotWorkspace,
     error,
     selectAndLinkWorkspace,
     unlinkWorkspace,
@@ -21,7 +21,7 @@ export const LinkedStatus = () => {
   return (
     <>
       <h1>Connection Status</h1>
-      {isInitialized &&
+      {hasGotWorkspace &&
         (workspace ? (
           <div className="linked-block">
             <p className="status">✅ Connected to Notion</p>

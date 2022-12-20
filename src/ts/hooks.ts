@@ -6,25 +6,16 @@ import {
   unlinkWorkspace,
 } from './workspaces';
 
-/* TODO: テスト。。
-   - (最初は isInitialized = false
-   - initialize
-     - getLinkedWorkspace が resolve した場合
-     - getLinkedWorkspace が reject した場合
-   - selectAndLinkWorkspace
-     - selectAndLinkWorkspace が resolve した場合
-     - selectAndLinkWorkspace が reject した場合
-*/
 export const useWorkspace = () => {
   const [workspace, setWorkspace] = useState<Workspace | undefined>(undefined);
   const [error, setError] = useState<
     { message: string; error: unknown } | undefined
   >(undefined);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [hasGotWorkspace, setHasGotWorkspace] = useState(false);
 
   useEffect(() => {
     (async () => {
-      setIsInitialized(true);
+      setHasGotWorkspace(true);
 
       let workspace: Workspace | undefined;
       try {
@@ -42,8 +33,9 @@ export const useWorkspace = () => {
 
   return {
     workspace,
+    // useEffect(() => { if (error) ... }, [error]); のように使う。 useEffect 省略不可
     error,
-    isInitialized,
+    hasGotWorkspace,
     selectAndLinkWorkspace: async () => {
       let result: LinkWorkspaceResult;
       try {
@@ -55,7 +47,7 @@ export const useWorkspace = () => {
         });
         return;
       }
-      if (result.aborted) {
+      if (result.hasAborted) {
         return;
       }
       setWorkspace(result.workspace);
