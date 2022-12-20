@@ -3,6 +3,7 @@ import { alertError } from './utils';
 import {
   getLinkedWorkspace,
   linkWorkspace,
+  LinkWorkspaceResult,
   unlinkWorkspace,
 } from './workspaces';
 
@@ -43,7 +44,7 @@ HTMLElement.prototype.hide = function () {
   }
 
   $('.link').addEventListener('click', async () => {
-    let result: { aborted: true } | { aborted: false; workspace: Workspace };
+    let result: LinkWorkspaceResult;
     try {
       result = await linkWorkspace();
     } catch (error) {

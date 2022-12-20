@@ -24,9 +24,11 @@ export const answerToIndex = (str: string) => {
 };
 
 // TODO: テストどうする...? ( prompt() の stub が少々だるいが)
-export const linkWorkspace = async (): Promise<
-  { aborted: true } | { aborted: false; workspace: Workspace }
-> => {
+export type LinkWorkspaceResult =
+  | { aborted: true }
+  | { aborted: false; workspace: Workspace };
+
+export const linkWorkspace = async (): Promise<LinkWorkspaceResult> => {
   const workspaces: Workspace[] = [];
   const res = (await axios.post<GetWorkspacesApiResponse>(PATH)).data;
   for (const { space: workspacesObj } of Object.values(res)) {
