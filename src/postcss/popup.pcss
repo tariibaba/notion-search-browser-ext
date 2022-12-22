@@ -84,10 +84,6 @@ Search
     width: 18px;
   }
 
-  .icon-clear-query {
-    width: 14px;
-  }
-
   .query {
     width: 100%;
     margin-left: var(--search-box-space);
@@ -98,6 +94,13 @@ Search
 
     &::placeholder {
       color: var(--font-color-x-light);
+    }
+
+    &::-webkit-search-cancel-button {
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+      appearance: none;
     }
   }
 }
