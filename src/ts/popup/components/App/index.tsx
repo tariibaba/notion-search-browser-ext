@@ -3,7 +3,7 @@ import { useWorkspace } from '../../../hooks';
 import { alertError } from '../../../utils';
 import { SearchContainer } from '../SearchContainer';
 
-export const Container = () => {
+export const App = () => {
   const { workspace, hasGotWorkspace, error, selectAndLinkWorkspace } =
     useWorkspace();
 
