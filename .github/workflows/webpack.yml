@@ -25,3 +25,11 @@ jobs:
 
       - name: Test
         run: npx jest
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            core.info(JSON.stringify(job))
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            core.info(JSON.stringify(github))            
