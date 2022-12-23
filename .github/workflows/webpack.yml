@@ -13,15 +13,22 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: latest
 
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('yarn.lock') }}
+          restore-keys: npm-
+
+      - name: Install dependencies
+        run: yarn install
+      
       - name: Build
-        run: |
-          yarn install
-          yarn run build
+        run: yarn run build
 
       - name: Test
         run: npx jest         
