@@ -1,17 +1,16 @@
-name: Slack Incoming Webhooks
+name: Slack Notification
 on:
-  push:
-    branches: ['*']
-  pull_request:
+  workflow_run:
+    workflows:
+      - Jest
+    types:
+      - completed
 jobs:
-  build:
+  notify:
     runs-on: ubuntu-latest
     steps:
-      # Check out theis repo
       - uses: actions/checkout@v2
 
-      # Start a Slack workflow using a webhook trigger
-      # https://github.com/slackapi/slack-github-action
       - name: Send GitHub Action trigger data to Slack workflow
         id: slack
         uses: slackapi/slack-github-action@v1.16.0
@@ -26,18 +25,14 @@ jobs:
                     "type": "mrkdwn",
                     "text": "ビルド結果: ${{ job.status }}\n\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
                   }
-                },
-                {
-                  "type": "context",
-                  "elements": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "${{ github }}"
-                    }
-                  ]
                 }
               ]
             }
         env:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: dump context
+        run: echo '${{ toJSON(github) }}'          
