@@ -17,8 +17,15 @@ jobs:
         with:
           payload: |
             {
-              "text": ":github: ビルド結果: ${{ job.status }}\n\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-            }
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Success: <${{ github.event.workflow.html_url }}|${{ github.event.workflow.name }}>\n${{ github.event.workflow_run.head_commit.message }} <${{ action }}|${{ github.event.workflow_run.html_url }}> <${{ commit }}|https://github.com/${{ github.repository }}/commit/${{ github.event.workflow_run.head_commit.message }}>"
+                  }
+                }
+              ]            }
         env:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
