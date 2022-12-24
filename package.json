@@ -4,10 +4,12 @@
     "watch": "rm ./public/js/*; NODE_ENV=development webpack -w",
     "eslint": "eslint './src/**/*.{ts,tsx}'",
     "eslint:fix": "eslint --fix './src/**/*.{ts,tsx}'",
-    "prettier": "prettier --write . '!./src/postcss/**/*' '!./public/js/**/*'",
-    "lint": "yarn run eslint:fix && yarn run prettier && yarn run lint:css:fix",
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write .",
+    "lint:fix": "yarn run eslint:fix && yarn run prettier && yarn run lint:css:fix",
     "lint:css": "stylelint ./src/**/*.pcss",
     "lint:css:fix": "stylelint --fix ./src/**/*.pcss",
+    "lint": "yarn run eslint && yarn run prettier && yarn run lint:css",
     "release": "rm out.zip; yarn run build; zip -r out.zip public"
   },
   "devDependencies": {
