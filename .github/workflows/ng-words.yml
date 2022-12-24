@@ -8,7 +8,7 @@ jobs:
   check-console:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: |
           if grep -rE "console\.(log|dir)" ./src ./test; then
                exit 1
@@ -18,7 +18,7 @@ jobs:
   check-fixme:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: |
           if grep -rE "FIXME" ./src ./test; then
                exit 1
