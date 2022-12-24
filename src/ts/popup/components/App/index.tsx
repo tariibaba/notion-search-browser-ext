@@ -23,7 +23,7 @@ export const App = () => {
         await selectAndLinkWorkspace();
       }
     })();
-  }, []);
+  }, [hasGotWorkspace]);
 
   if (workspace)
     return <SearchContainer isPopup={isPopup} workspace={workspace} />;
