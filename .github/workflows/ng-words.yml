@@ -1,0 +1,25 @@
+name: NG words
+
+on: [push, pull_request]
+
+jobs:
+  check-console:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          if grep -rE "console\.(log|dir)" ./src ./test; then
+               exit 1
+          else
+              echo "All good"
+          fi
+  check-fixme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          if grep -rE "FIXME" ./src ./test; then
+               exit 1
+          else
+              echo "All good"
+          fi

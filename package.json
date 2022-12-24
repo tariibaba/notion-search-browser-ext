@@ -2,8 +2,8 @@
   "scripts": {
     "build": "rm ./public/js/*; NODE_ENV=production webpack",
     "watch": "rm ./public/js/*; NODE_ENV=development webpack -w",
-    "eslint": "eslint './src/**/*.{ts,tsx}'",
-    "eslint:fix": "eslint --fix './src/**/*.{ts,tsx}'",
+    "eslint": "eslint './{src,test}/**/*.{ts,tsx}'",
+    "eslint:fix": "eslint --fix './{src,test}/**/*.{ts,tsx}'",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "lint:fix": "yarn run eslint:fix && yarn run prettier && yarn run lint:css:fix",
