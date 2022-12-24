@@ -6,14 +6,12 @@ on:
     types:
       - completed
 jobs:
-  notify:
+  on-success:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}    
     steps:
       - uses: actions/checkout@v2
-
-      - name: Send GitHub Action trigger data to Slack workflow
-        id: slack
-        uses: slackapi/slack-github-action@v1.16.0
+      - uses: slackapi/slack-github-action@v1.16.0
         with:
           payload: |
             {
@@ -22,15 +20,35 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Success: <${{ github.event.workflow_run.html_url }}|${{ github.event.workflow_run.name }}#${{ github.event.workflow_run.run_number }}>\n<https://github.com/${{ github.repository }}/commit/${{ github.event.workflow_run.head_commit.id }}|${{ github.event.workflow_run.head_commit.message }}>"
+                    "text": ":white_check_mark: Success: <${{ github.event.workflow_run.html_url }}|${{ github.event.workflow_run.name }}#${{ github.event.workflow_run.run_number }}>\n<https://github.com/${{ github.repository }}/commit/${{ github.event.workflow_run.head_commit.id }}|${{ github.event.workflow_run.head_commit.message }}>"
                   }
                 }
               ]            }
         env:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: slackapi/slack-github-action@v1.16.0
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":x: Failure @channel : <${{ github.event.workflow_run.html_url }}|${{ github.event.workflow_run.name }}#${{ github.event.workflow_run.run_number }}>\n<https://github.com/${{ github.repository }}/commit/${{ github.event.workflow_run.head_commit.id }}|${{ github.event.workflow_run.head_commit.message }}>"
+                  }
+                }
+              ]            }
+        env:
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}          
   dump:
     runs-on: ubuntu-latest
     steps:
-      - name: dump context
-        run: echo '${{ toJSON(github) }}'          
+      - run: echo '${{ toJSON(github) }}'          
