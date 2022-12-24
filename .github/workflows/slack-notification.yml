@@ -1,8 +1,9 @@
-name: Slack Notification
+name: Slack notification
 on:
   workflow_run:
     workflows:
-      - Jest
+      - Test and lint check
+      - NG words
     types:
       - completed
 jobs:

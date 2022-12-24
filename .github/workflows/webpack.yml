@@ -1,6 +1,8 @@
-name: Webpack build and test
+name: Test and lint check
 
-on: [push, pull_request]
+on:
+  - push
+  - pull_request
 
 jobs:
   jest:
