@@ -15,20 +15,18 @@ export const useWorkspace = () => {
 
   useEffect(() => {
     (async () => {
-      setHasGotWorkspace(true);
-
       let workspace: Workspace | undefined;
       try {
         workspace = await getLinkedWorkspace();
+        if (workspace) setWorkspace(workspace);
       } catch (error) {
         /* TODO: cause を使う */
         setError({
           message: 'Failed to get workspaces. Please reload this page.',
           error,
         });
-        return;
       }
-      if (workspace) setWorkspace(workspace);
+      setHasGotWorkspace(true);
     })();
   }, []);
 
