@@ -3,7 +3,7 @@ import { useHashParam, useObjectHashParam } from 'use-hash-param';
 import { storage } from '../../../storage';
 import { alertError } from '../../../utils';
 import { SORT_BY, STORAGE_KEY } from '../../constants';
-import { debouncedSearch } from '../../search';
+import { debouncedSearch, search } from '../../search';
 import { SearchBox } from '../SearchBox';
 import { Sort } from '../Sorts';
 import { Filter } from './../Filters';
@@ -59,7 +59,7 @@ export const SearchContainer = ({
 
       try {
         setSearchResult(
-          await debouncedSearch({
+          await (hasQuery ? debouncedSearch : search)({
             query,
             sortBy:
               !hasQuery && sortBy === SORT_BY.RELEVANCE // ad hoc: worthless condition
