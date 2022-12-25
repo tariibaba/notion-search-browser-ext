@@ -36,5 +36,5 @@ jobs:
       - name: Test
         run: npx jest
 
-      - name: Test
+      - name: Lint
         run: yarn run lint
