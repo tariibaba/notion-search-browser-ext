@@ -6,6 +6,12 @@ on:
       - NG words
     types:
       - completed
+
+env:
+  RESULT: |-
+    <${{ github.event.workflow_run.html_url }}|${{ github.event.workflow_run.name }}#${{ github.event.workflow_run.run_number }}>
+    <https://github.com/${{ github.repository }}/commit/${{ github.event.workflow_run.head_commit.id }}|${{ github.event.workflow_run.head_commit.message }}>
+
 jobs:
   on-success:
     runs-on: ubuntu-latest
@@ -22,7 +28,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":white_check_mark: Success: <${{ github.event.workflow_run.html_url }}|${{ github.event.workflow_run.name }}#${{ github.event.workflow_run.run_number }}>\n<https://github.com/${{ github.repository }}/commit/${{ github.event.workflow_run.head_commit.id }}|${{ github.event.workflow_run.head_commit.message }}>"
+                    "text": ":white_check_mark: Success: $RESULT"
                   }
                 }
               ]
@@ -45,7 +51,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":x: Failure @channel : <${{ github.event.workflow_run.html_url }}|${{ github.event.workflow_run.name }}#${{ github.event.workflow_run.run_number }}>\n<https://github.com/${{ github.repository }}/commit/${{ github.event.workflow_run.head_commit.id }}|${{ github.event.workflow_run.head_commit.message }}>"
+                    "text": ":x: Failure @channel : $RESULT"
                   }
                 }
               ]
