@@ -28,7 +28,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":white_check_mark: Success: $RESULT"
+                    "text": ":white_check_mark: Success: ${{ env.RESULT }}"
                   }
                 }
               ]
@@ -51,7 +51,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":x: Failure @channel : $RESULT"
+                    "text": ":x: Failure @channel : ${{ env.RESULT }}"
                   }
                 }
               ]
