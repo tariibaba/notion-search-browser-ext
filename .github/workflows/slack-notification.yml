@@ -23,7 +23,6 @@ jobs:
           SLACK_USERNAME: GitHub Actions
           SLACK_TITLE: Succeeded
           SLACK_ICON: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
-          SLACK_MESSAGE: 'Run number: #${{ github.run_number }}'
           SLACK_FOOTER: ''
   on-failure:
     runs-on: ubuntu-latest
