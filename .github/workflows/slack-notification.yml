@@ -19,12 +19,12 @@ jobs:
       - name: Send to Slack
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
           SLACK_USERNAME: GitHub Actions
           SLACK_TITLE: Succeeded
           SLACK_ICON: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
           SLACK_MESSAGE: 'Run number: #${{ github.run_number }}'
-          SLACK_FOOTER:
+          SLACK_FOOTER: ''
   on-failure:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
