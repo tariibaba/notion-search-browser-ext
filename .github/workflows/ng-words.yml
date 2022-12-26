@@ -9,22 +9,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  check-console:
+  check-ng-words:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - run: |
-          if grep -rE "console\.(log|dir)" ./src ./test; then
-               exit 1
-          else
-              echo "All good"
-          fi
-  check-fixme:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: |
-          if grep -rE "FIXME" ./src ./test; then
+          if grep -rE "console\.(log|dir)|FIXME" ./src ./test; then
                exit 1
           else
               echo "All good"
