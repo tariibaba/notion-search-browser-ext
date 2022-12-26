@@ -2,8 +2,7 @@ name: Slack notification
 on:
   workflow_run:
     workflows:
-      - Test and lint check
-      - NG words
+      - Test
     types:
       - completed
 
@@ -18,10 +17,10 @@ jobs:
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
           SLACK_USERNAME: GitHub Actions
-          SLACK_TITLE: Succeeded
           SLACK_ICON: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
-          SLACK_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
           SLACK_FOOTER: ''
+          SLACK_TITLE: Succeeded
+          SLACK_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
   on-failure:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
@@ -32,8 +31,9 @@ jobs:
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
           SLACK_USERNAME: GitHub Actions
-          SLACK_TITLE: Failed
           SLACK_ICON: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
-          SLACK_MESSAGE: ${{ github.event.workflow_run.head_commit.message }} @channel
           SLACK_FOOTER: ''
+          SLACK_TITLE: Failed
+          SLACK_MESSAGE: ${{ github.event.workflow_run.head_commit.message }} @channel
+          SLACK_LINK_NAMES: true
           SLACK_COLOR: danger
