@@ -6,10 +6,10 @@
     "eslint:fix": "eslint --fix './{src,test}/**/*.{ts,tsx}'",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
-    "lint:fix": "yarn run eslint:fix && yarn run prettier && yarn run lint:css:fix",
+    "lint": "yarn run eslint && yarn run prettier && yarn run lint:css",
+    "lint:fix": "yarn run eslint:fix && yarn run prettier:fix && yarn run lint:css:fix",
     "lint:css": "stylelint ./src/**/*.pcss",
     "lint:css:fix": "stylelint --fix ./src/**/*.pcss",
-    "lint": "yarn run eslint && yarn run prettier && yarn run lint:css",
     "release": "rm out.zip; yarn run build; zip -r out.zip public"
   },
   "devDependencies": {
