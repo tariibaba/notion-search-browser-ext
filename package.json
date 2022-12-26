@@ -2,15 +2,18 @@
   "scripts": {
     "build": "rm ./public/js/*; NODE_ENV=production webpack",
     "watch": "rm ./public/js/*; NODE_ENV=development webpack -w",
+    "test": "jest",
     "eslint": "eslint './{src,test}/**/*.{ts,tsx}'",
     "eslint:fix": "eslint --fix './{src,test}/**/*.{ts,tsx}'",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
-    "lint": "yarn run eslint && yarn run prettier && yarn run lint:css",
-    "lint:fix": "yarn run eslint:fix && yarn run prettier:fix && yarn run lint:css:fix",
-    "lint:css": "stylelint ./src/**/*.pcss",
-    "lint:css:fix": "stylelint --fix ./src/**/*.pcss",
-    "release": "rm out.zip; yarn run build; zip -r out.zip public"
+    "stylelint": "stylelint ./src/**/*.pcss",
+    "stylelint:fix": "stylelint --fix ./src/**/*.pcss",
+    "lint": "yarn run eslint && yarn run prettier && yarn run stylelint",
+    "lint:fix": "yarn run eslint:fix && yarn run prettier:fix && yarn run stylelint:fix",
+    "release": "rm out.zip; yarn run build; zip -r out.zip public",
+    "check-ngword": "if grep -rE \"console\\.(log|dir)|FIXME\" ./src ./test; then exit 1; else echo \"All good\"; fi",
+    "ci": "run-p test lint check-ngword"
   },
   "devDependencies": {
     "@babel/core": "^7.19.6",
@@ -42,6 +45,7 @@
     "jsdom": "^20.0.3",
     "lodash.debounce": "^4.0.8",
     "lodash.merge": "^4.6.2",
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.4.19",
     "postcss-loader": "^7.0.2",
     "postcss-nested": "^6.0.0",

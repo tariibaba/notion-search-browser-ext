@@ -9,10 +9,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  jest:
-    name: Jest
+  build:
     runs-on: macos-latest
-
     steps:
       - uses: actions/checkout@v3
 
@@ -33,8 +31,4 @@ jobs:
       - name: Build
         run: yarn run build
 
-      - name: Test
-        run: npx jest
-
-      - name: Lint
-        run: yarn run lint
+      - run: yarn run ci
