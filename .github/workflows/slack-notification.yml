@@ -7,9 +7,6 @@ on:
     types:
       - completed
 
-env:
-  RESULT: ${{ github.event.repository.name }} <${{ github.event.workflow_run.html_url }}|${{ github.event.workflow_run.name }}#${{ github.event.workflow_run.run_number }}>\n<https://github.com/${{ github.repository }}/commit/${{ github.event.workflow_run.head_commit.id }}|${{ github.event.workflow_run.head_commit.message }}>
-
 jobs:
   on-success:
     runs-on: ubuntu-latest
@@ -23,6 +20,7 @@ jobs:
           SLACK_USERNAME: GitHub Actions
           SLACK_TITLE: Succeeded
           SLACK_ICON: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+          SLACK_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
           SLACK_FOOTER: ''
   on-failure:
     runs-on: ubuntu-latest
@@ -30,20 +28,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Send to Slack
-        uses: slackapi/slack-github-action@v1.23.0
-        with:
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":x: @channel : ${{ env.RESULT }}"
-                  }
-                }
-              ]
-            }
+        uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
+          SLACK_USERNAME: GitHub Actions
+          SLACK_TITLE: Failed
+          SLACK_ICON: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+          SLACK_MESSAGE: ${{ github.event.workflow_run.head_commit.message }} @channel
+          SLACK_FOOTER: ''
+          SLACK_COLOR: danger
