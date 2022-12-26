@@ -9,8 +9,8 @@
     "prettier:fix": "prettier --write .",
     "stylelint": "stylelint ./src/**/*.pcss",
     "stylelint:fix": "stylelint --fix ./src/**/*.pcss",
-    "lint": "yarn run eslint && yarn run prettier && yarn run stylelint",
-    "lint:fix": "yarn run eslint:fix && yarn run prettier:fix && yarn run stylelint:fix",
+    "lint": "run-p eslint prettier stylelint",
+    "lint:fix": "run-p eslint:fix prettier:fix stylelint:fix",
     "release": "rm out.zip; yarn run build; zip -r out.zip public",
     "check-ngword": "if grep -rE \"console\\.(log|dir)|FIXME\" ./src ./test; then exit 1; else echo \"All good\"; fi",
     "ci": "run-p test lint check-ngword"
