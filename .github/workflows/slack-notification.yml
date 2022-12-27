@@ -16,7 +16,7 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_USERNAME: Github Actions
-          SLACK_ICON: https://cdn-ak.f.st-hatena.com/images/fotolife/C/Cside/20221228/20221228003307.png
+          SLACK_ICON: https://cdn-ak.f.st-hatena.com/images/fotolife/C/Cside/20221228/20221228003311.png
           SLACK_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
           SLACK_FOOTER: ''
           SLACK_TITLE: Notion Search
@@ -30,7 +30,7 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_USERNAME: Github Actions
-          SLACK_ICON: https://cdn-ak.f.st-hatena.com/images/fotolife/C/Cside/20221228/20221228003307.png
+          SLACK_ICON: https://cdn-ak.f.st-hatena.com/images/fotolife/C/Cside/20221228/20221228003311.png
           SLACK_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
           SLACK_FOOTER: ''
           SLACK_TITLE: Notion Search
