@@ -36,7 +36,7 @@ jobs:
       - uses: 8398a7/action-slack@v3
         with:
           author_name: ''
-          text: ''
+          text: ' '
           status: ${{ job.status }}
           fields: repo,message,ref,workflow,took
           username: Github Actions
