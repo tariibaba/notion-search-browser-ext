@@ -3,7 +3,7 @@ import { answerToIndex, selectAndLinkWorkspace } from './workspaces';
 
 describe('answerToIndex', () => {
   it.each([
-    { input: '1', expected: 1 },
+    { input: '1', expected: 2 },
     { input: '01', expected: 1 },
     { input: '0', expected: 0 },
     { input: '', expected: NaN },
