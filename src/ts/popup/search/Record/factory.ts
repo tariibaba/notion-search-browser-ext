@@ -52,9 +52,9 @@ export const createRecord = (
         console.warn(`Unknown block type: ${block.type}`, {
           id,
           tableType,
-          block,
-          recordMap,
+          block: JSON.stringify(block),
         });
+        console.info({ block, recordMap });
       }
 
       switch (block.type) {

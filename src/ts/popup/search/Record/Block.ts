@@ -11,8 +11,9 @@ export class BlockClass extends RecordClass {
     // 未知でも、とりあえず通す
     if (!Object.hasOwn(CAN_BE_DIR.BLOCK, block.type)) {
       console.warn(`Unknown block type: ${block.type}`, {
-        block,
+        block: JSON.stringify(block),
       });
+      console.info({ block });
       this.canBeDir = false;
     } else {
       this.canBeDir = CAN_BE_DIR.BLOCK[block.type];

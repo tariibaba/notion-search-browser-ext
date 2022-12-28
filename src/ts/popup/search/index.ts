@@ -85,7 +85,6 @@ export const search = async ({
     })
   ).data;
 
-  // TODO: パースエラーを送信したい（ユーザーはこちらの想定してないタイプのobjectを扱う可能性が高いので）
   const recordMap = res.recordMap;
   const items: Item[] = [];
   for (const item of res.results) {
@@ -123,10 +122,10 @@ export const search = async ({
             : {
                 id,
                 tableType,
-                record,
-                recordMap,
+                record: JSON.stringify(record),
               },
         );
+        console.info({ record, recordMap });
         return paths;
       }
     };
@@ -186,12 +185,11 @@ export const search = async ({
 
       items.push(result);
     } catch (error) {
-      // TODO: 第 2 引数目以降も Sentry にちゃんと送信されるのかな
       console.error(error, {
-        item,
-        block,
-        recordMap,
+        item: JSON.stringify(item),
+        block: JSON.stringify(block),
       });
+      console.info({ item, block, recordMap });
     }
   }
 
