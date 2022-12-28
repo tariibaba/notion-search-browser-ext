@@ -36,7 +36,11 @@ jobs:
       - uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          fields: repo,message,ref,action,job,workflow,workflowRun,took
+          fields: repo,message,ref,workflow,took
+          username: Github Actions
+          icon_url: https://cdn-ak.f.st-hatena.com/images/fotolife/C/Cside/20221228/20221228003311.png
+          mention: channel
+          if_mention: failure
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
