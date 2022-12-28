@@ -13,14 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Send to Slack
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
-          SLACK_FOOTER: ''
-          SLACK_TITLE: Notion Search
-          SLACK_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
-      - name: dumpJob
-        run: echo '${{ toJSON(github) }}'
+        uses: 8398a7/action-slack@v3
+          with:
+            status: ${{ job.status }}
+            fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # selectable (default: repo,message)
+          env:
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
   on-failure:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
