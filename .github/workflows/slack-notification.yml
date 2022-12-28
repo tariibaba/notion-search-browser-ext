@@ -20,7 +20,7 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
       - name: dumpJob
-        run: echo '${{ toJSON(github) }}'          
+        run: echo '${{ toJSON(github) }}'
   on-failure:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
