@@ -16,7 +16,7 @@ jobs:
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # seectable (default: repomessge)
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest # seectable (default: repomesge)
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_INCOMING_WEBHOOK_URL }}
       - name: dump Github
