@@ -3,5 +3,9 @@
     "\\.[jt]sx?$": ["ts-jest"]
   },
   "setupFilesAfterEnv": ["./test/jest.setup.ts"],
-  "testEnvironment": "jest-environment-jsdom"
+  "testEnvironment": "jest-environment-jsdom",
+  "globals": {
+    "PRODUCTION": true,
+    "VERSION": true
+  }
 }

@@ -90,6 +90,7 @@ export const search = async ({
   const items: Item[] = [];
   for (const item of res.results) {
     let block: BlockClass | undefined = undefined;
+
     const getDir = (
       paths: Dir[],
       id: string,

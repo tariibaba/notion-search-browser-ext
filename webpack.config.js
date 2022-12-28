@@ -1,10 +1,14 @@
-const merge = require('lodash.merge');
+const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
+const fs = require('fs');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
+const mode = process.env.NODE_ENV || 'development';
+const isDevelopment = mode === 'development';
 
 /** @type import('webpack').Configuration */
 let config = {
-  mode: process.env.NODE_ENV || 'development',
+  mode,
   entry: {
     background: './src/ts/background/index.ts',
     popup: './src/ts/popup/index.tsx',
@@ -73,21 +77,33 @@ let config = {
   // performance: {
   //   hints: false,
   // },
+  plugins: [
+    new webpack.DefinePlugin({
+      VERSION: JSON.stringify(
+        JSON.parse(fs.readFileSync('./public/manifest.json').toString())
+          .version,
+      ),
+      SENTRY_DSN: JSON.stringify(
+        isDevelopment
+          ? 'https://cba3c32ae1404f56a39f5cb4102beb64@o49171.ingest.sentry.io/4504401197989888'
+          : 'https://f3a64ab117364c0cab0e2edf79c51113@o49171.ingest.sentry.io/4504401230823424',
+      ),
+    }),
+    // new BundleAnalyzerPlugin(),
+  ],
 };
 
-if (config.mode !== 'development') {
-  config = merge(config, {
-    plugins: [
-      new TerserPlugin({
-        terserOptions: {
-          compress: {
-            pure_funcs: ['console.log', 'console.info'],
-          },
+if (!isDevelopment) {
+  config.plugins ||= [];
+  config.plugins.push(
+    new TerserPlugin({
+      terserOptions: {
+        compress: {
+          pure_funcs: ['console.log', 'console.info'],
         },
-      }),
-      // new BundleAnalyzerPlugin(),
-    ],
-  });
+      },
+    }),
+  );
 }
 
 module.exports = config;
