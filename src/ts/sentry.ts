@@ -9,7 +9,7 @@ export const initSentry = () => {
     integrations: [
       new BrowserTracing(),
       new CaptureConsoleIntegration({
-        levels: ['warn', 'error'],
+        levels: ['warn', 'error'], 
       }),
     ],
   });
