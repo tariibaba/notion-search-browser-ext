@@ -2,7 +2,7 @@
 
 [Chrome Web Store](https://chrome.google.com/webstore/detail/notion-search/nelmlmaelgfcpjgknkidapfnoddpjfee)
 
-<img src="https://user-images.githubusercontent.com/315510/207743788-c0c294b4-1e55-4357-ac40-28b0cf367537.gif" width="700px" />
+<img src="https://user-images.githubusercontent.com/315510/209901453-03629f48-d7a1-4c4f-aac0-e2b6b8705e26.gif" width="700px" />
 
 Notion search on the popup.
 
