@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const About = () => (
-  <>
+  <div className="container">
     <p>About Notion Search</p>
     <ul>
       <li>
@@ -11,20 +11,11 @@ export const About = () => (
       </li>
       <li>
         <a
-          href="https://chrome.google.com/webstore/detail/notion-search/nelmlmaelgfcpjgknkidapfnoddpjfee"
+          href={`https://chrome.google.com/webstore/detail/notion-search/nelmlmaelgfcpjgknkidapfnoddpjfee/reviews`}
           target="_blank"
           rel="noreferrer"
         >
-          Chrome Web Store
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/Cside/notion-search/issues"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Github Issues
+          Rate This Extension
         </a>
       </li>
       <li>
@@ -34,9 +25,9 @@ export const About = () => (
           rel="noreferrer"
         >
           Source Code
-        </a>
+        </a>{' '}
         (Patches welcome :D )
       </li>
     </ul>
-  </>
+  </div>
 );

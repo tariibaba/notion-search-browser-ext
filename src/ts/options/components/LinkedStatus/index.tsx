@@ -19,19 +19,19 @@ export const LinkedStatus = () => {
   }, [error]);
 
   return (
-    <>
-      <h1>Connection Status</h1>
+    <div className="container">
+      <h2>Connection Status</h2>
       {hasGotWorkspace &&
         (workspace ? (
-          <div className="linked-block">
-            <p className="status">✅ Connected to Notion</p>
+          <>
+            <p className="fs-5 text-success">✅ Connected to Notion</p>
             <p>
               Your workspace:{' '}
-              <span className="highlight">{workspace.name}</span>
+              <span className="mark fw-bold">{workspace.name}</span>
             </p>
             <p>
               <button
-                className="unlink"
+                className="btn btn-outline-danger"
                 onClick={() => {
                   const ok = confirm('Disconnect from Notion?');
                   if (!ok) return;
@@ -41,17 +41,20 @@ export const LinkedStatus = () => {
                 Disconnect from {workspace.name}
               </button>
             </p>
-          </div>
+          </>
         ) : (
-          <div className="not-linked-block">
-            <p className="status">❌ Not Connected to Notion</p>
+          <>
+            <p className="fs-5 text-danger">❌ Not Connected to Notion</p>
             <p>
-              <button className="link" onClick={selectAndLinkWorkspace}>
+              <button
+                className="btn btn-outline-success"
+                onClick={selectAndLinkWorkspace}
+              >
                 Connect to Notion
               </button>
             </p>
-          </div>
+          </>
         ))}
-    </>
+    </div>
   );
 };
