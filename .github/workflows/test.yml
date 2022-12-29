@@ -33,14 +33,15 @@ jobs:
       - name: Test && Lint && NG Words Check
         run: yarn run ci
 
+      # https://action-slack.netlify.app/usage/
       - uses: 8398a7/action-slack@v3
         with:
-          author_name: ''
-          text: ${{ job.status }}
           status: ${{ job.status }}
           fields: repo,message,ref,workflow,took
           username: Github Actions
           icon_url: https://cdn-ak.f.st-hatena.com/images/fotolife/C/Cside/20221228/20221228003311.png
+          text: ${{ job.status }}
+          author_name: ''
           mention: channel
           if_mention: failure
         env:
