@@ -39,7 +39,7 @@ jobs:
           status: ${{ job.status }}
           fields: repo,message,ref,workflow,took
           username: Github Actions
-          icon_url: https://cdn-ak.f.st-hatena.com/images/fotolife/C/Cside/20221228/20221228003311.png
+          icon_url: https://cdn-ak.f.st-hatena.com/images/fotolife/C/Cside/20221228/20221228175017.png
           text: ${{ job.status }}
           author_name: ''
           mention: channel
