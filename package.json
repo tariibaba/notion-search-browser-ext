@@ -44,7 +44,6 @@
     "jest-environment-jsdom": "^29.3.1",
     "jsdom": "^20.0.3",
     "lodash.debounce": "^4.0.8",
-    "lodash.merge": "^4.6.2",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.19",
     "postcss-loader": "^7.0.2",
@@ -70,6 +69,9 @@
     "webpack-cli": "^5.0.0"
   },
   "dependencies": {
+    "@sentry/integrations": "^7.28.1",
+    "@sentry/react": "^7.28.1",
+    "@sentry/tracing": "^7.28.1",
     "axios": "^0.27.2",
     "axios-cache-interceptor": "^0.10.7",
     "extensible-custom-error": "^0.0.7",
