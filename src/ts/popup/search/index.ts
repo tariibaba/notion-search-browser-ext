@@ -3,13 +3,7 @@ import { axios } from '../../axios';
 import { NOTION_HOST } from '../../constants';
 import { storage } from '../../storage';
 
-import {
-  FILTERS_BY,
-  ICON_TYPE,
-  SEARCH_LIMIT,
-  SORT_BY,
-  STORAGE_KEY,
-} from '../constants';
+import { ICON_TYPE, SEARCH_LIMIT, SORT_BY, STORAGE_KEY } from '../constants';
 import { RecordClass } from './Record';
 import { BlockClass } from './Record/Block';
 import { RecordError } from './Record/errors';
@@ -23,13 +17,13 @@ const TEXT_NO_TITLE = 'Untitled';
 export const search = async ({
   query,
   sortBy,
-  filtersBy,
+  filterOnlyTitles,
   savesToStorage,
   workspaceId,
 }: {
   query: string;
   sortBy: string;
-  filtersBy: FiltersBy;
+  filterOnlyTitles: boolean;
   savesToStorage: boolean;
   workspaceId: string;
 }) => {
@@ -51,16 +45,6 @@ export const search = async ({
     default:
       throw new Error(`Unknown sort option: ${sortBy}`);
   }
-  const filterOptions: { navigableBlockContentOnly?: boolean } = {};
-  for (const [key, value] of Object.entries(filtersBy)) {
-    switch (key) {
-      case FILTERS_BY.ONLY_TITLE:
-        if (value) filterOptions.navigableBlockContentOnly = true;
-        break;
-      default:
-        throw new Error(`Unknown filter opition: ${key}`);
-    }
-  }
 
   const res = (
     await axios.post<SearchApiResponse>(PATH, {
@@ -78,7 +62,7 @@ export const search = async ({
         editedBy: [],
         lastEditedTime: {},
         createdTime: {},
-        ...filterOptions,
+        ...(filterOnlyTitles ? { navigableBlockContentOnly: true } : {}),
       },
       sort: sortOptions,
       source: 'quick_find_input_change',

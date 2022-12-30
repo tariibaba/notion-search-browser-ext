@@ -1,4 +1,6 @@
-type valueOf<T> = T[keyof T]; // util
+// utils
+type valueOf<T> = T[keyof T];
+type SetStateArg<T> = T | ((latestValue: T) => T);
 
 type Workspace = {
   id: string;

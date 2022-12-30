@@ -134,7 +134,7 @@ describe('gets dirs', () => {
       await search({
         query: '',
         sortBy: SORT_BY.RELEVANCE,
-        filtersBy: {},
+        filterOnlyTitles: false,
         savesToStorage: false,
         workspaceId: 'spaceId',
       })
@@ -207,7 +207,7 @@ describe('gets an icon', () => {
         await search({
           query: '',
           sortBy: SORT_BY.RELEVANCE,
-          filtersBy: {},
+          filterOnlyTitles: false,
           savesToStorage: false,
           workspaceId: 'spaceId',
         })

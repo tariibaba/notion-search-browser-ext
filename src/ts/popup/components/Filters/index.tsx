@@ -1,29 +1,23 @@
 import React from 'react';
-import { FILTERS_BY } from '../../constants';
 
 export const Filter = ({
-  filtersBy,
-  setFiltersBy,
+  filterOnlyTitles,
+  setFilterOnlyTitles,
 }: {
-  filtersBy: FiltersBy;
-  setFiltersBy: (value: FiltersBy | ((prev: FiltersBy) => FiltersBy)) => void;
+  filterOnlyTitles: boolean;
+  setFilterOnlyTitles: SetQueryParam<boolean>;
 }) => {
   return (
     <div className="filters">
       <span
         onClick={() => {
-          setFiltersBy((prev) => {
-            return {
-              ...prev,
-              [FILTERS_BY.ONLY_TITLE]: !prev[FILTERS_BY.ONLY_TITLE],
-            };
-          });
+          setFilterOnlyTitles((prev) => !prev);
         }}
         className={[
           'filter',
           'test-filter-only-title',
           'clickable',
-          filtersBy[FILTERS_BY.ONLY_TITLE] ? 'selected' : '',
+          filterOnlyTitles ? 'selected' : '',
         ].join(' ')}
       >
         Only search titles
