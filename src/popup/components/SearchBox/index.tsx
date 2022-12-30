@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import './styles.pcss';
 
 const INPUT_CLASS_NAME = 'query';
@@ -13,10 +13,6 @@ export const SearchBox = ({
   workspaceName: string;
 }) => {
   // input の value に state を指定すると onhashchange 時に変化が取り消されてしまう
-  // ため、回避策 (use-hash-param の問題)
-  // TODO: useURLParams に乗り換えたら state にする
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
   useEffect(() => {
     const style = document.createElement('style');
     style.appendChild(
@@ -31,10 +27,6 @@ export const SearchBox = ({
     document.body.appendChild(style);
   }, []);
 
-  useEffect(() => {
-    if (inputRef.current) inputRef.current.value = query;
-  }, [query]);
-
   return (
     <div className="search-box">
       <img
@@ -42,12 +34,12 @@ export const SearchBox = ({
         src={chrome.runtime.getURL('./images/search.svg')}
       ></img>
       <input
-        ref={inputRef}
         type="search"
         className={INPUT_CLASS_NAME}
         placeholder={`Search ${workspaceName}...`}
         autoFocus
         onChange={(event) => setQuery(event.target.value)}
+        value={query}
       />
     </div>
   );
