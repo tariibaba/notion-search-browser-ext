@@ -1,5 +1,6 @@
 import React from 'react';
 import Item from '../Item';
+import './styles.pcss';
 
 export const Items = ({
   isPopup,

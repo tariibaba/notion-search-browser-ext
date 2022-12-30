@@ -14,6 +14,7 @@ import { Sort } from '../Sorts';
 import { Filter } from './../Filters';
 import { Footer } from './../Footer';
 import { Items } from './../Items';
+import './styles.pcss';
 
 export const SearchContainer = ({
   isPopup,
@@ -88,7 +89,7 @@ export const SearchContainer = ({
   }, [trimmedQuery, sortBy, filterOnlyTitles]);
 
   return (
-    <div className={`wrapper ${isPopup ? 'is-popup' : ''}`}>
+    <div className={`container ${isPopup ? 'is-popup' : ''}`}>
       <main>
         <SearchBox
           query={query}

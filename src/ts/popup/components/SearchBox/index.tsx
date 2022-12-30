@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import './styles.pcss';
 
 const INPUT_CLASS_NAME = 'query';
 

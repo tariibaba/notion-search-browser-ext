@@ -1,0 +1,26 @@
+.container {
+  box-sizing: border-box;
+  width: 100%;
+  padding-top: 40px;
+  background-color: #6d6d6d;
+
+  &.is-popup {
+    padding-top: 0;
+  }
+
+  &:not(.is-popup) {
+    height: 100vh;
+  }
+}
+
+main {
+  max-width: 662px;
+  padding: 0;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 6px;
+
+  .is-popup & {
+    width: 662px;
+  }
+}

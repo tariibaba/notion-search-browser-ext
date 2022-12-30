@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../../../postcss/common.pcss';
+import '../../../common.css';
 import { About } from '../About';
 import { KeyboardShortcuts } from '../KeyboardShortcuts';
 import { LinkedStatus } from '../LinkedStatus';

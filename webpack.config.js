@@ -44,7 +44,7 @@ let config = {
         ],
       },
       {
-        test: /\.pcss$/,
+        test: /\.p?css$/,
         use: [
           'style-loader',
           'css-loader',

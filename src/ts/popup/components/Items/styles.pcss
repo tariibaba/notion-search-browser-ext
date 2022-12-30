@@ -1,0 +1,19 @@
+.items {
+  box-sizing: border-box;
+  max-height: calc(100vh - 225px);
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+
+  .is-popup & {
+    max-height: 453px;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #7c7c7c;
+    border-radius: 5px;
+  }
+}

@@ -1,4 +1,5 @@
 import React from 'react';
+import './styles.pcss';
 
 export const Filter = ({
   filterOnlyTitles,
@@ -13,12 +14,9 @@ export const Filter = ({
         onClick={() => {
           setFilterOnlyTitles((prev) => !prev);
         }}
-        className={[
-          'filter',
-          'test-filter-only-title',
-          'clickable',
-          filterOnlyTitles ? 'selected' : '',
-        ].join(' ')}
+        className={`filter test-filter-only-title clickable ${
+          filterOnlyTitles ? 'selected' : ''
+        }`}
       >
         Only search titles
       </span>
