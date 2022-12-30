@@ -6,7 +6,7 @@ const getType = (block: Block) =>
   'debug-block-' + block.type.replaceAll('_', '-');
 
 export default function Item({
-  opensNewTab,
+  isPopup,
   query,
   icon,
   title,
@@ -15,7 +15,7 @@ export default function Item({
   text,
   block,
 }: {
-  opensNewTab: boolean;
+  isPopup: boolean;
   query: string;
 } & Item) {
   return (
@@ -24,7 +24,7 @@ export default function Item({
     >
       <a
         className="url"
-        {...(opensNewTab && { target: '_blank' })}
+        {...(isPopup && { target: '_blank' })}
         href={url}
         onClick={() => console.info(block)}
       >

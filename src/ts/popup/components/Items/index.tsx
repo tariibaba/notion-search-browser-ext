@@ -2,11 +2,11 @@ import React from 'react';
 import Item from '../Item';
 
 export const Items = ({
-  opensNewTab,
+  isPopup,
   query,
   items,
 }: {
-  opensNewTab: boolean;
+  isPopup: boolean;
   query: string;
   items: Item[];
 }) => {
@@ -17,7 +17,7 @@ export const Items = ({
           {items.map((item) => (
             <Item
               key={item.block.id}
-              opensNewTab={opensNewTab}
+              isPopup={isPopup}
               query={query}
               {...item}
             ></Item>

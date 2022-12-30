@@ -104,12 +104,13 @@ export const SearchContainer = ({
           <>
             <Items
               items={searchResult.items}
-              opensNewTab={isPopup}
+              isPopup={isPopup}
               query={usedQuery}
             />
           </>
         )}
         <Footer
+          isPopup={isPopup}
           total={searchResult?.total || 0}
           showsSummary={!!searchResult && hasQuery}
         />

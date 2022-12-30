@@ -14,7 +14,7 @@ export const App = () => {
     );
     throw error;
   }
-  const isPopup = location.search === '?popup';
+  const isPopup = new URL(location.href).searchParams.has('popup');
 
   useEffect(() => {
     (async () => {

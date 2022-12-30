@@ -4,16 +4,27 @@ import { SEARCH_LIMIT } from '../../constants';
 export const Footer = ({
   total,
   showsSummary,
+  isPopup,
 }: {
   total: number;
   showsSummary: boolean;
+  isPopup: boolean;
 }) => {
-  const handleClickSettings = async (
+  const handleClickSetting = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
   ) => {
     chrome.runtime.openOptionsPage();
     event.preventDefault();
   };
+  const handleClickOpenInNewTab = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) => {
+    const url = new URL(location.href);
+    url.searchParams.delete('popup');
+    chrome.tabs.create({ url: url.toString() });
+    event.preventDefault();
+  };
+
   return (
     <div className="footer">
       <div className="summary">
@@ -28,12 +39,19 @@ export const Footer = ({
           </>
         )}
       </div>
-      <div className="settings">
-        <a href="#" onClick={handleClickSettings}>
-          <img
-            className="icon-settings"
-            src={chrome.runtime.getURL('./images/settings.svg')}
-          />
+      <div className="icons">
+        {/* TODO: i18n */}
+        {isPopup && (
+          <a
+            href="#"
+            title="Open in a new tab"
+            onClick={handleClickOpenInNewTab}
+          >
+            <img src={chrome.runtime.getURL('./images/open-in-new-tab.png')} />
+          </a>
+        )}
+        <a href="#" title="Open settings" onClick={handleClickSetting}>
+          <img src={chrome.runtime.getURL('./images/settings.svg')} />
         </a>
       </div>
     </div>

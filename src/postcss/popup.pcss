@@ -27,6 +27,7 @@ body {
 }
 
 .wrapper {
+  /* TODO: このクラス名どうにかならんの */
   box-sizing: border-box;
   width: 100%;
   padding-top: 40px;
@@ -237,6 +238,10 @@ Items
 /* ----------------------------------------
 footer
 ---------------------------------------- */
+.footer,
+.footer * {
+  outline: 1px pink dotted;
+}
 
 .footer {
   display: flex;
@@ -253,9 +258,14 @@ footer
   font-weight: bold;
 }
 
-.icon-settings {
-  width: 16px;
-  margin-right: 3px;
+.icons {
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 16px;
+    margin-left: 10px;
+  }
 }
 
 /* ----------------------------------------
