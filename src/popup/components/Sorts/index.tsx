@@ -1,5 +1,6 @@
 import React from 'react';
 import { SORT_BY } from '../../constants';
+import './styles.pcss';
 
 export const Sort = ({
   sortBy,

@@ -1,6 +1,5 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import '../../postcss/popup.pcss';
 import { App } from './components/App';
 import { QueryParamProvider } from './components/QueryParamProvider';
 

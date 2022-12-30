@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useWorkspace } from '../../../hooks';
 import { alertError } from '../../../utils';
 import { SearchContainer } from '../SearchContainer';
+import './styles.pcss';
 
 export const App = () => {
   const { workspace, hasGotWorkspace, error, selectAndLinkWorkspace } =
@@ -30,7 +31,7 @@ export const App = () => {
 
   return (
     // TODO: to .css
-    <main style={{ width: '400px', height: '300px', padding: '20px' }}>
+    <div style={{ width: '400px', height: '300px', padding: '20px' }}>
       <button
         onClick={(event) => {
           selectAndLinkWorkspace();
@@ -39,6 +40,6 @@ export const App = () => {
       >
         Click here to connect Notion
       </button>
-    </main>
+    </div>
   );
 };

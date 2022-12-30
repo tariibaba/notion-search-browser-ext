@@ -1,5 +1,6 @@
 import React from 'react';
 import { ICON_TYPE } from '../../constants';
+import './styles.pcss';
 import { setHighlight } from './utils';
 
 const getType = (block: Block) =>
@@ -34,10 +35,9 @@ export default function Item({
               <>{icon.value}</>
             ) : (
               <img
-                className={[
-                  'page-icon',
-                  icon.value.match(/^https?:\/\/.+\.svg/) ? 'svg' : '',
-                ].join(' ')}
+                className={`page-icon ${
+                  icon.value.match(/^https?:\/\/.+\.svg/) ? 'svg' : ''
+                }`}
                 src={icon.value}
               />
             )}
@@ -45,12 +45,7 @@ export default function Item({
         </div>
         <div className="texts-container">
           <div className="texts">
-            <p
-              className={[
-                'title',
-                query.trim().length > 0 ? '' : 'no-query',
-              ].join(' ')}
-            >
+            <p className={`title ${query.trim().length > 0 ? '' : 'no-query'}`}>
               {setHighlight(title, query)}
             </p>
             {dirs.length > 0 && (

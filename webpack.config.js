@@ -10,9 +10,9 @@ const isDevelopment = mode === 'development';
 let config = {
   mode,
   entry: {
-    background: './src/ts/background/index.ts',
-    popup: './src/ts/popup/index.tsx',
-    options: './src/ts/options/index.tsx',
+    background: './src/background/index.ts',
+    popup: './src/popup/index.tsx',
+    options: './src/options/index.tsx',
   },
   output: {
     path: `${__dirname}/public/js`,
@@ -44,7 +44,7 @@ let config = {
         ],
       },
       {
-        test: /\.pcss$/,
+        test: /\.p?css$/,
         use: [
           'style-loader',
           'css-loader',
