@@ -30,8 +30,7 @@ export const App = () => {
     return <SearchContainer isPopup={isPopup} workspace={workspace} />;
 
   return (
-    // TODO: to .css
-    <div style={{ width: '400px', height: '300px', padding: '20px' }}>
+    <div className="link-button-container">
       <button
         onClick={(event) => {
           selectAndLinkWorkspace();
