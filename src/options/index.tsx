@@ -7,4 +7,5 @@ initSentry();
 
 const reactRoot = document.querySelector('.react-root');
 if (!reactRoot) throw new Error('.react-root is not found');
+
 createRoot(reactRoot).render(<App />);
