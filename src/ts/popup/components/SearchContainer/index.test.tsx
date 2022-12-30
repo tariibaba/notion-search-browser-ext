@@ -1,8 +1,10 @@
 import { act, cleanup, render } from '@testing-library/react';
 import React from 'react';
+
 import { $, userEventSetup } from '../../../../../test/helpers';
 import { axios } from '../../../axios';
 import { BLOCK_TYPE, SORT_BY, TABLE_TYPE } from '../../constants';
+import { QueryParamProvider } from '../QueryParamProvider';
 import { SearchContainer } from '../SearchContainer';
 
 afterEach(() => cleanup());
@@ -32,10 +34,12 @@ test('filter options', async () => {
     .mockResolvedValue({ data: { results: [], total: 0 } });
 
   await renderAndWaitEffect(
-    <SearchContainer
-      isPopup={false}
-      workspace={{ id: 'space-id', name: 'space-name' }}
-    />,
+    <QueryParamProvider>
+      <SearchContainer
+        isPopup={false}
+        workspace={{ id: 'space-id', name: 'space-name' }}
+      />
+    </QueryParamProvider>,
   );
 
   const elem = $('.test-filter-only-title');
@@ -69,10 +73,12 @@ test('sort options', async () => {
     .mockResolvedValue({ data: { results: [], total: 0 } });
 
   await renderAndWaitEffect(
-    <SearchContainer
-      isPopup={false}
-      workspace={{ id: 'space-id', name: 'space-name' }}
-    />,
+    <QueryParamProvider>
+      <SearchContainer
+        isPopup={false}
+        workspace={{ id: 'space-id', name: 'space-name' }}
+      />
+    </QueryParamProvider>,
   );
 
   const input = $<HTMLInputElement>('.query');
@@ -161,10 +167,12 @@ describe('gets last search result', () => {
     { input: true, expected: query },
   ])('isPopup: $input', async ({ input, expected }) => {
     const container = (
-      <SearchContainer
-        isPopup={input}
-        workspace={{ id: 'space-id', name: 'space-name' }}
-      />
+      <QueryParamProvider>
+        <SearchContainer
+          isPopup={input}
+          workspace={{ id: 'space-id', name: 'space-name' }}
+        />
+      </QueryParamProvider>
     );
 
     const { unmount } = await act(() => renderAndWaitEffect(container));
@@ -174,7 +182,8 @@ describe('gets last search result', () => {
     await user.type(inputElem, query);
     unmount();
 
-    location.hash = ''; // TODO: useURLParams に移行したら消す
+    history.replaceState(null, '', '/');
+
     await act(() => render(container));
     inputElem = $<HTMLInputElement>('.query');
     expect(inputElem).toHaveValue(expected);

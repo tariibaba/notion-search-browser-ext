@@ -1,4 +1,5 @@
-type valueOf<T> = T[keyof T]; // util
+// utils
+type valueOf<T> = T[keyof T];
 
 type Workspace = {
   id: string;

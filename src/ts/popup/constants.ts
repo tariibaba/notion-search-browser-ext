@@ -4,10 +4,6 @@
 export const SEARCH_LIMIT = 50;
 export const MATCH_TAG = 'gzkNfoUU';
 
-export const FILTERS_BY = {
-  ONLY_TITLE: 'only-title',
-} as const;
-
 export const SORT_BY = {
   RELEVANCE: 'relevance',
   LAST_EDITED: 'last-edited',

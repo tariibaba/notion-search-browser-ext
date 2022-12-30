@@ -6,7 +6,7 @@ export const Sort = ({
   setSortBy,
 }: {
   sortBy: string;
-  setSortBy: (value: string) => void;
+  setSortBy: SetQueryParam<string>;
 }) => {
   return (
     <div className="sorts-container">

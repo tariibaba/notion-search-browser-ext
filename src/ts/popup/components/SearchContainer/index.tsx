@@ -1,5 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useHashParam, useObjectHashParam } from 'use-hash-param';
+import {
+  BooleanParam,
+  StringParam,
+  useQueryParam,
+  withDefault,
+} from 'use-query-params';
 import { storage } from '../../../storage';
 import { alertError } from '../../../utils';
 import { SORT_BY, STORAGE_KEY } from '../../constants';
@@ -17,16 +22,20 @@ export const SearchContainer = ({
   isPopup: boolean;
   workspace: Workspace;
 }) => {
-  const [query, setQuery] = useHashParam('query', '');
-  const [usedQuery, setUsedQuery] = useState('');
-
-  const sortStateAndSetter = useHashParam('sort_by', SORT_BY.RELEVANCE);
-  const [sortBy, setSortBy] = sortStateAndSetter;
-
-  const [filtersBy, setFiltersBy] = useObjectHashParam<FiltersBy>(
-    'filters_by',
-    {},
+  const [query, setQuery] = useQueryParam(
+    'query',
+    withDefault(StringParam, ''),
   );
+  const [sortBy, setSortBy] = useQueryParam(
+    'sort_by',
+    withDefault(StringParam, SORT_BY.RELEVANCE),
+  );
+  const [filterOnlyTitles, setFilterOnlyTitles] = useQueryParam(
+    'only_titles',
+    withDefault(BooleanParam, false),
+  );
+
+  const [usedQuery, setUsedQuery] = useState('');
   const [searchResult, setSearchResult] = useState<SearchResult | undefined>(
     undefined,
   );
@@ -65,7 +74,7 @@ export const SearchContainer = ({
               !hasQuery && sortBy === SORT_BY.RELEVANCE // ad hoc: worthless condition
                 ? SORT_BY.CREATED // 別に last edited でも良いのだが
                 : sortBy,
-            filtersBy,
+            filterOnlyTitles,
             savesToStorage: isPopup && hasQuery,
             workspaceId: workspace.id,
           }),
@@ -76,7 +85,7 @@ export const SearchContainer = ({
         throw error;
       }
     })();
-  }, [trimmedQuery, sortBy, filtersBy]);
+  }, [trimmedQuery, sortBy, filterOnlyTitles]);
 
   return (
     <div className={`wrapper ${isPopup ? 'is-popup' : ''}`}>
@@ -86,7 +95,10 @@ export const SearchContainer = ({
           setQuery={setQuery}
           workspaceName={workspace.name}
         />
-        <Filter filtersBy={filtersBy} setFiltersBy={setFiltersBy} />
+        <Filter
+          filterOnlyTitles={filterOnlyTitles}
+          setFilterOnlyTitles={setFilterOnlyTitles}
+        />
         <Sort sortBy={sortBy} setSortBy={setSortBy} />
         {searchResult && (
           <>

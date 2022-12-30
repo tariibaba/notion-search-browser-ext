@@ -8,7 +8,7 @@ export const SearchBox = ({
   workspaceName,
 }: {
   query: string;
-  setQuery: (value: string) => void;
+  setQuery: SetQueryParam<string>;
   workspaceName: string;
 }) => {
   // input の value に state を指定すると onhashchange 時に変化が取り消されてしまう
