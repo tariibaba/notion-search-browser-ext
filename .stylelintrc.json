@@ -15,7 +15,7 @@
     "csstools/value-no-unknown-custom-properties": [
       true,
       {
-        "importFrom": ["src/ts/popup/components/App/custom-properties.css"]
+        "importFrom": ["src/popup/components/App/custom-properties.css"]
       }
     ],
     "csstree/validator": true,
