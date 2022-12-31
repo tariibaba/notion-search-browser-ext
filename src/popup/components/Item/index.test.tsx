@@ -11,13 +11,9 @@ it.each([
     },
     expected: [
       'foo ',
-      <span key="1" className="highlight">
-        bar
-      </span>,
+      <em key="1">bar</em>,
       ' baz foo',
-      <span key="3" className="highlight">
-        bar
-      </span>,
+      <em key="3">bar</em>,
       '',
     ],
   },
@@ -45,21 +41,13 @@ it.each([
     },
     expected: [
       '',
-      <span key="1" className="highlight">
-        foo
-      </span>,
+      <em key="1">foo</em>,
       ' ',
-      <span key="3" className="highlight">
-        bar
-      </span>,
+      <em key="3">bar</em>,
       ' baz ',
-      <span key="5" className="highlight">
-        foo
-      </span>,
+      <em key="5">foo</em>,
       '',
-      <span key="7" className="highlight">
-        bar
-      </span>,
+      <em key="7">bar</em>,
       '',
     ],
   },

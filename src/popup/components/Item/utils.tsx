@@ -20,10 +20,6 @@ export const setHighlight = (text: string, query: string) => {
         .join('|')})`,
       'ig',
     ),
-    (match, i) => (
-      <span key={i} className="highlight">
-        {match}
-      </span>
-    ),
+    (match, i) => <em key={i}>{match}</em>,
   );
 };
