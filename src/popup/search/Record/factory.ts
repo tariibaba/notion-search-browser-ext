@@ -1,16 +1,16 @@
-import { RecordClass } from '.';
+import { Record } from '.';
 import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
-import { BlockClass } from './Block';
-import { BlockCollectionViewClass } from './BlockCollectionView';
-import { CollectionClass } from './Collection';
+import { Block } from './Block';
+import { BlockCollectionView } from './BlockCollectionView';
+import { Collection } from './Collection';
 import { RecordError, RecordNotFoundError, RecordTypeError } from './errors';
 import { getBlock, getCollection } from './utils';
 
 export const createRecord = (
   id: string,
   tableType: TableType,
-  recordMap: RecordMap,
-): RecordClass => {
+  recordMap: Response.RecordMap,
+): Record => {
   switch (tableType) {
     case TABLE_TYPE.WORKSPACE:
       throw new RecordTypeError(`Can't handle a workspace`, {
@@ -32,7 +32,7 @@ export const createRecord = (
           },
         );
       }
-      return new CollectionClass({ collection });
+      return new Collection({ collection });
     }
     case TABLE_TYPE.BLOCK: {
       const block = getBlock(recordMap, id);
@@ -60,7 +60,7 @@ export const createRecord = (
       switch (block.type) {
         case BLOCK_TYPE.COLLECTION_VIEW_PAGE:
         case BLOCK_TYPE.COLLECTION_VIEW: {
-          let collection: Collection | undefined = undefined;
+          let collection: Response.Collection | undefined = undefined;
           if (block.collection_id) {
             collection = getCollection(recordMap, block.collection_id);
             if (!collection) {
@@ -75,15 +75,15 @@ export const createRecord = (
               );
             }
           }
-          return new BlockCollectionViewClass({
+          return new BlockCollectionView({
             block,
             ...(collection
-              ? { collection: new CollectionClass({ collection }) }
+              ? { collection: new Collection({ collection }) }
               : {}),
           });
         }
         default:
-          return new BlockClass({ block });
+          return new Block({ block });
       }
     }
     default:
@@ -95,9 +95,9 @@ export const createRecord = (
   }
 };
 
-export const createBlock = (id: string, recordMap: RecordMap) => {
+export const createBlock = (id: string, recordMap: Response.RecordMap) => {
   const record = createRecord(id, TABLE_TYPE.BLOCK, recordMap);
-  if (!(record instanceof BlockClass))
+  if (!(record instanceof Block))
     // 今の実装では起こり得ない。保険
     throw new RecordError('Not a block', {
       id,
@@ -105,5 +105,5 @@ export const createBlock = (id: string, recordMap: RecordMap) => {
       recordMap,
     });
 
-  return record as BlockClass;
+  return record as Block;
 };

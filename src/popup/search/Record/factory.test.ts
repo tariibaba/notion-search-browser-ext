@@ -1,11 +1,11 @@
 import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
-import { BlockClass } from './Block';
-import { BlockCollectionViewClass } from './BlockCollectionView';
-import { CollectionClass } from './Collection';
+import { Block } from './Block';
+import { BlockCollectionView } from './BlockCollectionView';
+import { Collection } from './Collection';
 import { createBlock, createRecord } from './factory';
 
 const BLOCK_ID = 'block-id';
-const BLOCK: Block = {
+const BLOCK: Response.Block = {
   id: BLOCK_ID,
   parent_id: 'parent-block-id',
   parent_table: TABLE_TYPE.BLOCK,
@@ -13,13 +13,13 @@ const BLOCK: Block = {
 };
 
 const COLLECTION_ID = 'yyy';
-const COLLECTION: Collection = {
+const COLLECTION: Response.Collection = {
   id: COLLECTION_ID,
   parent_id: 'parent-collection-id',
   parent_table: TABLE_TYPE.BLOCK,
 };
 
-const RECORD_MAP: RecordMap = {
+const RECORD_MAP: Response.RecordMap = {
   block: {
     [BLOCK_ID]: {
       value: BLOCK,
@@ -39,7 +39,7 @@ describe('createRecord()', () => {
     it('gets a block', () =>
       expect(
         createRecord(BLOCK_ID, TABLE_TYPE.BLOCK, RECORD_MAP),
-      ).toBeInstanceOf(BlockClass));
+      ).toBeInstanceOf(Block));
 
     for (const type of [
       BLOCK_TYPE.COLLECTION_VIEW,
@@ -59,8 +59,8 @@ describe('createRecord()', () => {
               },
             },
           });
-          expect(block).toBeInstanceOf(BlockCollectionViewClass);
-          expect((block as BlockCollectionViewClass).collection).toBeDefined();
+          expect(block).toBeInstanceOf(BlockCollectionView);
+          expect((block as BlockCollectionView).collection).toBeDefined();
         });
         it("a block doesn't have a collection", () => {
           const block = createRecord(BLOCK_ID, TABLE_TYPE.BLOCK, {
@@ -74,10 +74,8 @@ describe('createRecord()', () => {
               },
             },
           });
-          expect(block).toBeInstanceOf(BlockCollectionViewClass);
-          expect(
-            (block as BlockCollectionViewClass).collection,
-          ).toBeUndefined();
+          expect(block).toBeInstanceOf(BlockCollectionView);
+          expect((block as BlockCollectionView).collection).toBeUndefined();
         });
       });
     }
@@ -85,7 +83,7 @@ describe('createRecord()', () => {
     it('gets a collection', () =>
       expect(
         createRecord(COLLECTION_ID, TABLE_TYPE.COLLECTION, RECORD_MAP),
-      ).toBeInstanceOf(CollectionClass));
+      ).toBeInstanceOf(Collection));
   });
 
   describe('abnormal', () => {
@@ -162,5 +160,5 @@ describe('createRecord()', () => {
 
 describe('createBlock()', () => {
   it('gets a block', () =>
-    expect(createBlock(BLOCK_ID, RECORD_MAP)).toBeInstanceOf(BlockClass));
+    expect(createBlock(BLOCK_ID, RECORD_MAP)).toBeInstanceOf(Block));
 });

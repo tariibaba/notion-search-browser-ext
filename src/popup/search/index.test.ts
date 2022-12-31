@@ -2,7 +2,7 @@ import { search } from '.';
 import { axios } from '../../axios';
 import { NOTION_HOST } from '../../constants';
 import { BLOCK_TYPE, ICON_TYPE, SORT_BY, TABLE_TYPE } from '../constants';
-import { BlockClass } from './Record/Block';
+import { Block } from './Record/Block';
 
 afterEach(() => jest.restoreAllMocks());
 
@@ -118,8 +118,8 @@ describe('gets dirs', () => {
     },
   ])('$name', async ({ input, expected }) => {
     jest
-      .spyOn(BlockClass.prototype, 'getTitle')
-      .mockImplementation(function (this: BlockClass) {
+      .spyOn(Block.prototype, 'getTitle')
+      .mockImplementation(function (this: Block) {
         return `Title of ${this.record.id}`;
       });
 
@@ -143,13 +143,13 @@ describe('gets dirs', () => {
   });
 });
 
-const BLOCK: Block = {
+const BLOCK: Response.Block = {
   id: BLOCK_ID,
   parent_id: PARENT_ID,
   parent_table: TABLE_TYPE.BLOCK,
   type: BLOCK_TYPE.PAGE,
 };
-const PARENT_BLOCK: Block = {
+const PARENT_BLOCK: Response.Block = {
   id: PARENT_ID,
   parent_id: GRANDPARENT_ID,
   parent_table: TABLE_TYPE.WORKSPACE,
@@ -185,7 +185,7 @@ describe('gets an icon', () => {
       },
     },
   ])('$name', async ({ input, expected }) => {
-    jest.spyOn(BlockClass.prototype, 'getIcon').mockReturnValue(input);
+    jest.spyOn(Block.prototype, 'getIcon').mockReturnValue(input);
     jest.spyOn(axios, 'post').mockResolvedValue({
       data: {
         results: [{ id: BLOCK_ID }],

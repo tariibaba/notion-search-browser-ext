@@ -1,8 +1,8 @@
 import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
-import { BlockClass } from './Block';
-import { BlockCollectionViewClass } from './BlockCollectionView';
+import { Block } from './Block';
+import { BlockCollectionView } from './BlockCollectionView';
 
-const BLOCK: Block = {
+const BLOCK: Response.Block = {
   id: 'block-id',
   parent_id: 'parent-id',
   parent_table: TABLE_TYPE.BLOCK,
@@ -11,7 +11,7 @@ const BLOCK: Block = {
 
 afterEach(() => jest.restoreAllMocks());
 
-for (const className of [BlockClass, BlockCollectionViewClass]) {
+for (const className of [Block, BlockCollectionView]) {
   describe(className.name as string, () => {
     it('detects an unknown block type', () => {
       /* eslint @typescript-eslint/no-empty-function: 0 */
@@ -67,7 +67,7 @@ describe('getTitle()', () => {
     },
   ])('$name', ({ input, expected }) => {
     expect(
-      new BlockClass({
+      new Block({
         block: {
           ...BLOCK,
           ...input,
@@ -96,7 +96,7 @@ describe('getIcon()', () => {
     },
   ])('$name', ({ input, expected }) => {
     expect(
-      new BlockClass({
+      new Block({
         block: {
           ...BLOCK,
           ...input,

@@ -1,7 +1,9 @@
-export const getBlock = (recordMap: RecordMap, id: string): Block | undefined =>
-  recordMap.block[id]?.value;
+export const getBlock = (
+  recordMap: Response.RecordMap,
+  id: string,
+): Response.Block | undefined => recordMap.block[id]?.value;
 
 export const getCollection = (
-  recordMap: RecordMap,
+  recordMap: Response.RecordMap,
   id: string,
-): Collection | undefined => recordMap.collection?.[id]?.value;
+): Response.Collection | undefined => recordMap.collection?.[id]?.value;

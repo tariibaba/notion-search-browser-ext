@@ -1,7 +1,7 @@
 import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
-import { BlockClass } from '../Record/Block';
+import { Block } from '../Record/Block';
 
-const BLOCK: Block = {
+const BLOCK: Response.Block = {
   id: 'block-id',
   parent_id: 'parent-id',
   parent_table: TABLE_TYPE.BLOCK,
@@ -9,7 +9,7 @@ const BLOCK: Block = {
 };
 
 describe('parent', () => {
-  const parent = new BlockClass({
+  const parent = new Block({
     block: BLOCK,
   }).parent;
 
@@ -28,7 +28,7 @@ describe('parent', () => {
       { input: TABLE_TYPE.WORKSPACE, expected: true },
     ])('$input → $expected', ({ input, expected }) => {
       expect(
-        new BlockClass({
+        new Block({
           block: {
             ...BLOCK,
             parent_table: input,
