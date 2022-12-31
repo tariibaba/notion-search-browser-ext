@@ -26,7 +26,6 @@ export const Footer = ({
     event.preventDefault();
   };
 
-  console.log(total);
   return (
     <div className="footer">
       {showsSummary && (

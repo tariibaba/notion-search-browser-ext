@@ -113,7 +113,7 @@ export const SearchContainer = ({
         <Footer
           isPopup={isPopup}
           total={searchResult?.total || 0}
-          showsSummary={!!searchResult && hasQuery}
+          showsSummary={!!searchResult && usedQuery.trim().length > 0}
         />
       </main>
     </div>
