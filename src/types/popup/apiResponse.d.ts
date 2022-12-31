@@ -32,7 +32,7 @@ type Collection = RecordBase & {
   icon?: string;
 };
 
-type BLOCK_TYPE_COLLECTION_VIEW_PAGE =
+type BlockTypeCollectionViewPage =
   typeof import('../../popup/constants').BLOCK_TYPE.COLLECTION_VIEW_PAGE;
 type BLOCK_TYPE_COLLECTION_VIEW =
   typeof import('../../popup/constants').BLOCK_TYPE.COLLECTION_VIEW;
@@ -45,11 +45,11 @@ type Block = RecordBase & {
     | {
         type: Exclude<
           BlockType,
-          BLOCK_TYPE_COLLECTION_VIEW_PAGE | BLOCK_TYPE_COLLECTION_VIEW
+          BlockTypeCollectionViewPage | BLOCK_TYPE_COLLECTION_VIEW
         >;
       }
     | {
-        type: BLOCK_TYPE_COLLECTION_VIEW_PAGE | BLOCK_TYPE_COLLECTION_VIEW;
+        type: BlockTypeCollectionViewPage | BLOCK_TYPE_COLLECTION_VIEW;
         // 無い場合もある（その場合はアイコン取得不可。。。）
         // ex) https://www.notion.so/cside/63e92fc56afe463386ea800f82e37ce8
         collection_id?: string;
