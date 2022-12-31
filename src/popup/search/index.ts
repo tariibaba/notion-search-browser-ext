@@ -4,8 +4,8 @@ import { NOTION_HOST } from '../../constants';
 import { storage } from '../../storage';
 
 import { ICON_TYPE, SEARCH_LIMIT, SORT_BY, STORAGE_KEY } from '../constants';
-import { RecordClass } from './Record';
-import { BlockClass } from './Record/Block';
+import { Record } from './Record';
+import { Block } from './Record/Block';
 import { RecordError } from './Record/errors';
 import { createBlock, createRecord } from './Record/factory';
 
@@ -17,13 +17,13 @@ const TEXT_NO_TITLE = 'Untitled';
 export const search = async ({
   query,
   sortBy,
-  filterOnlyTitles,
+  filterByOnlyTitles,
   savesToStorage,
   workspaceId,
 }: {
   query: string;
   sortBy: string;
-  filterOnlyTitles: boolean;
+  filterByOnlyTitles: boolean;
   savesToStorage: boolean;
   workspaceId: string;
 }) => {
@@ -62,7 +62,7 @@ export const search = async ({
         editedBy: [],
         lastEditedTime: {},
         createdTime: {},
-        ...(filterOnlyTitles ? { navigableBlockContentOnly: true } : {}),
+        ...(filterByOnlyTitles ? { navigableBlockContentOnly: true } : {}),
       },
       sort: sortOptions,
       source: 'quick_find_input_change',
@@ -72,20 +72,20 @@ export const search = async ({
   const recordMap = res.recordMap;
   const items: Item[] = [];
   for (const item of res.results) {
-    let block: BlockClass | undefined = undefined;
+    let block: Block | undefined = undefined;
 
     const getDir = (
       paths: Dir[],
       id: string,
       tableType: TableTypeWithoutWorkspace,
     ): Dir[] => {
-      let record: RecordClass | undefined;
+      let record: Record | undefined;
       try {
         record = createRecord(id, tableType, recordMap);
         if (record.canBeDir)
           paths.push({
             title: record.getTitle() || TEXT_NO_TITLE,
-            block: record.record as Block, // Collection は canBeDir == false なので問題ない
+            block: record.record as Response.Block, // Collection は canBeDir == false なので問題ない
           });
 
         const parent = record.parent;

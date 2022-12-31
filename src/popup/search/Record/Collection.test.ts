@@ -1,7 +1,7 @@
 import { TABLE_TYPE } from '../../constants';
-import { CollectionClass } from '../Record/Collection';
+import { Collection } from '../Record/Collection';
 
-const COLLECTION: Collection = {
+const COLLECTION: Response.Collection = {
   id: 'block-id',
   parent_id: 'parent-id',
   parent_table: TABLE_TYPE.BLOCK,
@@ -21,7 +21,7 @@ describe('getTitle()', () => {
     },
   ])('$name', ({ input, expected }) => {
     expect(
-      new CollectionClass({
+      new Collection({
         collection: {
           ...COLLECTION,
           ...input,
@@ -45,7 +45,7 @@ describe('getIcon()', () => {
     },
   ])('$name', ({ input, expected }) => {
     expect(
-      new CollectionClass({
+      new Collection({
         collection: {
           ...COLLECTION,
           ...input,
@@ -57,7 +57,7 @@ describe('getIcon()', () => {
 
 test('canBeDir', () => {
   expect(
-    new CollectionClass({
+    new Collection({
       collection: COLLECTION,
     }).canBeDir,
   ).toBe(false);

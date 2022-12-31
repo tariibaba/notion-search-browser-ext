@@ -1,15 +1,15 @@
-import { BlockClass } from './Block';
-import { CollectionClass } from './Collection';
+import { Block } from './Block';
+import { Collection } from './Collection';
 
 // combines collection view page and collection view
-export class BlockCollectionViewClass extends BlockClass {
-  collection?: CollectionClass;
+export class BlockCollectionView extends Block {
+  collection?: Collection;
   constructor({
     block,
     collection,
   }: {
-    block: Block;
-    collection?: CollectionClass;
+    block: Response.Block;
+    collection?: Collection;
   }) {
     super({ block });
     this.collection = collection;

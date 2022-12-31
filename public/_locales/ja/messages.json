@@ -1,5 +1,29 @@
 {
-  "description": {
+  "DESCRIPTION": {
     "message": "Notion のページをポップアップで検索します"
+  },
+  "searchPlaceholder": {
+    "message": "$1を検索する..."
+  },
+  "filterBy_onlyTitles": {
+    "message": "タイトルのみ検索"
+  },
+  "sortBy_relevance": {
+    "message": "一致度の高い順"
+  },
+  "sortBy_lastEdited": {
+    "message": "最終更新日："
+  },
+  "sortBy_created": {
+    "message": "作成日："
+  },
+  "sortBy_newestFirst": {
+    "message": "新しい順"
+  },
+  "summaryOfResult": {
+    "message": "<em>$1</em>件"
+  },
+  "summaryOfResultOverLimit": {
+    "message": "<em>$1</em>件中 <em>$2</em>件"
   }
 }

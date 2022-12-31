@@ -2,8 +2,8 @@
 
 import { TABLE_TYPE } from '../../constants';
 
-export abstract class RecordClass {
-  public abstract record: Block | Collection;
+export abstract class Record {
+  public abstract record: Response.Block | Response.Collection;
   public parent: {
     id: string;
     tableType: TableType;

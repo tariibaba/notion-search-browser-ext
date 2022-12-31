@@ -31,7 +31,7 @@ export const SearchContainer = ({
     'sort_by',
     withDefault(StringParam, SORT_BY.RELEVANCE),
   );
-  const [filterOnlyTitles, setFilterOnlyTitles] = useQueryParam(
+  const [filterByOnlyTitles, setFilterOnlyTitles] = useQueryParam(
     'only_titles',
     withDefault(BooleanParam, false),
   );
@@ -75,7 +75,7 @@ export const SearchContainer = ({
               !hasQuery && sortBy === SORT_BY.RELEVANCE // ad hoc: worthless condition
                 ? SORT_BY.CREATED // 別に last edited でも良いのだが
                 : sortBy,
-            filterOnlyTitles,
+            filterByOnlyTitles,
             savesToStorage: isPopup && hasQuery,
             workspaceId: workspace.id,
           }),
@@ -86,7 +86,7 @@ export const SearchContainer = ({
         throw error;
       }
     })();
-  }, [trimmedQuery, sortBy, filterOnlyTitles]);
+  }, [trimmedQuery, sortBy, filterByOnlyTitles]);
 
   return (
     <div className={`container ${isPopup ? 'is-popup' : ''}`}>
@@ -97,7 +97,7 @@ export const SearchContainer = ({
           workspaceName={workspace.name}
         />
         <Filter
-          filterOnlyTitles={filterOnlyTitles}
+          filterByOnlyTitles={filterByOnlyTitles}
           setFilterOnlyTitles={setFilterOnlyTitles}
         />
         <Sort sortBy={sortBy} setSortBy={setSortBy} />
@@ -113,7 +113,7 @@ export const SearchContainer = ({
         <Footer
           isPopup={isPopup}
           total={searchResult?.total || 0}
-          showsSummary={!!searchResult && hasQuery}
+          showsSummary={!!searchResult && usedQuery.trim().length > 0}
         />
       </main>
     </div>

@@ -1,9 +1,9 @@
 import { CAN_BE_DIR } from '../../constants';
-import { RecordClass } from '../Record';
+import { Record } from '../Record';
 
-export class BlockClass extends RecordClass {
-  public record: Block;
-  constructor({ block }: { block: Block }) {
+export class Block extends Record {
+  public record: Response.Block;
+  constructor({ block }: { block: Response.Block }) {
     super();
     this.record = block;
     this.setParent();
