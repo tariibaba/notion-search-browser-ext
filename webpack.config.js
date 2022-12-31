@@ -10,9 +10,9 @@ const isDevelopment = mode === 'development';
 let config = {
   mode,
   entry: {
-    background: './src/background/index.ts',
-    popup: './src/popup/index.tsx',
-    options: './src/options/index.tsx',
+    background: './src/background/main.ts',
+    popup: './src/popup/main.tsx',
+    options: './src/options/main.tsx',
   },
   output: {
     path: `${__dirname}/public/js`,

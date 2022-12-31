@@ -41,7 +41,7 @@ describe('useWorkspace', () => {
     });
   });
   it('getLinkedWorkspace rejects', async () => {
-    const error = new Error('error');
+    const error = new Error('a kind of error');
     jest.spyOn(workspaces, 'getLinkedWorkspace').mockRejectedValue(error);
 
     const {
@@ -51,13 +51,15 @@ describe('useWorkspace', () => {
     expect(current).toEqual(
       expect.objectContaining({
         workspace: undefined,
-        error: {
-          message: 'Failed to get workspaces. Please reload this page.',
-          error,
-        },
         hasGotWorkspace: true,
       }),
     );
+    expect(current.error?.message).toBe(
+      'Failed to get workspaces. Please reload this page.',
+    );
+    const cause = current.error?.cause;
+    expect(cause).toBeInstanceOf(Error);
+    expect((cause as Error).message).toBe('a kind of error');
   });
 
   describe('selectAndLinkWorkspace', () => {

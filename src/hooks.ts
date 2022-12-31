@@ -8,9 +8,7 @@ import {
 
 export const useWorkspace = () => {
   const [workspace, setWorkspace] = useState<Workspace | undefined>(undefined);
-  const [error, setError] = useState<
-    { message: string; error: unknown } | undefined
-  >(undefined);
+  const [error, setError] = useState<Error | undefined>(undefined);
   const [hasGotWorkspace, setHasGotWorkspace] = useState(false);
 
   useEffect(() => {
@@ -20,11 +18,11 @@ export const useWorkspace = () => {
         workspace = await getLinkedWorkspace();
         if (workspace) setWorkspace(workspace);
       } catch (error) {
-        /* TODO: cause を使う */
-        setError({
-          message: 'Failed to get workspaces. Please reload this page.',
-          error,
-        });
+        setError(
+          new Error('Failed to get workspaces. Please reload this page.', {
+            cause: error,
+          }),
+        );
       }
       setHasGotWorkspace(true);
     })();
@@ -40,10 +38,12 @@ export const useWorkspace = () => {
       try {
         result = await selectAndLinkWorkspace();
       } catch (error) {
-        setError({
-          message: 'Failed to connect Notion. Please redo the operation later.',
-          error,
-        });
+        setError(
+          new Error(
+            'Failed to connect Notion. Please redo the operation later.',
+            { cause: error },
+          ),
+        );
         return;
       }
       if (result.hasAborted) {

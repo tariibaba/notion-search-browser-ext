@@ -8,13 +8,13 @@ export const App = () => {
   const { workspace, hasGotWorkspace, error, selectAndLinkWorkspace } =
     useWorkspace();
 
-  if (error) {
-    alertError(
-      'Failed to connect Notion. Please redo the operation later.',
-      error,
-    );
-    throw error;
-  }
+  useEffect(() => {
+    if (error) {
+      alertError(error.message, error.cause);
+      console.log(error.cause);
+    }
+  }, [error]);
+
   const isPopup = new URL(location.href).searchParams.has('popup');
 
   useEffect(() => {
