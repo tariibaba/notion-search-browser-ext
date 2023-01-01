@@ -12,7 +12,6 @@ export const SearchBox = ({
   setQuery: SetQueryParam<string>;
   workspaceName: string;
 }) => {
-  // input の value に state を指定すると onhashchange 時に変化が取り消されてしまう
   useEffect(() => {
     const style = document.createElement('style');
     style.appendChild(
