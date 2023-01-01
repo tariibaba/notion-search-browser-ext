@@ -8,7 +8,11 @@ export abstract class Record {
     id: string;
     tableType: TableType;
     isWorkspace: boolean;
-  } = { id: '', tableType: TABLE_TYPE.BLOCK, isWorkspace: false }; // meanless
+  } = {
+    id: '',
+    tableType: TABLE_TYPE.BLOCK,
+    isWorkspace: false,
+  }; // meanless
   public canBeDir = true;
 
   public abstract getTitle(): string | undefined;
