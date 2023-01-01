@@ -11,7 +11,7 @@ export const About = () => (
       </li>
       <li>
         <a
-          href={`https://chrome.google.com/webstore/detail/notion-search/nelmlmaelgfcpjgknkidapfnoddpjfee/reviews`}
+          href="https://chrome.google.com/webstore/detail/notion-search/nelmlmaelgfcpjgknkidapfnoddpjfee/reviews"
           target="_blank"
           rel="noreferrer"
         >
