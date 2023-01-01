@@ -59,7 +59,7 @@ describe('selectAndLinkWorkspace', () => {
       },
     });
   });
-  describe('2 space', () => {
+  describe('2 spaces', () => {
     beforeEach(() => {
       jest.spyOn(axios, 'post').mockResolvedValue({
         data: {
