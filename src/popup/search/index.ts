@@ -159,7 +159,7 @@ export const search = async ({
           };
         } else {
           // NOTE: 本気でやるなら、ここで絵文字以外のものが来た場合にエラーにする
-          // icon は length 2 なので判定が単純ではない
+          // emoji は length 2 なので判定が単純ではない
           result.icon = {
             type: ICON_TYPE.EMOJI,
             value: icon,
