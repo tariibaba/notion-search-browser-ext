@@ -144,15 +144,19 @@ export const search = async ({
       const icon = block.getIcon();
       if (icon) {
         if (icon.startsWith('http')) {
+          // uploaded by user
           result.icon = {
             type: ICON_TYPE.IMAGE,
             value:
-              `${NOTION_HOST}/image/${encodeURIComponent(icon)}` +
-              '?table=block' +
-              `&id=${id}` +
-              `&width=${ICON_WIDTH}`,
+              `${NOTION_HOST}/image/${encodeURIComponent(icon)}?` +
+              new URLSearchParams({
+                table: 'block',
+                id,
+                width: String(ICON_WIDTH),
+              }),
           };
         } else if (icon.startsWith('/')) {
+          // custom svg
           result.icon = {
             type: ICON_TYPE.IMAGE,
             value: `${NOTION_HOST}${icon}`,
