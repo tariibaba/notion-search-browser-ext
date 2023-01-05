@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   BooleanParam,
@@ -82,7 +83,10 @@ export const SearchContainer = ({
         );
         setUsedQuery(query);
       } catch (error) {
-        alertError('Faled to search.', error);
+        alertError(
+          error instanceof AxiosError ? 'Network error' : error + '',
+          error,
+        );
         throw error;
       }
     })();
