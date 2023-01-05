@@ -10,7 +10,7 @@ export class Block extends Record {
 
     // 未知でも、とりあえず通す
     if (!Object.hasOwn(CAN_BE_DIR.BLOCK, block.type)) {
-      console.warn(`Unknown block type: ${block.type}`, {
+      console.error(`Unknown block type: ${block.type}`, {
         block: JSON.stringify(block),
       });
       console.info({ block });

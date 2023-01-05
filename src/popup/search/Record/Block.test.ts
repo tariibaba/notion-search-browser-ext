@@ -15,7 +15,7 @@ for (const className of [Block, BlockCollectionView]) {
   describe(className.name as string, () => {
     test('detects an unknown block type', () => {
       /* eslint @typescript-eslint/no-empty-function: 0 */
-      const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
       expect(
         () =>
           new className({
@@ -39,7 +39,7 @@ for (const className of [Block, BlockCollectionView]) {
         { input: BLOCK_TYPE.COLUMN, expected: false },
         { input: 'unknown type' as BlockType, expected: false },
       ])('$input → $expected', ({ input, expected }) => {
-        jest.spyOn(console, 'warn').mockImplementation(() => {});
+        jest.spyOn(console, 'error').mockImplementation(() => {});
         expect(
           new className({
             block: {

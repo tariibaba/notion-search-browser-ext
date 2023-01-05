@@ -49,7 +49,7 @@ export const createRecord = (
       if (!Object.values(BLOCK_TYPE).includes(block.type)) {
         // コード側では、CVP かそれ以外か、で扱ってるので、問題なく扱える可能性もある。
         // ので、処理は中断しない
-        console.warn(`Unknown block type: ${block.type}`, {
+        console.error(`Unknown block type: ${block.type}`, {
           id,
           tableType,
           block: JSON.stringify(block),
