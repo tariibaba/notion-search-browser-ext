@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/browser';
 import { CaptureConsole as CaptureConsoleIntegration } from '@sentry/integrations';
 import { BrowserTracing } from '@sentry/tracing';
 
-const ENABLED = false;
+const ENABLED = true;
 
 export const initSentry = () => {
   if (ENABLED)
