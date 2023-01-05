@@ -7,7 +7,7 @@
   "options_page": "./options.html",
   "action": {
     "default_icon": "./images/icon38.png",
-    "default_popup": "./popup.html?popup"
+    "default_popup": "./search.html?popup=true"
   },
   "background": {
     "service_worker": "./js/background.js"
