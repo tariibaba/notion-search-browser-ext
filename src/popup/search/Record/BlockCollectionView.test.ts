@@ -16,7 +16,7 @@ const COLLECTION: Response.Collection = {
 };
 
 describe('getTitle()', () => {
-  it.each([
+  test.each([
     {
       name: 'gets a title from a block (a collction is specified, but the block is preferred)',
       input: {
@@ -91,7 +91,7 @@ describe('getTitle()', () => {
 });
 
 describe('getIcon()', () => {
-  it.each([
+  test.each([
     {
       name: 'gets a icon from a block (a collction is specified, but the block is preferred)',
       input: {

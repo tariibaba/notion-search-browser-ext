@@ -52,8 +52,17 @@ export const useWorkspace = () => {
       setWorkspace(result.workspace);
     },
     unlinkWorkspace: async () => {
-      await unlinkWorkspace();
-      setWorkspace(undefined);
+      try {
+        await unlinkWorkspace();
+        setWorkspace(undefined);
+      } catch (error) {
+        setError(
+          new Error(
+            'Failed to disconnect Notion. Please redo the operation later.',
+            { cause: error },
+          ),
+        );
+      }
     },
   };
 };

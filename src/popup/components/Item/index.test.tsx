@@ -2,7 +2,7 @@ import React from 'react';
 import { MATCH_TAG } from '../../constants';
 import { setHighlight } from '../Item/utils';
 
-it.each([
+test.each([
   {
     name: 'basic',
     input: {

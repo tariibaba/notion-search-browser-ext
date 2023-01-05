@@ -11,7 +11,7 @@ const PARENT_ID = 'parent-id';
 const GRANDPARENT_ID = 'grandparent-id';
 
 describe('gets dirs', () => {
-  it.each([
+  test.each([
     {
       name: 'no ancestors',
       input: {
@@ -157,7 +157,7 @@ const PARENT_BLOCK: Response.Block = {
 };
 
 describe('gets an icon', () => {
-  it.each([
+  test.each([
     {
       name: ' image (^http)',
       input: 'https://exmaple.com/icon.svg',

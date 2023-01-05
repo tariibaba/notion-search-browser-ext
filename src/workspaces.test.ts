@@ -2,7 +2,7 @@ import { axios } from './axios';
 import { answerToIndex, selectAndLinkWorkspace } from './workspaces';
 
 describe('answerToIndex', () => {
-  it.each([
+  test.each([
     { input: '1', expected: 1 },
     { input: '01', expected: 1 },
     { input: '0', expected: 0 },
@@ -20,7 +20,7 @@ describe('selectAndLinkWorkspace', () => {
     jest.restoreAllMocks();
   });
 
-  it('no spaces', async () => {
+  test('no spaces', async () => {
     jest.spyOn(axios, 'post').mockResolvedValue({ data: {} });
     await expect(selectAndLinkWorkspace()).rejects.toThrow(
       /^No spaces are found/,
@@ -37,7 +37,7 @@ describe('selectAndLinkWorkspace', () => {
       /^No spaces are found/,
     );
   });
-  it('1 space', async () => {
+  test('1 space', async () => {
     jest.spyOn(axios, 'post').mockResolvedValue({
       data: {
         'user-id': {
@@ -80,7 +80,7 @@ describe('selectAndLinkWorkspace', () => {
         },
       });
     });
-    it.each([
+    test.each([
       {
         name: 'select one',
         input: '2',

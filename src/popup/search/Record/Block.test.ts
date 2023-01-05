@@ -13,7 +13,7 @@ afterEach(() => jest.restoreAllMocks());
 
 for (const className of [Block, BlockCollectionView]) {
   describe(className.name as string, () => {
-    it('detects an unknown block type', () => {
+    test('detects an unknown block type', () => {
       /* eslint @typescript-eslint/no-empty-function: 0 */
       const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
       expect(
@@ -31,7 +31,7 @@ for (const className of [Block, BlockCollectionView]) {
       );
     });
     describe('canBeDir', () => {
-      it.each([
+      test.each([
         { input: BLOCK_TYPE.PAGE, expected: true },
         { input: BLOCK_TYPE.COLLECTION_VIEW_PAGE, expected: true },
         { input: BLOCK_TYPE.COLLECTION_VIEW, expected: true },
@@ -54,7 +54,7 @@ for (const className of [Block, BlockCollectionView]) {
 }
 
 describe('getTitle()', () => {
-  it.each([
+  test.each([
     {
       name: 'gets a title',
       input: { properties: { title: [['foo']] } },
@@ -78,7 +78,7 @@ describe('getTitle()', () => {
 });
 
 describe('getIcon()', () => {
-  it.each([
+  test.each([
     {
       name: 'gets a icon',
       input: { format: { page_icon: 'https://example.com/icon.png' } },

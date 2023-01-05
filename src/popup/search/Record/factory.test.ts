@@ -36,7 +36,7 @@ afterEach(() => jest.restoreAllMocks());
 
 describe('createRecord()', () => {
   describe('normal', () => {
-    it('gets a block', () =>
+    test('gets a block', () =>
       expect(
         createRecord(BLOCK_ID, TABLE_TYPE.BLOCK, RECORD_MAP),
       ).toBeInstanceOf(Block));
@@ -46,7 +46,7 @@ describe('createRecord()', () => {
       BLOCK_TYPE.COLLECTION_VIEW_PAGE,
     ]) {
       describe(`gets a block (${type})`, () => {
-        it('a block has a collection', () => {
+        test('a block has a collection', () => {
           const block = createRecord(BLOCK_ID, TABLE_TYPE.BLOCK, {
             ...RECORD_MAP,
             block: {
@@ -62,7 +62,7 @@ describe('createRecord()', () => {
           expect(block).toBeInstanceOf(BlockCollectionView);
           expect((block as BlockCollectionView).collection).toBeDefined();
         });
-        it("a block doesn't have a collection", () => {
+        test("a block doesn't have a collection", () => {
           const block = createRecord(BLOCK_ID, TABLE_TYPE.BLOCK, {
             ...RECORD_MAP,
             block: {
@@ -80,29 +80,29 @@ describe('createRecord()', () => {
       });
     }
 
-    it('gets a collection', () =>
+    test('gets a collection', () =>
       expect(
         createRecord(COLLECTION_ID, TABLE_TYPE.COLLECTION, RECORD_MAP),
       ).toBeInstanceOf(Collection));
   });
 
   describe('abnormal', () => {
-    it('unknown table type', () =>
+    test('unknown table type', () =>
       expect(() =>
         createRecord(BLOCK_ID, 'unknown table type' as TableType, RECORD_MAP),
       ).toThrow(/^Unknown table type:/));
 
-    it("can't handle a workspace", () =>
+    test("can't handle a workspace", () =>
       expect(() =>
         createRecord(BLOCK_ID, TABLE_TYPE.WORKSPACE, RECORD_MAP),
       ).toThrow(/^Can't handle a workspace/));
 
-    it("block-id doesn't exist", () =>
+    test("block-id doesn't exist", () =>
       expect(() =>
         createRecord("id that doesn't exist", TABLE_TYPE.BLOCK, RECORD_MAP),
       ).toThrow(/^Block .+ is not found/));
 
-    it("collection id doesn't exist (collection)", () =>
+    test("collection id doesn't exist (collection)", () =>
       expect(() =>
         createRecord(
           "id that doesn't exist",
@@ -115,7 +115,7 @@ describe('createRecord()', () => {
       BLOCK_TYPE.COLLECTION_VIEW,
       BLOCK_TYPE.COLLECTION_VIEW_PAGE,
     ]) {
-      it(`collection id doesn't exist (${type})`, () => {
+      test(`collection id doesn't exist (${type})`, () => {
         expect(() =>
           createRecord(BLOCK_ID, TABLE_TYPE.BLOCK, {
             ...RECORD_MAP,
@@ -135,7 +135,7 @@ describe('createRecord()', () => {
       });
     }
 
-    it('unknow block type', () => {
+    test('unknow block type', () => {
       /* eslint @typescript-eslint/no-empty-function: 0 */
       const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
@@ -159,6 +159,6 @@ describe('createRecord()', () => {
 });
 
 describe('createBlock()', () => {
-  it('gets a block', () =>
+  test('gets a block', () =>
     expect(createBlock(BLOCK_ID, RECORD_MAP)).toBeInstanceOf(Block));
 });

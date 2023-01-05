@@ -8,7 +8,7 @@ const COLLECTION: Response.Collection = {
 };
 
 describe('getTitle()', () => {
-  it.each([
+  test.each([
     {
       name: 'gets a title',
       input: { name: [['foo']] },
@@ -32,7 +32,7 @@ describe('getTitle()', () => {
 });
 
 describe('getIcon()', () => {
-  it.each([
+  test.each([
     {
       name: 'gets a icon',
       input: { icon: 'https://example.com/icon.png' },

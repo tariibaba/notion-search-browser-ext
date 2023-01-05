@@ -13,16 +13,16 @@ describe('parent', () => {
     block: BLOCK,
   }).parent;
 
-  it('gets an id', () => {
+  test('gets an id', () => {
     expect(parent.id).toBe('parent-id');
   });
 
-  it('gets a table type', () => {
+  test('gets a table type', () => {
     expect(parent.tableType).toBe(TABLE_TYPE.BLOCK);
   });
 
   describe('isWorkspace', () => {
-    it.each([
+    test.each([
       { input: TABLE_TYPE.BLOCK, expected: false },
       { input: TABLE_TYPE.COLLECTION, expected: false },
       { input: TABLE_TYPE.WORKSPACE, expected: true },

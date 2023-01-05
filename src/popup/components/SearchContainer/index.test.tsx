@@ -162,7 +162,7 @@ describe('gets last search result', () => {
     });
   });
 
-  it.each([
+  test.each([
     { input: false, expected: '' },
     { input: true, expected: query },
   ])('isPopup: $input', async ({ input, expected }) => {

@@ -14,7 +14,7 @@ export const LinkedStatus = () => {
   useEffect(() => {
     if (error) {
       alertError(error.message, error.cause);
-      console.error(error.cause);
+      throw error.cause;
     }
   }, [error]);
 

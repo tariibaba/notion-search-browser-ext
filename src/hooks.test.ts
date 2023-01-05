@@ -8,62 +8,66 @@ describe('useWorkspace', () => {
 
   afterEach(() => cleanup());
 
-  describe('getLinkedWorkspace resolves', () => {
-    it.each([
-      {
-        name: 'returns object',
-        input: dummyWorkspace1,
-        expected: {
-          workspace: dummyWorkspace1,
-          error: undefined,
-          // renderHook し終わった時点で hasGotWorkspace = true なので
-          // (act()で囲まなくても)、false の検証はできない。。
-          hasGotWorkspace: true,
+  describe('getLinkedWorkspace', () => {
+    describe('resolves', () => {
+      test.each([
+        {
+          name: 'returns object',
+          input: dummyWorkspace1,
+          expected: {
+            workspace: dummyWorkspace1,
+            error: undefined,
+            // renderHook し終わった時点で hasGotWorkspace = true なので
+            // (act()で囲まなくても)、false の検証はできない。。
+            hasGotWorkspace: true,
+          },
         },
-      },
-      {
-        name: 'returns undefined',
-        input: undefined,
-        expected: {
-          workspace: undefined,
-          error: undefined,
-          hasGotWorkspace: true,
+        {
+          name: 'returns undefined',
+          input: undefined,
+          expected: {
+            workspace: undefined,
+            error: undefined,
+            hasGotWorkspace: true,
+          },
         },
-      },
-    ])('$name', async ({ input, expected }) => {
-      jest.spyOn(workspaces, 'getLinkedWorkspace').mockResolvedValue(input);
+      ])('$name', async ({ input, expected }) => {
+        jest.spyOn(workspaces, 'getLinkedWorkspace').mockResolvedValue(input);
+
+        const {
+          result: { current },
+        } = await act(async () => renderHook(() => useWorkspace()));
+
+        expect(current).toEqual(expect.objectContaining(expected));
+      });
+    });
+    test('rejects', async () => {
+      jest
+        .spyOn(workspaces, 'getLinkedWorkspace')
+        .mockRejectedValue(new Error('a kind of error'));
 
       const {
         result: { current },
       } = await act(async () => renderHook(() => useWorkspace()));
 
-      expect(current).toEqual(expect.objectContaining(expected));
+      expect(current).toEqual(
+        expect.objectContaining({
+          workspace: undefined,
+          hasGotWorkspace: true,
+          error: expect.any(Error),
+        }),
+      );
+      const error = current.error;
+      expect(error?.message).toBe(
+        'Failed to get workspaces. Please reload this page.',
+      );
+      const cause = error?.cause;
+      expect((cause as Error).message).toBe('a kind of error');
     });
-  });
-  it('getLinkedWorkspace rejects', async () => {
-    const error = new Error('a kind of error');
-    jest.spyOn(workspaces, 'getLinkedWorkspace').mockRejectedValue(error);
-
-    const {
-      result: { current },
-    } = await act(async () => renderHook(() => useWorkspace()));
-
-    expect(current).toEqual(
-      expect.objectContaining({
-        workspace: undefined,
-        hasGotWorkspace: true,
-      }),
-    );
-    expect(current.error?.message).toBe(
-      'Failed to get workspaces. Please reload this page.',
-    );
-    const cause = current.error?.cause;
-    expect(cause).toBeInstanceOf(Error);
-    expect((cause as Error).message).toBe('a kind of error');
   });
 
   describe('selectAndLinkWorkspace', () => {
-    it.each([
+    test.each([
       {
         name: 'returns object',
         input: { hasAborted: false, workspace: dummyWorkspace2 },
@@ -96,27 +100,56 @@ describe('useWorkspace', () => {
     });
   });
 
-  it('unlinkWorkspace', async () => {
-    jest
-      .spyOn(workspaces, 'getLinkedWorkspace')
-      .mockResolvedValue(dummyWorkspace1);
+  describe('unlinkWorkspace', () => {
+    beforeEach(() => {
+      jest
+        .spyOn(workspaces, 'getLinkedWorkspace')
+        .mockResolvedValue(dummyWorkspace1);
+    });
+    test('resolves', async () => {
+      const { result } = await act(async () =>
+        renderHook(() => useWorkspace()),
+      );
 
-    const { result } = await act(async () => renderHook(() => useWorkspace()));
+      expect(result.current).toEqual(
+        expect.objectContaining({
+          workspace: dummyWorkspace1,
+          error: undefined,
+        }),
+      );
 
-    expect(result.current).toEqual(
-      expect.objectContaining({
-        workspace: dummyWorkspace1,
-        error: undefined,
-      }),
-    );
+      await act(async () => result.current.unlinkWorkspace());
 
-    await act(async () => result.current.unlinkWorkspace());
+      expect(result.current).toEqual(
+        expect.objectContaining({
+          workspace: undefined,
+          error: undefined,
+        }),
+      );
+    });
 
-    expect(result.current).toEqual(
-      expect.objectContaining({
-        workspace: undefined,
-        error: undefined,
-      }),
-    );
+    test('rejects', async () => {
+      jest
+        .spyOn(workspaces, 'unlinkWorkspace')
+        .mockRejectedValue(new Error('a kind of error'));
+
+      const { result } = await act(async () =>
+        renderHook(() => useWorkspace()),
+      );
+
+      await act(async () => result.current.unlinkWorkspace());
+
+      expect(result.current).toEqual(
+        expect.objectContaining({
+          error: expect.any(Error),
+        }),
+      );
+      const error = result.current.error;
+      expect(error?.message).toBe(
+        'Failed to disconnect Notion. Please redo the operation later.',
+      );
+      const cause = error?.cause;
+      expect((cause as Error).message).toBe('a kind of error');
+    });
   });
 });
