@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "rm ./public/js/*; NODE_ENV=development webpack",
+    "build": "yarn install && rm ./public/js/*; NODE_ENV=development webpack",
     "watch": "rm ./public/js/*; NODE_ENV=development webpack -w",
     "test": "jest",
     "eslint": "eslint './{src,test}/**/*.{ts,tsx}'",
