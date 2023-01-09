@@ -12,7 +12,7 @@
     "lint": "run-p eslint prettier stylelint",
     "lint:fix": "run-p eslint:fix prettier:fix stylelint:fix",
     "release": "rm out.zip; yarn run build; zip -r out.zip public",
-    "check-ngword": "if grep -rE \"console\\.(log|dir)|FIXME\" ./src ./test; then exit 1; else echo \"All good\"; fi",
+    "check-ngword": "if grep -rE \"console\\.(log|dir)|FIXME|ENABLED = false\" ./src ./test; then exit 1; else echo \"All good\"; fi",
     "ci": "run-p test lint check-ngword"
   },
   "devDependencies": {

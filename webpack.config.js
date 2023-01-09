@@ -12,6 +12,7 @@ let config = {
   entry: {
     background: './src/background/main.ts',
     popup: './src/popup/main.tsx',
+    debug: './src/debug/main.ts',
     options: './src/options/main.tsx',
   },
   output: {
