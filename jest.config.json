@@ -4,9 +4,5 @@
     "\\.p?css$": "jest-transform-stub"
   },
   "setupFilesAfterEnv": ["./test/jest.setup.ts"],
-  "testEnvironment": "jest-environment-jsdom",
-  "globals": {
-    "PRODUCTION": true,
-    "VERSION": true
-  }
+  "testEnvironment": "jest-environment-jsdom"
 }

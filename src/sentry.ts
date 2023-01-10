@@ -2,13 +2,10 @@ import * as Sentry from '@sentry/browser';
 import { CaptureConsole as CaptureConsoleIntegration } from '@sentry/integrations';
 import { BrowserTracing } from '@sentry/tracing';
 
-const ENABLED = true;
-
 export const initSentry = () => {
-  if (ENABLED)
+  if (IS_SENTRY_ENABLED)
     Sentry.init({
-      dsn: SENTRY_DSN,
-      release: VERSION,
+      ...SETNRY_ARGS,
       integrations: [
         new BrowserTracing(),
         new CaptureConsoleIntegration({

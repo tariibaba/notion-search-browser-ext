@@ -80,15 +80,21 @@ let config = {
   // },
   plugins: [
     new webpack.DefinePlugin({
-      VERSION: JSON.stringify(
-        JSON.parse(fs.readFileSync('./public/manifest.json').toString())
-          .version,
-      ),
-      SENTRY_DSN: JSON.stringify(
-        isDevelopment
-          ? 'https://cba3c32ae1404f56a39f5cb4102beb64@o49171.ingest.sentry.io/4504401197989888'
-          : 'https://f3a64ab117364c0cab0e2edf79c51113@o49171.ingest.sentry.io/4504401230823424',
-      ),
+      IS_SENTRY_ENABLED:
+        (process.env.IS_SENTRY_ENABLED &&
+          JSON.parse(process.env.IS_SENTRY_ENABLED)) ??
+        true,
+      SETNRY_ARGS: {
+        dsn: JSON.stringify(
+          isDevelopment
+            ? 'https://cba3c32ae1404f56a39f5cb4102beb64@o49171.ingest.sentry.io/4504401197989888'
+            : 'https://f3a64ab117364c0cab0e2edf79c51113@o49171.ingest.sentry.io/4504401230823424',
+        ),
+        release: JSON.stringify(
+          JSON.parse(fs.readFileSync('./public/manifest.json').toString())
+            .version,
+        ),
+      },
     }),
     // new BundleAnalyzerPlugin(),
   ],
