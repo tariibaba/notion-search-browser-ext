@@ -3,6 +3,7 @@ import { axios } from '../../../../axios';
 import { NOTION_BASE_URL } from '../../../../constants';
 import './styles.pcss';
 
+// TODO: test
 export const EmptySearchResultsCallout = ({
   workspace,
 }: {
@@ -21,12 +22,19 @@ export const EmptySearchResultsCallout = ({
       loop: for (const { space_view: spaceViewObj } of Object.values(res)) {
         for (const { value } of Object.values(spaceViewObj)) {
           if (value.space_id !== workspace.id) continue;
+          // Notion の workspace に加入したら最初の private page 作成ページにリダイレクトされるので、
+          // private_pages が空ということは恐らくありえない
           if (value.private_pages.length === 0) {
             console.warn(
               `space_view.id.value.private_pages are empty. workspace: ${workspace.id}`,
             );
             continue;
           }
+          /* NOTE: サイドバーの一番上の private page 。
+            KNOWN PROBLEM:
+              公開されてるページだとサイドバーが表示されないし Cookie もセットされない。
+              API のレスポンスには page id しか無く public か否か判定できない。
+              まぁニッチな機能なので、public である場合は一旦スルー ... 。 */
           setPageId(value.private_pages[0]);
           isFound = true;
           break loop;
