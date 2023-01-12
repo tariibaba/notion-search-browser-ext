@@ -85,6 +85,10 @@ module.exports = (...[, argv]) => {
 
   config.plugins = [
     new webpack.DefinePlugin({
+      IS_SENTRY_ENABLED:
+        (process.env.IS_SENTRY_ENABLED &&
+          JSON.parse(process.env.IS_SENTRY_ENABLED)) ??
+        true,
       SETNRY_ARGS: {
         dsn: JSON.stringify(
           isDevelopment
