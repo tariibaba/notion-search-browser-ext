@@ -1,20 +1,16 @@
 const webpack = require('webpack');
-const TerserPlugin = require('terser-webpack-plugin');
 const fs = require('fs');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-const mode = process.env.NODE_ENV || 'development';
-const isDevelopment = mode === 'development';
-
 /** @type import('webpack').Configuration */
 let config = {
-  mode,
+  context: `${__dirname}/src`,
   entry: {
-    background: './src/background/main.ts',
-    popup: './src/popup/main.tsx',
-    debug: './src/debug/main.ts',
-    options: './src/options/main.tsx',
-    'helps/empty-search-results': './src/helps/emptySearchResults.ts',
+    background: './background/main.ts',
+    popup: './popup/main.tsx',
+    debug: './debug/main.ts',
+    options: './options/main.tsx',
+    'helps/empty-search-results': './helps/emptySearchResults.ts',
   },
   output: {
     path: `${__dirname}/public/js`,
@@ -68,6 +64,7 @@ let config = {
       name: 'vendor',
       chunks: (chunk) => chunk.name !== 'background',
     },
+    minimize: false,
   },
   watchOptions: {
     ignored: /node_modules/,
@@ -75,16 +72,19 @@ let config = {
   experiments: {
     topLevelAwait: true,
   },
-  // // Chrome 拡張においてファイルサイズは大した問題ではないので無視する
-  // performance: {
-  //   hints: false,
-  // },
-  plugins: [
+  // Chrome 拡張においてファイルサイズは大した問題ではない
+  performance: {
+    hints: false,
+  },
+};
+
+module.exports = (...[, argv]) => {
+  const mode = argv.mode || 'development';
+  config.mode = mode;
+  const isDevelopment = mode === 'development';
+
+  config.plugins = [
     new webpack.DefinePlugin({
-      IS_SENTRY_ENABLED:
-        (process.env.IS_SENTRY_ENABLED &&
-          JSON.parse(process.env.IS_SENTRY_ENABLED)) ??
-        true,
       SETNRY_ARGS: {
         dsn: JSON.stringify(
           isDevelopment
@@ -98,20 +98,21 @@ let config = {
       },
     }),
     // new BundleAnalyzerPlugin(),
-  ],
+  ];
+  // TODO: これがあると minify:false が効かない。
+  // 本番環境で console.info が吐かれてる問題があるので、それを対処するときに向き合う。
+  // const TerserPlugin = require('terser-webpack-plugin');
+  // if (!isDevelopment) {
+  //   config.plugins.push(
+  //     new TerserPlugin({
+  //       terserOptions: {
+  //         compress: {
+  //           pure_funcs: ['console.log', 'console.info'],
+  //         },
+  //       },
+  //     }),
+  //   );
+  // }
+
+  return config;
 };
-
-if (!isDevelopment) {
-  config.plugins ||= [];
-  config.plugins.push(
-    new TerserPlugin({
-      terserOptions: {
-        compress: {
-          pure_funcs: ['console.log', 'console.info'],
-        },
-      },
-    }),
-  );
-}
-
-module.exports = config;

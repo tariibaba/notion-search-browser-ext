@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "build": "yarn install && rm ./public/js/*; NODE_ENV=development webpack",
-    "watch": "rm ./public/js/*; NODE_ENV=development IS_SENTRY_ENABLED=false webpack -w",
+    "build": "yarn install && rm -rf ./public/js/*; webpack --mode=production",
+    "watch": "rm -rf ./public/js/*; webpack --mode=development -w",
     "test": "jest",
     "eslint": "eslint './{src,test}/**/*.{ts,tsx}'",
     "eslint:fix": "eslint --fix './{src,test}/**/*.{ts,tsx}'",
