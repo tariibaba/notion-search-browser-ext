@@ -71,9 +71,11 @@ export const search = async ({
     })
   ).data;
 
-  if (query === '' && res.results.length === 0) {
-    throw new EmptySearchResultsError(); // 1 件も記事のない ws でも起こりうる
-  }
+  // Known issue:
+  //   tab mode の場合、別タブで cookie を set しても、
+  //   axios のキャッシュが残る
+  if (query === '' && res.results.length === 0)
+    throw new EmptySearchResultsError();
 
   const recordMap = res.recordMap;
   const items: Item[] = [];

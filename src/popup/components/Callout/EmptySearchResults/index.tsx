@@ -31,7 +31,7 @@ export const EmptySearchResultsCallout = ({
             continue;
           }
           /* NOTE: サイドバーの一番上の private page 。
-            KNOWN PROBLEM:
+            Known Promblem:
               公開されてるページだとサイドバーが表示されないし Cookie もセットされない。
               API のレスポンスには page id しか無く public か否か判定できない。
               まぁニッチな機能なので、public である場合は一旦スルー ... 。 */
@@ -61,9 +61,10 @@ export const EmptySearchResultsCallout = ({
   );
   return (
     <div className="callout callout-info">
-      ℹ️ Always empty search results?{' '}
+      {/* TODO: i18n */}
+      ℹ️ Always no results?{' '}
       <a href={helpsUrl} target="_blank" rel="noreferrer">
-        Try this.
+        Go to the help page.
       </a>
     </div>
   );
