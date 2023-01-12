@@ -25,10 +25,15 @@ export const SORT_BY = {
              └- ...
 */
 
+// 新しい type はここに追記するだけでは駄目で、他に
+//  - factory.ts の createRecord の分岐を追加
+//  - 下の CAN_BE_DIR
+//  - apiResponse.d.ts
 export const TABLE_TYPE = {
   WORKSPACE: 'space',
   BLOCK: 'block',
   COLLECTION: 'collection', // parent のみ
+  TEAM: 'team',
 } as const;
 
 // NOTE: ここに追加したら、テストも追加。あと popup.pcss のクラスにも一応追加
@@ -43,6 +48,7 @@ export const BLOCK_TYPE = {
 // default is true
 export const CAN_BE_DIR = {
   COLLECTION: false,
+  TEAM: true,
   BLOCK: {
     [BLOCK_TYPE.PAGE]: true,
     [BLOCK_TYPE.COLLECTION_VIEW_PAGE]: true,
@@ -52,6 +58,7 @@ export const CAN_BE_DIR = {
   },
 } as const satisfies {
   COLLECTION: boolean;
+  TEAM: boolean;
   BLOCK: {
     [key in valueOf<typeof BLOCK_TYPE>]: boolean;
   };
