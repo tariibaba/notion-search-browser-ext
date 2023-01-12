@@ -1,18 +1,16 @@
 const webpack = require('webpack');
-const TerserPlugin = require('terser-webpack-plugin');
 const fs = require('fs');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-const mode = process.env.NODE_ENV || 'development';
-const isDevelopment = mode === 'development';
-
 /** @type import('webpack').Configuration */
 let config = {
-  mode,
+  context: `${__dirname}/src`,
   entry: {
-    background: './src/background/main.ts',
-    popup: './src/popup/main.tsx',
-    options: './src/options/main.tsx',
+    background: './background/main.ts',
+    popup: './popup/main.tsx',
+    debug: './debug/main.ts',
+    options: './options/main.tsx',
+    'helps/empty-search-results': './helps/emptySearchResults.ts',
   },
   output: {
     path: `${__dirname}/public/js`,
@@ -66,6 +64,7 @@ let config = {
       name: 'vendor',
       chunks: (chunk) => chunk.name !== 'background',
     },
+    minimize: false,
   },
   watchOptions: {
     ignored: /node_modules/,
@@ -73,37 +72,47 @@ let config = {
   experiments: {
     topLevelAwait: true,
   },
-  // // Chrome 拡張においてファイルサイズは大した問題ではないので無視する
-  // performance: {
-  //   hints: false,
-  // },
-  plugins: [
-    new webpack.DefinePlugin({
-      VERSION: JSON.stringify(
-        JSON.parse(fs.readFileSync('./public/manifest.json').toString())
-          .version,
-      ),
-      SENTRY_DSN: JSON.stringify(
-        isDevelopment
-          ? 'https://cba3c32ae1404f56a39f5cb4102beb64@o49171.ingest.sentry.io/4504401197989888'
-          : 'https://f3a64ab117364c0cab0e2edf79c51113@o49171.ingest.sentry.io/4504401230823424',
-      ),
-    }),
-    // new BundleAnalyzerPlugin(),
-  ],
+  // Chrome 拡張においてファイルサイズは大した問題ではない
+  performance: {
+    hints: false,
+  },
 };
 
-if (!isDevelopment) {
-  config.plugins ||= [];
-  config.plugins.push(
-    new TerserPlugin({
-      terserOptions: {
-        compress: {
-          pure_funcs: ['console.log', 'console.info'],
-        },
+module.exports = (...[, argv]) => {
+  const mode = argv.mode || 'development';
+  config.mode = mode;
+  const isDevelopment = mode === 'development';
+
+  config.plugins = [
+    new webpack.DefinePlugin({
+      SETNRY_ARGS: {
+        dsn: JSON.stringify(
+          isDevelopment
+            ? 'https://cba3c32ae1404f56a39f5cb4102beb64@o49171.ingest.sentry.io/4504401197989888'
+            : 'https://f3a64ab117364c0cab0e2edf79c51113@o49171.ingest.sentry.io/4504401230823424',
+        ),
+        release: JSON.stringify(
+          JSON.parse(fs.readFileSync('./public/manifest.json').toString())
+            .version,
+        ),
       },
     }),
-  );
-}
+    // new BundleAnalyzerPlugin(),
+  ];
+  // TODO: これがあると minify:false が効かない。
+  // 本番環境で console.info が吐かれてる問題があるので、それを対処するときに向き合う。
+  // const TerserPlugin = require('terser-webpack-plugin');
+  // if (!isDevelopment) {
+  //   config.plugins.push(
+  //     new TerserPlugin({
+  //       terserOptions: {
+  //         compress: {
+  //           pure_funcs: ['console.log', 'console.info'],
+  //         },
+  //       },
+  //     }),
+  //   );
+  // }
 
-module.exports = config;
+  return config;
+};

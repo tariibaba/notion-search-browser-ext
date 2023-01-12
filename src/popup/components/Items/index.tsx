@@ -12,19 +12,19 @@ export const Items = ({
   items: Item[];
 }) => {
   return (
-    <>
-      {items.length >= 0 && (
-        <div className="items">
-          {items.map((item) => (
-            <Item
-              key={item.block.id}
-              isPopup={isPopup}
-              query={query}
-              {...item}
-            ></Item>
-          ))}
-        </div>
+    <div className="items">
+      {items.length > 0 ? (
+        items.map((item) => (
+          <Item
+            key={item.block.id}
+            isPopup={isPopup}
+            query={query}
+            {...item}
+          ></Item>
+        ))
+      ) : (
+        <p className="no-results">No results</p>
       )}
-    </>
+    </div>
   );
 };

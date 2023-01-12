@@ -7,5 +7,7 @@ type Workspace = {
   name: string;
 };
 
-declare const SENTRY_DSN: string;
-declare const VERSION: string;
+declare const SETNRY_ARGS: {
+  dsn: string;
+  release: string;
+};
