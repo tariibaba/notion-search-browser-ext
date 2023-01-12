@@ -7,6 +7,7 @@ type Workspace = {
   name: string;
 };
 
+declare const IS_SENTRY_ENABLED: boolean;
 declare const SETNRY_ARGS: {
   dsn: string;
   release: string;

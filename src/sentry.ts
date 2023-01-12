@@ -3,13 +3,14 @@ import { CaptureConsole as CaptureConsoleIntegration } from '@sentry/integration
 import { BrowserTracing } from '@sentry/tracing';
 
 export const initSentry = () => {
-  Sentry.init({
-    ...SETNRY_ARGS,
-    integrations: [
-      new BrowserTracing(),
-      new CaptureConsoleIntegration({
-        levels: ['warn', 'error'],
-      }),
-    ],
-  });
+  if (IS_SENTRY_ENABLED)
+    Sentry.init({
+      ...SETNRY_ARGS,
+      integrations: [
+        new BrowserTracing(),
+        new CaptureConsoleIntegration({
+          levels: ['warn', 'error'],
+        }),
+      ],
+    });
 };
