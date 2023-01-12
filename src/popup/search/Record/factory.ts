@@ -4,7 +4,7 @@ import { Block } from './Block';
 import { BlockCollectionView } from './BlockCollectionView';
 import { Collection } from './Collection';
 import { RecordError, RecordNotFoundError, RecordTypeError } from './errors';
-import { getBlock, getCollection } from './utils';
+import { Team } from './Team';
 
 export const createRecord = (
   id: string,
@@ -21,7 +21,7 @@ export const createRecord = (
 
     // only parent
     case TABLE_TYPE.COLLECTION: {
-      const collection = getCollection(recordMap, id);
+      const collection = recordMap.collection?.[id]?.value;
       if (!collection) {
         throw new RecordNotFoundError(
           `Collection (id:${id}) is not found in recordMap.collection`,
@@ -34,8 +34,23 @@ export const createRecord = (
       }
       return new Collection({ collection });
     }
+    // only parent
+    case TABLE_TYPE.TEAM: {
+      const team = recordMap.team?.[id]?.value;
+      if (!team) {
+        throw new RecordNotFoundError(
+          `Team (id:${id}) is not found in recordMap.team`,
+          {
+            id,
+            tableType,
+            recordMap,
+          },
+        );
+      }
+      return new Team({ team });
+    }
     case TABLE_TYPE.BLOCK: {
-      const block = getBlock(recordMap, id);
+      const block = recordMap.block[id]?.value;
       if (!block) {
         throw new RecordNotFoundError(
           `Block (id:${id}) is not found in recordMap.block`,
@@ -62,10 +77,10 @@ export const createRecord = (
         case BLOCK_TYPE.COLLECTION_VIEW: {
           let collection: Response.Collection | undefined = undefined;
           if (block.collection_id) {
-            collection = getCollection(recordMap, block.collection_id);
+            collection = recordMap.collection?.[block.collection_id]?.value;
             if (!collection) {
               throw new RecordNotFoundError(
-                `block.collection_id exists, but collection_id:${block.collection_id} is not found in recordMap.collection`,
+                `block.collection_id exists, but collection_id: ${block.collection_id} is not found in recordMap.collection`,
                 {
                   id,
                   tableType,
