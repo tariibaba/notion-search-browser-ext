@@ -5,8 +5,8 @@ const block = new Block({
 });
 
 console.info({
-  title: block.getTitle(),
-  icon: block.getIcon(),
+  title: block.title,
+  icon: block.icon,
 });
 
 const elem = document.getElementById('result');

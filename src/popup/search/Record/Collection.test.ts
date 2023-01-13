@@ -7,7 +7,7 @@ const COLLECTION: Response.Collection = {
   parent_table: TABLE_TYPE.BLOCK,
 };
 
-describe('getTitle()', () => {
+describe('title', () => {
   test.each([
     {
       name: 'gets a title',
@@ -26,12 +26,12 @@ describe('getTitle()', () => {
           ...COLLECTION,
           ...input,
         },
-      }).getTitle(),
+      }).title,
     ).toBe(expected);
   });
 });
 
-describe('getIcon()', () => {
+describe('icon', () => {
   test.each([
     {
       name: 'gets a icon',
@@ -50,7 +50,7 @@ describe('getIcon()', () => {
           ...COLLECTION,
           ...input,
         },
-      }).getIcon(),
+      }).icon,
     ).toBe(expected);
   });
 });

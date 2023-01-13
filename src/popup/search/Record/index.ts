@@ -15,8 +15,8 @@ export abstract class Record {
   }; // meanless
   public canBeDir = true;
 
-  public abstract getTitle(): string | undefined;
-  public abstract getIcon(): string | undefined;
+  public abstract get title(): string | undefined;
+  public abstract get icon(): string | undefined;
   protected setParent() {
     this.parent = {
       id: this.record.parent_id,

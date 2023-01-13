@@ -92,7 +92,7 @@ export const search = async ({
         record = createRecord(id, tableType, recordMap);
         if (record.canBeDir)
           paths.push({
-            title: record.getTitle() || TEXT_NO_TITLE,
+            title: record.title || TEXT_NO_TITLE,
             block: record.record as Response.Block, // Collection は canBeDir == false なので問題ない
           });
 
@@ -128,7 +128,7 @@ export const search = async ({
       block = createBlock(id, recordMap);
 
       const result: Item = {
-        title: block.getTitle() ?? TEXT_NO_TITLE,
+        title: block.title ?? TEXT_NO_TITLE,
         text: item.highlight?.text,
         block: block.record,
         dirs: block.parent.isWorkspace
@@ -149,7 +149,7 @@ export const search = async ({
         },
       };
 
-      const icon = block.getIcon();
+      const icon = block.icon;
       if (icon) {
         if (icon.startsWith('http')) {
           // uploaded by user

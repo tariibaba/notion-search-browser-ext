@@ -52,7 +52,7 @@ for (const className of [Block, BlockCollectionView]) {
   });
 }
 
-describe('getTitle()', () => {
+describe('title', () => {
   test.each([
     {
       name: 'gets a title',
@@ -71,12 +71,12 @@ describe('getTitle()', () => {
           ...BLOCK,
           ...input,
         },
-      }).getTitle(),
+      }).title,
     ).toBe(expected);
   });
 });
 
-describe('getIcon()', () => {
+describe('icon', () => {
   test.each([
     {
       name: 'gets a icon',
@@ -100,7 +100,7 @@ describe('getIcon()', () => {
           ...BLOCK,
           ...input,
         },
-      }).getIcon(),
+      }).icon,
     ).toBe(expected);
   });
 });

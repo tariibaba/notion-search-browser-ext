@@ -8,18 +8,18 @@ const TEAM: Response.Team = {
   parent_table: TABLE_TYPE.BLOCK,
 };
 
-it('getTitle()', () => {
+it('title', () => {
   expect(
     new Team({
       team: {
         ...TEAM,
       },
-    }).getTitle(),
+    }).title,
   ).toBe('team-name');
 });
 
 // not used
-describe('getIcon()', () => {
+describe('icon', () => {
   test.each([
     {
       name: 'gets a icon',
@@ -38,7 +38,7 @@ describe('getIcon()', () => {
           ...TEAM,
           ...input,
         },
-      }).getIcon(),
+      }).icon,
     ).toBe(expected);
   });
 });
