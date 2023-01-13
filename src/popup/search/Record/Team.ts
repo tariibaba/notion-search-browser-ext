@@ -1,4 +1,3 @@
-import { CAN_BE_DIR } from '../../constants';
 import { Record } from '../Record';
 
 export class Team extends Record {
@@ -7,7 +6,9 @@ export class Team extends Record {
     super();
     this.record = team;
     this.setParent();
-    this.canBeDir = CAN_BE_DIR.TEAM;
+  }
+  public canBeDir() {
+    return true;
   }
   public get title() {
     return this.record.name;

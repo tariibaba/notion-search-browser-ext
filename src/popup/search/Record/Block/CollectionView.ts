@@ -1,5 +1,14 @@
-import { Block } from './Block';
-import { Collection } from './Collection';
+import { BLOCK_TYPE } from '../../../constants';
+import { Collection } from '../Collection';
+import { Block } from './';
+
+export const isCollectionView = (
+  block: Response.Block,
+): block is Response.BlockCollectionView => {
+  return (
+    [BLOCK_TYPE.COLLECTION_VIEW, BLOCK_TYPE.COLLECTION_VIEW_PAGE] as BlockType[]
+  ).includes(block.type);
+};
 
 // combines collection view page and collection view
 export class BlockCollectionView extends Block {
@@ -13,6 +22,18 @@ export class BlockCollectionView extends Block {
   }) {
     super({ block });
     this.collection = collection;
+
+    if (!isCollectionView(block)) {
+      throw new Error(
+        `Not a collection view. type: ${block.type}. block: ${JSON.stringify(
+          block,
+        )}`,
+      );
+    }
+  }
+
+  public canBeDir() {
+    return true;
   }
   public get title() {
     return super.title ?? this.collection?.title;

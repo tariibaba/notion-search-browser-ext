@@ -54,31 +54,10 @@ export const BLOCK_TYPE = {
   FACTORY: 'factory',
 } as const;
 
-// default is true
-export const CAN_BE_DIR = {
-  COLLECTION: false,
-  TEAM: true,
-  BLOCK: {
-    [BLOCK_TYPE.PAGE]: true,
-    [BLOCK_TYPE.COLLECTION_VIEW_PAGE]: true,
-    [BLOCK_TYPE.COLLECTION_VIEW]: true,
-    [BLOCK_TYPE.COLUMN_LIST]: false,
-    [BLOCK_TYPE.COLUMN]: false,
-    // 下記は dir にならなくていい。親が必ず block だし。というか子を持てないだろう。
-    [BLOCK_TYPE.TEXT]: false,
-    [BLOCK_TYPE.TO_DO]: false,
-    [BLOCK_TYPE.SUB_HEADER]: false,
-    [BLOCK_TYPE.TOGGLE]: false,
-    [BLOCK_TYPE.BULLETED_LIST]: false,
-    [BLOCK_TYPE.FACTORY]: false, // これ何だろう...。
-  },
-} as const satisfies {
-  COLLECTION: boolean;
-  TEAM: boolean;
-  BLOCK: {
-    [key in valueOf<typeof BLOCK_TYPE>]: boolean;
-  };
-};
+export const BLOCK_TYPES_COLLECTION_VIEW = [
+  BLOCK_TYPE.COLLECTION_VIEW_PAGE,
+  BLOCK_TYPE.COLLECTION_VIEW,
+] as const;
 
 // ========================================
 // Others

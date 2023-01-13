@@ -1,4 +1,3 @@
-import { CAN_BE_DIR } from '../../constants';
 import { Record } from '../Record';
 
 export class Collection extends Record {
@@ -7,11 +6,14 @@ export class Collection extends Record {
     super();
     this.record = collection;
     this.setParent();
-    this.canBeDir = CAN_BE_DIR.COLLECTION;
+  }
+  public canBeDir() {
+    return false;
   }
   public get title() {
     return this.record.name?.map((array) => array[0]).join('');
   }
+  // collection_view のアイコンで使う（ことがある）
   public get icon() {
     return this.record.icon;
   }

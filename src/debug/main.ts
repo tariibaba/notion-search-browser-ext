@@ -1,6 +1,6 @@
-import { Block } from '../popup/search/Record/Block';
+import { BlockNotCollectionView } from '../popup/search/Record/Block/NotCollectionView';
 
-const block = new Block({
+const block = new BlockNotCollectionView({
   block: JSON.parse(prompt('json') || ''),
 });
 

@@ -16,53 +16,49 @@ declare namespace Response {
     highlightBlockId?: string;
   };
 
-  type RecordBase = {
+  type _RecordBase = {
     id: string;
     parent_id: string;
     parent_table: TableType;
-    format?: {
-      page_icon?: string;
-    };
-    properties?: {
-      title: string[][];
-    };
   };
 
-  type Collection = RecordBase & {
+  type Collection = _RecordBase & {
+    // こちらは探せど探せど size も深さも 1 の配列しか無いので、RecordBase と合わせない
     name?: string[][];
     icon?: string;
   };
 
-  type Team = RecordBase & {
+  type Team = _RecordBase & {
     name: string;
     icon?: string; // not used
   };
 
-  type BlockTypeCollectionViewPage =
-    typeof import('../../popup/constants').BLOCK_TYPE.COLLECTION_VIEW_PAGE;
-  type BlockTypeCollectionView =
-    typeof import('../../popup/constants').BLOCK_TYPE.COLLECTION_VIEW;
-
-  type Block = RecordBase & {
+  type _BlockBase = _RecordBase & {
     format?: {
       page_icon?: string;
     };
-  } & (
-      | {
-          type: Exclude<
-            BlockType,
-            BlockTypeCollectionViewPage | BlockTypeCollectionView
-          >;
-        }
-      | {
-          type: BlockTypeCollectionViewPage | BlockTypeCollectionView;
-          // 無い場合もある（その場合はアイコン取得不可。。。）
-          // ex) https://www.notion.so/cside/63e92fc56afe463386ea800f82e37ce8
-          collection_id?: string;
-        }
-    );
+    properties?: {
+      title: (string | string[][])[][];
+    };
+  };
 
-  type Record = Response.Block | Response.Collection | Response.Team;
+  type _BlockTypeCollectionView =
+    typeof import('../../popup/constants').BLOCK_TYPES_COLLECTION_VIEW[number];
+
+  type BlockNotCollectionView = _BlockBase & {
+    type: Exclude<BlockType, _BlockTypeCollectionView>;
+  };
+
+  type BlockCollectionView = _BlockBase & {
+    type: _BlockTypeCollectionView;
+    // 無い場合もある（その場合はアイコン取得不可。。。）
+    // ex) https://www.notion.so/cside/63e92fc56afe463386ea800f82e37ce8
+    collection_id?: string;
+  };
+
+  type Block = BlockCollectionView | BlockNotCollectionView;
+
+  type Record = Block | Collection | Team;
 
   type RecordMapValue<T> = {
     [id: string]: {
@@ -70,7 +66,7 @@ declare namespace Response {
     };
   };
   type RecordMap = {
-    // API に type: BlocksInSpace と要求してるので、欠落することはない
+    // API に type: BlocksInSpaceと要求してるので、欠落することはない
     block: RecordMapValue<Block>;
     collection?: RecordMapValue<Collection>;
     team?: RecordMapValue<Team>;

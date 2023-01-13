@@ -1,5 +1,5 @@
 import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
-import { Block } from '../Record/Block';
+import { BlockNotCollectionView } from '../Record/Block/NotCollectionView';
 
 const BLOCK: Response.Block = {
   id: 'block-id',
@@ -9,7 +9,7 @@ const BLOCK: Response.Block = {
 };
 
 describe('parent', () => {
-  const parent = new Block({
+  const parent = new BlockNotCollectionView({
     block: BLOCK,
   }).parent;
 
@@ -28,7 +28,7 @@ describe('parent', () => {
       { input: TABLE_TYPE.WORKSPACE, expected: true },
     ])('$input → $expected', ({ input, expected }) => {
       expect(
-        new Block({
+        new BlockNotCollectionView({
           block: {
             ...BLOCK,
             parent_table: input,
