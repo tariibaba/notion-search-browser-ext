@@ -136,7 +136,6 @@ describe('createRecord()', () => {
     }
 
     test('unknow block type', () => {
-      /* eslint @typescript-eslint/no-empty-function: 0 */
       const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
       createRecord(BLOCK_ID, TABLE_TYPE.BLOCK, {

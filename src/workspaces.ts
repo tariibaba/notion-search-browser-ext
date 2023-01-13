@@ -18,8 +18,7 @@ export type LinkWorkspaceResult =
 export const selectAndLinkWorkspace =
   async (): Promise<LinkWorkspaceResult> => {
     const workspaces: Workspace[] = [];
-    const res = (await axios.post<GetWorkspacesApiResponse>('./getSpaces'))
-      .data;
+    const res = (await axios.post<GetWorkspacesApiResponse>('/getSpaces')).data;
     for (const { space: workspacesObj } of Object.values(res)) {
       for (const [workspaceId, value] of Object.entries(workspacesObj)) {
         workspaces.push({
@@ -29,9 +28,13 @@ export const selectAndLinkWorkspace =
       }
     }
     let workspace: Workspace | undefined = undefined;
+    console.error(`No spaces are found. res: ${JSON.stringify(res)}`);
     switch (workspaces.length) {
       case 0:
-        throw new Error('No spaces are found');
+        // オブジェクトがでかすぎて Sentry に到達しない可能性も無きにしもあらずなので、念の為分ける
+        console.error(`No spaces are found. res: ${JSON.stringify(res)}`);
+        // TODO: このエラー 2 回コンソールに出るんだけどなんで？
+        throw new Error(`No spaces are found`);
       case 1:
         workspace = workspaces[0];
         break;
