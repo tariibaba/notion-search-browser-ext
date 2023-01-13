@@ -30,7 +30,8 @@ export const selectAndLinkWorkspace =
     let workspace: Workspace | undefined = undefined;
     switch (workspaces.length) {
       case 0:
-        throw new Error('No spaces are found');
+        // TODO: このエラー 2 回コンソールに出るんだけどなんで？
+        throw new Error(`No spaces are found. res: ${JSON.stringify(res)}`);
       case 1:
         workspace = workspaces[0];
         break;
