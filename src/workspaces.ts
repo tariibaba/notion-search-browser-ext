@@ -28,7 +28,6 @@ export const selectAndLinkWorkspace =
       }
     }
     let workspace: Workspace | undefined = undefined;
-    console.error(`No spaces are found. res: ${JSON.stringify(res)}`);
     switch (workspaces.length) {
       case 0:
         // オブジェクトがでかすぎて Sentry に到達しない可能性も無きにしもあらずなので、念の為分ける
