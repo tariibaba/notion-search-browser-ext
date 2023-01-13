@@ -16,26 +16,33 @@ describe('answerToIndex', () => {
 });
 
 describe('selectAndLinkWorkspace', () => {
-  beforeEach(() => {
+  afterEach(() => {
     jest.restoreAllMocks();
   });
 
-  test('no spaces', async () => {
-    jest.spyOn(axios, 'post').mockResolvedValue({ data: {} });
-    await expect(selectAndLinkWorkspace()).rejects.toThrow(
-      /^No spaces are found/,
-    );
-
-    jest.spyOn(axios, 'post').mockResolvedValue({
-      data: {
-        'user-id': {
-          space: {},
-        },
-      },
+  describe('no spaces', () => {
+    beforeEach(() => {
+      jest.spyOn(console, 'error').mockImplementation(() => {});
     });
-    await expect(selectAndLinkWorkspace()).rejects.toThrow(
-      /^No spaces are found/,
-    );
+    test('data: {}', async () => {
+      jest.spyOn(axios, 'post').mockResolvedValue({ data: {} });
+      await expect(selectAndLinkWorkspace()).rejects.toThrow(
+        /^No spaces are found/,
+      );
+    });
+
+    test('user-id: {}', async () => {
+      jest.spyOn(axios, 'post').mockResolvedValue({
+        data: {
+          'user-id': {
+            space: {},
+          },
+        },
+      });
+      await expect(selectAndLinkWorkspace()).rejects.toThrow(
+        /^No spaces are found/,
+      );
+    });
   });
   test('1 space', async () => {
     jest.spyOn(axios, 'post').mockResolvedValue({
