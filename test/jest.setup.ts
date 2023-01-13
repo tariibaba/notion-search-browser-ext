@@ -19,8 +19,6 @@ beforeAll(() => {
 
 beforeEach(() => {
   storage.clear();
-
-  /* eslint @typescript-eslint/no-empty-function: 0 */
   jest.spyOn(console, 'info').mockImplementation(() => {});
 });
 

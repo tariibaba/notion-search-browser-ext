@@ -22,8 +22,9 @@
     }
   },
   "rules": {
-    "react-hooks/exhaustive-deps": "off",
     "no-trailing-spaces": "error",
+    "@typescript-eslint/no-empty-function": "off",
+    "react-hooks/exhaustive-deps": "off",
     "jest/valid-title": "off"
   }
 }
