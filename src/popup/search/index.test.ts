@@ -118,7 +118,7 @@ describe('gets dirs', () => {
     },
   ])('$name', async ({ input, expected }) => {
     jest
-      .spyOn(Block.prototype, 'getTitle')
+      .spyOn(Block.prototype, 'title', 'get')
       .mockImplementation(function (this: Block) {
         return `Title of ${this.record.id}`;
       });
@@ -185,7 +185,7 @@ describe('gets an icon', () => {
       },
     },
   ])('$name', async ({ input, expected }) => {
-    jest.spyOn(Block.prototype, 'getIcon').mockReturnValue(input);
+    jest.spyOn(Block.prototype, 'icon', 'get').mockReturnValue(input);
     jest.spyOn(axios, 'post').mockResolvedValue({
       data: {
         results: [{ id: BLOCK_ID }],

@@ -15,7 +15,7 @@ const COLLECTION: Response.Collection = {
   parent_table: TABLE_TYPE.BLOCK,
 };
 
-describe('getTitle()', () => {
+describe('title', () => {
   test.each([
     {
       name: 'gets a title from a block (a collction is specified, but the block is preferred)',
@@ -85,12 +85,12 @@ describe('getTitle()', () => {
           ...block,
         },
         ...(collection ? { collection: collection } : {}),
-      }).getTitle(),
+      }).title,
     ).toBe(expected);
   });
 });
 
-describe('getIcon()', () => {
+describe('icon', () => {
   test.each([
     {
       name: 'gets a icon from a block (a collction is specified, but the block is preferred)',
@@ -160,7 +160,7 @@ describe('getIcon()', () => {
           ...block,
         },
         ...(collection ? { collection: collection } : {}),
-      }).getIcon(),
+      }).icon,
     ).toBe(expected);
   });
 });

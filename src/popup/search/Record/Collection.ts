@@ -9,10 +9,10 @@ export class Collection extends Record {
     this.setParent();
     this.canBeDir = CAN_BE_DIR.COLLECTION;
   }
-  public getTitle() {
+  public get title() {
     return this.record.name?.map((array) => array[0]).join('');
   }
-  public getIcon() {
+  public get icon() {
     return this.record.icon;
   }
 }

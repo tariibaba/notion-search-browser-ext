@@ -14,12 +14,12 @@ export class BlockCollectionView extends Block {
     super({ block });
     this.collection = collection;
   }
-  public getTitle() {
-    return super.getTitle() ?? this.collection?.getTitle();
+  public get title() {
+    return super.title ?? this.collection?.title;
   }
-  public getIcon() {
+  public get icon() {
     // collection が icon を持つケースは https://www.notion.so/4897c80a8baa4c4d92617e1f627121bf とか
     // cvp 全部がそうというわけでなく、 format.page_icon があるやつもある
-    return super.getIcon() ?? this.collection?.getIcon();
+    return super.icon ?? this.collection?.icon;
   }
 }

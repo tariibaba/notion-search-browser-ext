@@ -9,11 +9,11 @@ export class Team extends Record {
     this.setParent();
     this.canBeDir = CAN_BE_DIR.TEAM;
   }
-  public getTitle() {
+  public get title() {
     return this.record.name;
   }
   // not used
-  public getIcon() {
+  public get icon() {
     return this.record.icon;
   }
 }
