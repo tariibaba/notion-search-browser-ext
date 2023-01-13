@@ -14,7 +14,6 @@ afterEach(() => jest.restoreAllMocks());
 for (const className of [Block, BlockCollectionView]) {
   describe(className.name as string, () => {
     test('detects an unknown block type', () => {
-      /* eslint @typescript-eslint/no-empty-function: 0 */
       const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
       expect(
         () =>
