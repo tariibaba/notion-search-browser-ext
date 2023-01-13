@@ -33,11 +33,6 @@ declare namespace Response {
     icon?: string;
   };
 
-  type Team = RecordBase & {
-    name: string;
-    icon?: string; // not used
-  };
-
   type BlockTypeCollectionViewPage =
     typeof import('../../popup/constants').BLOCK_TYPE.COLLECTION_VIEW_PAGE;
   type BlockTypeCollectionView =
@@ -62,18 +57,18 @@ declare namespace Response {
         }
     );
 
-  type Record = Response.Block | Response.Collection | Response.Team;
-
-  type RecordMapValue<T> = {
-    [id: string]: {
-      value: T;
-    };
-  };
   type RecordMap = {
     // API に type: BlocksInSpace と要求してるので、欠落することはない
-    block: RecordMapValue<Block>;
-    collection?: RecordMapValue<Collection>;
-    team?: RecordMapValue<Team>;
+    block: {
+      [id: string]: {
+        value: Block;
+      };
+    };
+    collection?: {
+      [id: string]: {
+        value: Collection;
+      };
+    };
   };
 }
 

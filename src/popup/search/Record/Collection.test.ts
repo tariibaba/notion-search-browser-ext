@@ -2,7 +2,7 @@ import { TABLE_TYPE } from '../../constants';
 import { Collection } from '../Record/Collection';
 
 const COLLECTION: Response.Collection = {
-  id: 'collection-id',
+  id: 'block-id',
   parent_id: 'parent-id',
   parent_table: TABLE_TYPE.BLOCK,
 };

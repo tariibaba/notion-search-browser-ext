@@ -3,7 +3,7 @@
 import { TABLE_TYPE } from '../../constants';
 
 export abstract class Record {
-  public abstract record: Response.Record;
+  public abstract record: Response.Block | Response.Collection;
   public parent: {
     id: string;
     tableType: TableType;
