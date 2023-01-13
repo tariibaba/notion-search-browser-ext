@@ -18,8 +18,7 @@ export type LinkWorkspaceResult =
 export const selectAndLinkWorkspace =
   async (): Promise<LinkWorkspaceResult> => {
     const workspaces: Workspace[] = [];
-    const res = (await axios.post<GetWorkspacesApiResponse>('./getSpaces'))
-      .data;
+    const res = (await axios.post<GetWorkspacesApiResponse>('/getSpaces')).data;
     for (const { space: workspacesObj } of Object.values(res)) {
       for (const [workspaceId, value] of Object.entries(workspacesObj)) {
         workspaces.push({

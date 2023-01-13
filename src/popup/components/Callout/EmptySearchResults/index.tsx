@@ -14,7 +14,7 @@ export const EmptySearchResultsCallout = ({
   useEffect(() => {
     (async () => {
       // 見せられなくても致命的でないのでエラーハンドリングしない
-      const res = (await axios.post<GetWorkspacesApiResponse>('./getSpaces'))
+      const res = (await axios.post<GetWorkspacesApiResponse>('/getSpaces'))
         .data;
 
       // TODO: userId 手に入れたら改修の必要あり
