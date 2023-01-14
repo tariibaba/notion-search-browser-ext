@@ -58,7 +58,7 @@ let config = {
       },
     ],
   },
-  devtool: 'inline-source-map',
+  devtool: false,
   optimization: {
     splitChunks: {
       name: 'vendor',
@@ -75,6 +75,12 @@ let config = {
   // Chrome 拡張においてファイルサイズは大した問題ではない
   performance: {
     hints: false,
+  },
+  cache: {
+    type: 'filesystem',
+    buildDependencies: {
+      config: [__filename],
+    },
   },
 };
 
