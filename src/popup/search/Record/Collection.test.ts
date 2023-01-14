@@ -59,6 +59,6 @@ test('canBeDir', () => {
   expect(
     new Collection({
       collection: COLLECTION,
-    }).canBeDir,
+    }).canBeDir(),
   ).toBe(false);
 });

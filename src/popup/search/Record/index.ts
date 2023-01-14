@@ -13,8 +13,8 @@ export abstract class Record {
     tableType: TABLE_TYPE.BLOCK,
     isWorkspace: false,
   }; // meanless
-  public canBeDir = true;
 
+  public abstract canBeDir(): boolean;
   public abstract get title(): string | undefined;
   public abstract get icon(): string | undefined;
   protected setParent() {

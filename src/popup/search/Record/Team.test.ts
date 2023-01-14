@@ -47,6 +47,6 @@ test('canBeDir', () => {
   expect(
     new Team({
       team: TEAM,
-    }).canBeDir,
+    }).canBeDir(),
   ).toBe(true);
 });

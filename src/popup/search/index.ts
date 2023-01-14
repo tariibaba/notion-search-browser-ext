@@ -90,7 +90,7 @@ export const search = async ({
       let record: Record | undefined;
       try {
         record = createRecord(id, tableType, recordMap);
-        if (record.canBeDir)
+        if (record.canBeDir())
           paths.push({
             title: record.title || TEXT_NO_TITLE,
             block: record.record as Response.Block, // Collection は canBeDir == false なので問題ない

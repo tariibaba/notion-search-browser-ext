@@ -1,7 +1,8 @@
 import { Record } from '.';
-import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
+import { TABLE_TYPE } from '../../constants';
 import { Block } from './Block';
-import { BlockCollectionView } from './BlockCollectionView';
+import { BlockCollectionView, isCollectionView } from './Block/CollectionView';
+import { BlockNotCollectionView } from './Block/NotCollectionView';
 import { Collection } from './Collection';
 import { RecordError, RecordNotFoundError, RecordTypeError } from './errors';
 import { Team } from './Team';
@@ -61,45 +62,29 @@ export const createRecord = (
           },
         );
       }
-      if (!Object.values(BLOCK_TYPE).includes(block.type)) {
-        // コード側では、CVP かそれ以外か、で扱ってるので、問題なく扱える可能性もある。
-        // ので、処理は中断しない
-        console.error(`Unknown block type: ${block.type}`, {
-          id,
-          tableType,
-          block: JSON.stringify(block),
-        });
-        console.info({ block, recordMap });
-      }
 
-      switch (block.type) {
-        case BLOCK_TYPE.COLLECTION_VIEW_PAGE:
-        case BLOCK_TYPE.COLLECTION_VIEW: {
-          let collection: Response.Collection | undefined = undefined;
-          if (block.collection_id) {
-            collection = recordMap.collection?.[block.collection_id]?.value;
-            if (!collection) {
-              throw new RecordNotFoundError(
-                `block.collection_id exists, but collection_id: ${block.collection_id} is not found in recordMap.collection`,
-                {
-                  id,
-                  tableType,
-                  block,
-                  recordMap,
-                },
-              );
-            }
+      if (isCollectionView(block)) {
+        let collection: Response.Collection | undefined = undefined;
+        if (block.collection_id) {
+          collection = recordMap.collection?.[block.collection_id]?.value;
+          if (!collection) {
+            throw new RecordNotFoundError(
+              `block.collection_id exists, but collection_id: ${block.collection_id} is not found in recordMap.collection`,
+              {
+                id,
+                tableType,
+                block,
+                recordMap,
+              },
+            );
           }
-          return new BlockCollectionView({
-            block,
-            ...(collection
-              ? { collection: new Collection({ collection }) }
-              : {}),
-          });
         }
-        default:
-          return new Block({ block });
+        return new BlockCollectionView({
+          block,
+          ...(collection ? { collection: new Collection({ collection }) } : {}),
+        });
       }
+      return new BlockNotCollectionView({ block });
     }
     default:
       throw new RecordTypeError(`Unknown table type: ${tableType}`, {

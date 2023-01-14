@@ -1,12 +1,12 @@
-import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
-import { BlockCollectionView } from '../Record/BlockCollectionView';
-import { Collection } from '../Record/Collection';
+import { BLOCK_TYPE, TABLE_TYPE } from '../../../constants';
+import { Collection } from '../Collection';
+import { BlockCollectionView, isCollectionView } from './CollectionView';
 
 const BLOCK: Response.Block = {
   id: 'block-id',
   parent_id: 'parent-block-id',
   parent_table: TABLE_TYPE.BLOCK,
-  type: BLOCK_TYPE.PAGE,
+  type: BLOCK_TYPE.COLLECTION_VIEW,
 };
 
 const COLLECTION: Response.Collection = {
@@ -14,6 +14,36 @@ const COLLECTION: Response.Collection = {
   parent_id: 'parent-collection-id',
   parent_table: TABLE_TYPE.BLOCK,
 };
+
+describe('validates a block type', () => {
+  test.each([
+    {
+      input: BLOCK_TYPE.PAGE,
+      expected: { ok: false },
+    },
+    {
+      input: BLOCK_TYPE.COLLECTION_VIEW,
+      expected: { ok: true },
+    },
+    {
+      input: BLOCK_TYPE.COLLECTION_VIEW_PAGE,
+      expected: { ok: true },
+    },
+  ])('$input', ({ input, expected: { ok } }) => {
+    const fn = () =>
+      new BlockCollectionView({
+        block: {
+          ...BLOCK,
+          type: input,
+        },
+      });
+    if (ok) {
+      expect(fn).not.toThrow();
+    } else {
+      expect(fn).toThrow(/^Not a collection view/);
+    }
+  });
+});
 
 describe('title', () => {
   test.each([
@@ -136,7 +166,7 @@ describe('icon', () => {
       expected: 'https://example.com/icon2.svg',
     },
     {
-      name: 'no icon in a block nor a collection (a collction is specified, but has no icon)',
+      name: 'no icon in a block or a collection (a collction is specified, but has no icon)',
       input: {
         block: {},
         collection: new Collection({
@@ -146,7 +176,7 @@ describe('icon', () => {
       expected: undefined,
     },
     {
-      name: 'no icon in a block nor a collection (collection is omitted)',
+      name: 'no icon in a block or a collection (collection is omitted)',
       input: {
         block: {},
       },
@@ -161,6 +191,38 @@ describe('icon', () => {
         },
         ...(collection ? { collection: collection } : {}),
       }).icon,
+    ).toBe(expected);
+  });
+});
+
+test('canBeDir', () => {
+  expect(
+    new BlockCollectionView({
+      block: BLOCK,
+    }).canBeDir(),
+  ).toBe(true);
+});
+
+describe('isCollectionView', () => {
+  test.each([
+    {
+      input: BLOCK_TYPE.PAGE,
+      expected: false,
+    },
+    {
+      input: BLOCK_TYPE.COLLECTION_VIEW,
+      expected: true,
+    },
+    {
+      input: BLOCK_TYPE.COLLECTION_VIEW_PAGE,
+      expected: true,
+    },
+  ])('$input', ({ input, expected }) => {
+    expect(
+      isCollectionView({
+        ...BLOCK,
+        type: input,
+      }),
     ).toBe(expected);
   });
 });

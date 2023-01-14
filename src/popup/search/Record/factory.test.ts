@@ -1,6 +1,6 @@
 import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
 import { Block } from './Block';
-import { BlockCollectionView } from './BlockCollectionView';
+import { BlockCollectionView } from './Block/CollectionView';
 import { Collection } from './Collection';
 import { createBlock, createRecord } from './factory';
 
@@ -134,26 +134,6 @@ describe('createRecord()', () => {
         );
       });
     }
-
-    test('unknow block type', () => {
-      const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
-      createRecord(BLOCK_ID, TABLE_TYPE.BLOCK, {
-        ...RECORD_MAP,
-        block: {
-          [BLOCK_ID]: {
-            value: {
-              ...BLOCK,
-              type: 'unknown block type' as BlockType,
-            },
-          },
-        },
-      });
-      expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/Unknown block type:/),
-        expect.anything(),
-      );
-    });
   });
 });
 
