@@ -76,6 +76,12 @@ let config = {
   performance: {
     hints: false,
   },
+  cache: {
+    type: 'filesystem',
+    buildDependencies: {
+      config: [__filename],
+    },
+  },
 };
 
 module.exports = (...[, argv]) => {
