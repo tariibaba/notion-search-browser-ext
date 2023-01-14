@@ -58,7 +58,7 @@ let config = {
       },
     ],
   },
-  devtool: 'inline-source-map',
+  devtool: false,
   optimization: {
     splitChunks: {
       name: 'vendor',
