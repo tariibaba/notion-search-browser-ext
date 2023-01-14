@@ -1,7 +1,7 @@
-import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
 import { Block } from './Block';
 import { BlockCollectionView } from './Block/CollectionView';
 import { Collection } from './Collection';
+import { BLOCK_TYPE, TABLE_TYPE } from './constants';
 import { createBlock, createRecord } from './factory';
 
 const BLOCK_ID = 'block-id';

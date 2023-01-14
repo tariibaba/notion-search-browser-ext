@@ -1,5 +1,5 @@
-import { BLOCK_TYPE } from '../../../constants';
 import { Collection } from '../Collection';
+import { BLOCK_TYPE } from '../constants';
 import { Block } from './';
 
 export const isCollectionView = (

@@ -1,6 +1,6 @@
 // NOTE: このファイルに仕様のメモはしない。 するなら apiResponse.d.ts に
 
-import { TABLE_TYPE } from '../../constants';
+import { TABLE_TYPE } from './constants';
 
 export abstract class Record {
   public abstract record: SearchApi.Record;

@@ -1,4 +1,4 @@
-import { BLOCK_TYPE } from '../../../constants';
+import { BLOCK_TYPE } from '../constants';
 import { Block } from './';
 import { isCollectionView } from './CollectionView';
 

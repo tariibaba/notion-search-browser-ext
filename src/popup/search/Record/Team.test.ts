@@ -1,5 +1,5 @@
-import { TABLE_TYPE } from '../../constants';
 import { Team } from '../Record/Team';
+import { TABLE_TYPE } from './constants';
 
 const TEAM: SearchApi.Team = {
   id: 'team-id',

@@ -3,7 +3,8 @@ import React from 'react';
 
 import { $, userEventSetup } from '../../../../test/helpers';
 import { axios } from '../../../axios';
-import { BLOCK_TYPE, SORT_BY, TABLE_TYPE } from '../../constants';
+import { SORT_BY } from '../../constants';
+import { BLOCK_TYPE, TABLE_TYPE } from '../../search/Record/constants';
 import * as emptySearchResultsCallout from '../Callout/EmptySearchResults';
 import { QueryParamProvider } from '../QueryParamProvider';
 import { SearchContainer } from '../SearchContainer';

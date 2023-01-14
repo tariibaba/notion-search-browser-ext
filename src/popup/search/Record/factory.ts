@@ -1,9 +1,9 @@
 import { Record } from '.';
-import { TABLE_TYPE } from '../../constants';
 import { Block } from './Block';
 import { BlockCollectionView, isCollectionView } from './Block/CollectionView';
 import { BlockNotCollectionView } from './Block/NotCollectionView';
 import { Collection } from './Collection';
+import { TABLE_TYPE } from './constants';
 import { RecordError, RecordNotFoundError, RecordTypeError } from './errors';
 import { Team } from './Team';
 

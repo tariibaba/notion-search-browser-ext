@@ -1,5 +1,5 @@
-import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
 import { BlockNotCollectionView } from '../Record/Block/NotCollectionView';
+import { BLOCK_TYPE, TABLE_TYPE } from './constants';
 
 const BLOCK: SearchApi.Block = {
   id: 'block-id',

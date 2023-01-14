@@ -1,13 +1,17 @@
 // NOTE: このファイルに仕様のメモはしない。 するなら constants.ts に
 
 declare namespace SearchApi {
-  type TableType = valueOf<typeof import('../../popup/constants').TABLE_TYPE>;
+  type TableType = valueOf<
+    typeof import('../../popup/search/Record/constants').TABLE_TYPE
+  >;
   type TableTypeWithoutWorkspace = Exclude<
     TableType,
-    typeof import('../../popup/constants').TABLE_TYPE.WORKSPACE
+    typeof import('../../popup/search/Record/constants').TABLE_TYPE.WORKSPACE
   >;
 
-  type BlockType = valueOf<typeof import('../../popup/constants').BLOCK_TYPE>;
+  type BlockType = valueOf<
+    typeof import('../../popup/search/Record/constants').BLOCK_TYPE
+  >;
 
   type Item = {
     id: string;
@@ -44,7 +48,7 @@ declare namespace SearchApi {
   };
 
   type _BlockTypeCollectionView =
-    typeof import('../../popup/constants').BLOCK_TYPES_COLLECTION_VIEW[number];
+    typeof import('../../popup/search/Record/constants').BLOCK_TYPES_COLLECTION_VIEW[number];
 
   type BlockNotCollectionView = _BlockBase & {
     type: Exclude<BlockType, _BlockTypeCollectionView>;

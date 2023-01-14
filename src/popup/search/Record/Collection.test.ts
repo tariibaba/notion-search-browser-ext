@@ -1,5 +1,5 @@
-import { TABLE_TYPE } from '../../constants';
 import { Collection } from '../Record/Collection';
+import { TABLE_TYPE } from './constants';
 
 const COLLECTION: SearchApi.Collection = {
   id: 'collection-id',
