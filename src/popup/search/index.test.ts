@@ -143,13 +143,13 @@ describe('gets dirs', () => {
   });
 });
 
-const BLOCK: Response.Block = {
+const BLOCK: SearchApi.Block = {
   id: BLOCK_ID,
   parent_id: PARENT_ID,
   parent_table: TABLE_TYPE.BLOCK,
   type: BLOCK_TYPE.PAGE,
 };
-const PARENT_BLOCK: Response.Block = {
+const PARENT_BLOCK: SearchApi.Block = {
   id: PARENT_ID,
   parent_id: GRANDPARENT_ID,
   parent_table: TABLE_TYPE.WORKSPACE,

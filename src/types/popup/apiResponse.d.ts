@@ -1,13 +1,14 @@
 // NOTE: このファイルに仕様のメモはしない。 するなら constants.ts に
 
-type TableType = valueOf<typeof import('../../popup/constants').TABLE_TYPE>;
-type TableTypeWithoutWorkspace = Exclude<
-  TableType,
-  typeof import('../../popup/constants').TABLE_TYPE.WORKSPACE
->;
-type BlockType = valueOf<typeof import('../../popup/constants').BLOCK_TYPE>;
+declare namespace SearchApi {
+  type TableType = valueOf<typeof import('../../popup/constants').TABLE_TYPE>;
+  type TableTypeWithoutWorkspace = Exclude<
+    TableType,
+    typeof import('../../popup/constants').TABLE_TYPE.WORKSPACE
+  >;
 
-declare namespace Response {
+  type BlockType = valueOf<typeof import('../../popup/constants').BLOCK_TYPE>;
+
   type Item = {
     id: string;
     highlight?: {
@@ -74,8 +75,8 @@ declare namespace Response {
 }
 
 type SearchApiResponse = {
-  results: Response.Item[];
-  recordMap: Response.RecordMap;
+  results: SearchApi.Item[];
+  recordMap: SearchApi.RecordMap;
   total: number;
 };
 

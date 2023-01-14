@@ -2,14 +2,14 @@ import { BLOCK_TYPE, TABLE_TYPE } from '../../../constants';
 import { Collection } from '../Collection';
 import { BlockCollectionView, isCollectionView } from './CollectionView';
 
-const BLOCK: Response.Block = {
+const BLOCK: SearchApi.Block = {
   id: 'block-id',
   parent_id: 'parent-block-id',
   parent_table: TABLE_TYPE.BLOCK,
   type: BLOCK_TYPE.COLLECTION_VIEW,
 };
 
-const COLLECTION: Response.Collection = {
+const COLLECTION: SearchApi.Collection = {
   id: 'collection-id',
   parent_id: 'parent-collection-id',
   parent_table: TABLE_TYPE.BLOCK,

@@ -1,7 +1,7 @@
 import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
 import { BlockNotCollectionView } from '../Record/Block/NotCollectionView';
 
-const BLOCK: Response.Block = {
+const BLOCK: SearchApi.Block = {
   id: 'block-id',
   parent_id: 'parent-id',
   parent_table: TABLE_TYPE.BLOCK,

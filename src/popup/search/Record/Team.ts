@@ -1,8 +1,8 @@
 import { Record } from '../Record';
 
 export class Team extends Record {
-  public record: Response.Team;
-  constructor({ team }: { team: Response.Team }) {
+  public record: SearchApi.Team;
+  constructor({ team }: { team: SearchApi.Team }) {
     super();
     this.record = team;
     this.setParent();

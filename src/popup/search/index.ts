@@ -85,7 +85,7 @@ export const search = async ({
     const getDir = (
       paths: Dir[],
       id: string,
-      tableType: TableTypeWithoutWorkspace,
+      tableType: SearchApi.TableTypeWithoutWorkspace,
     ): Dir[] => {
       let record: Record | undefined;
       try {
@@ -93,7 +93,7 @@ export const search = async ({
         if (record.canBeDir())
           paths.push({
             title: record.title || TEXT_NO_TITLE,
-            block: record.record as Response.Block, // Collection は canBeDir == false なので問題ない
+            block: record.record as SearchApi.Block, // Collection は canBeDir == false なので問題ない
           });
 
         const parent = record.parent;
@@ -102,7 +102,7 @@ export const search = async ({
         return getDir(
           paths,
           parent.id,
-          parent.tableType as TableTypeWithoutWorkspace,
+          parent.tableType as SearchApi.TableTypeWithoutWorkspace,
         );
       } catch (error) {
         // parent_id が生えてることはまず無い(エラーのほぼ全てはクラス生成前のバリデーションなので)
@@ -136,7 +136,7 @@ export const search = async ({
           : getDir(
               [],
               block.parent.id,
-              block.parent.tableType as TableTypeWithoutWorkspace,
+              block.parent.tableType as SearchApi.TableTypeWithoutWorkspace,
             ).reverse(),
         url:
           `${NOTION_BASE_URL}/${id.replaceAll('-', '')}` +

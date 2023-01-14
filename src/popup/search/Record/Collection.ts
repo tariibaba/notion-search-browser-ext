@@ -1,8 +1,8 @@
 import { Record } from '../Record';
 
 export class Collection extends Record {
-  public record: Response.Collection;
-  constructor({ collection }: { collection: Response.Collection }) {
+  public record: SearchApi.Collection;
+  constructor({ collection }: { collection: SearchApi.Collection }) {
     super();
     this.record = collection;
     this.setParent();

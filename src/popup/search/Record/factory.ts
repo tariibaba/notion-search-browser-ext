@@ -9,8 +9,8 @@ import { Team } from './Team';
 
 export const createRecord = (
   id: string,
-  tableType: TableType,
-  recordMap: Response.RecordMap,
+  tableType: SearchApi.TableType,
+  recordMap: SearchApi.RecordMap,
 ): Record => {
   switch (tableType) {
     case TABLE_TYPE.WORKSPACE:
@@ -64,7 +64,7 @@ export const createRecord = (
       }
 
       if (isCollectionView(block)) {
-        let collection: Response.Collection | undefined = undefined;
+        let collection: SearchApi.Collection | undefined = undefined;
         if (block.collection_id) {
           collection = recordMap.collection?.[block.collection_id]?.value;
           if (!collection) {
@@ -95,7 +95,7 @@ export const createRecord = (
   }
 };
 
-export const createBlock = (id: string, recordMap: Response.RecordMap) => {
+export const createBlock = (id: string, recordMap: SearchApi.RecordMap) => {
   const record = createRecord(id, TABLE_TYPE.BLOCK, recordMap);
   if (!(record instanceof Block))
     // 今の実装では起こり得ない。保険
