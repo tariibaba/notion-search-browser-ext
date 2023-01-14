@@ -1,7 +1,7 @@
 import { BLOCK_TYPE, TABLE_TYPE } from '../../../constants';
 import { BlockNotCollectionView } from './NotCollectionView';
 
-const BLOCK: Response.Block = {
+const BLOCK: SearchApi.Block = {
   id: 'block-id',
   parent_id: 'parent-id',
   parent_table: TABLE_TYPE.BLOCK,
@@ -13,7 +13,7 @@ afterEach(() => jest.restoreAllMocks());
 describe('unknown block type', () => {
   test.each([
     {
-      input: 'unknown type' as BlockType,
+      input: 'unknown type' as SearchApi.BlockType,
       expected: /^Unknown block type/,
     },
     {

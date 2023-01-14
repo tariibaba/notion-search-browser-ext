@@ -1,7 +1,7 @@
 import { TABLE_TYPE } from '../../constants';
 import { Collection } from '../Record/Collection';
 
-const COLLECTION: Response.Collection = {
+const COLLECTION: SearchApi.Collection = {
   id: 'collection-id',
   parent_id: 'parent-id',
   parent_table: TABLE_TYPE.BLOCK,

@@ -3,10 +3,13 @@ import { Collection } from '../Collection';
 import { Block } from './';
 
 export const isCollectionView = (
-  block: Response.Block,
-): block is Response.BlockCollectionView => {
+  block: SearchApi.Block,
+): block is SearchApi.BlockCollectionView => {
   return (
-    [BLOCK_TYPE.COLLECTION_VIEW, BLOCK_TYPE.COLLECTION_VIEW_PAGE] as BlockType[]
+    [
+      BLOCK_TYPE.COLLECTION_VIEW,
+      BLOCK_TYPE.COLLECTION_VIEW_PAGE,
+    ] as SearchApi.BlockType[]
   ).includes(block.type);
 };
 
@@ -17,7 +20,7 @@ export class BlockCollectionView extends Block {
     block,
     collection,
   }: {
-    block: Response.Block;
+    block: SearchApi.Block;
     collection?: Collection;
   }) {
     super({ block });

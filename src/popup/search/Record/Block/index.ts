@@ -1,9 +1,9 @@
 import { Record } from '../../Record';
 
 export abstract class Block extends Record {
-  public record: Response.Block;
+  public record: SearchApi.Block;
 
-  constructor({ block }: { block: Response.Block }) {
+  constructor({ block }: { block: SearchApi.Block }) {
     super();
     this.record = block;
     this.setParent();

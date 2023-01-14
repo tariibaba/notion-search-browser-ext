@@ -5,7 +5,7 @@ import { Collection } from './Collection';
 import { createBlock, createRecord } from './factory';
 
 const BLOCK_ID = 'block-id';
-const BLOCK: Response.Block = {
+const BLOCK: SearchApi.Block = {
   id: BLOCK_ID,
   parent_id: 'parent-block-id',
   parent_table: TABLE_TYPE.BLOCK,
@@ -13,13 +13,13 @@ const BLOCK: Response.Block = {
 };
 
 const COLLECTION_ID = 'yyy';
-const COLLECTION: Response.Collection = {
+const COLLECTION: SearchApi.Collection = {
   id: COLLECTION_ID,
   parent_id: 'parent-collection-id',
   parent_table: TABLE_TYPE.BLOCK,
 };
 
-const RECORD_MAP: Response.RecordMap = {
+const RECORD_MAP: SearchApi.RecordMap = {
   block: {
     [BLOCK_ID]: {
       value: BLOCK,
@@ -89,7 +89,11 @@ describe('createRecord()', () => {
   describe('abnormal', () => {
     test('unknown table type', () =>
       expect(() =>
-        createRecord(BLOCK_ID, 'unknown table type' as TableType, RECORD_MAP),
+        createRecord(
+          BLOCK_ID,
+          'unknown table type' as SearchApi.TableType,
+          RECORD_MAP,
+        ),
       ).toThrow(/^Unknown table type:/));
 
     test("can't handle a workspace", () =>

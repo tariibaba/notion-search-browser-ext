@@ -1,7 +1,7 @@
 import { TABLE_TYPE } from '../../constants';
 import { Team } from '../Record/Team';
 
-const TEAM: Response.Team = {
+const TEAM: SearchApi.Team = {
   id: 'team-id',
   name: 'team-name',
   parent_id: 'parent-id',

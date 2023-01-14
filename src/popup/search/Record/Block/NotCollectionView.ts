@@ -3,7 +3,7 @@ import { Block } from './';
 import { isCollectionView } from './CollectionView';
 
 export class BlockNotCollectionView extends Block {
-  public type: BlockType;
+  public type: SearchApi.BlockType;
   /*
     # クラス設計どうしよう会議
     - 全然別のバリデーションをしたいので、今のままだと駄目 ( constructor での super() が強制)
@@ -15,7 +15,7 @@ export class BlockNotCollectionView extends Block {
       - これかなぁ。。。
       - BlockBase みたいなの要るよね
   */
-  constructor({ block }: { block: Response.Block }) {
+  constructor({ block }: { block: SearchApi.Block }) {
     super({ block });
     this.type = block.type;
 
