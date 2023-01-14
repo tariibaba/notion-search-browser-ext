@@ -1,5 +1,5 @@
-import { BLOCK_TYPE, TABLE_TYPE } from '../../../constants';
 import { Collection } from '../Collection';
+import { BLOCK_TYPE, TABLE_TYPE } from '../constants';
 import { BlockCollectionView, isCollectionView } from './CollectionView';
 
 const BLOCK: SearchApi.Block = {
