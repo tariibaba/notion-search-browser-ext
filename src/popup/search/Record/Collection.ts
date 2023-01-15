@@ -1,18 +1,20 @@
-import { CAN_BE_DIR } from '../../constants';
 import { Record } from '../Record';
 
 export class Collection extends Record {
-  public record: Response.Collection;
-  constructor({ collection }: { collection: Response.Collection }) {
+  public record: SearchApi.Collection;
+  constructor({ collection }: { collection: SearchApi.Collection }) {
     super();
     this.record = collection;
     this.setParent();
-    this.canBeDir = CAN_BE_DIR.COLLECTION;
   }
-  public getTitle() {
+  public canBeDir() {
+    return false;
+  }
+  public get title() {
     return this.record.name?.map((array) => array[0]).join('');
   }
-  public getIcon() {
+  // collection_view のアイコンで使う（ことがある）
+  public get icon() {
     return this.record.icon;
   }
 }

@@ -1,11 +1,11 @@
-import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
 import { Block } from './Block';
-import { BlockCollectionView } from './BlockCollectionView';
+import { BlockCollectionView } from './Block/CollectionView';
 import { Collection } from './Collection';
+import { BLOCK_TYPE, TABLE_TYPE } from './constants';
 import { createBlock, createRecord } from './factory';
 
 const BLOCK_ID = 'block-id';
-const BLOCK: Response.Block = {
+const BLOCK: SearchApi.Block = {
   id: BLOCK_ID,
   parent_id: 'parent-block-id',
   parent_table: TABLE_TYPE.BLOCK,
@@ -13,13 +13,13 @@ const BLOCK: Response.Block = {
 };
 
 const COLLECTION_ID = 'yyy';
-const COLLECTION: Response.Collection = {
+const COLLECTION: SearchApi.Collection = {
   id: COLLECTION_ID,
   parent_id: 'parent-collection-id',
   parent_table: TABLE_TYPE.BLOCK,
 };
 
-const RECORD_MAP: Response.RecordMap = {
+const RECORD_MAP: SearchApi.RecordMap = {
   block: {
     [BLOCK_ID]: {
       value: BLOCK,
@@ -89,7 +89,11 @@ describe('createRecord()', () => {
   describe('abnormal', () => {
     test('unknown table type', () =>
       expect(() =>
-        createRecord(BLOCK_ID, 'unknown table type' as TableType, RECORD_MAP),
+        createRecord(
+          BLOCK_ID,
+          'unknown table type' as SearchApi.TableType,
+          RECORD_MAP,
+        ),
       ).toThrow(/^Unknown table type:/));
 
     test("can't handle a workspace", () =>
@@ -134,26 +138,6 @@ describe('createRecord()', () => {
         );
       });
     }
-
-    test('unknow block type', () => {
-      const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
-
-      createRecord(BLOCK_ID, TABLE_TYPE.BLOCK, {
-        ...RECORD_MAP,
-        block: {
-          [BLOCK_ID]: {
-            value: {
-              ...BLOCK,
-              type: 'unknown block type' as BlockType,
-            },
-          },
-        },
-      });
-      expect(spy).toHaveBeenCalledWith(
-        expect.stringMatching(/Unknown block type:/),
-        expect.anything(),
-      );
-    });
   });
 });
 

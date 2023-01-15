@@ -1,13 +1,13 @@
-import { TABLE_TYPE } from '../../constants';
 import { Collection } from '../Record/Collection';
+import { TABLE_TYPE } from './constants';
 
-const COLLECTION: Response.Collection = {
-  id: 'block-id',
+const COLLECTION: SearchApi.Collection = {
+  id: 'collection-id',
   parent_id: 'parent-id',
   parent_table: TABLE_TYPE.BLOCK,
 };
 
-describe('getTitle()', () => {
+describe('title', () => {
   test.each([
     {
       name: 'gets a title',
@@ -26,12 +26,12 @@ describe('getTitle()', () => {
           ...COLLECTION,
           ...input,
         },
-      }).getTitle(),
+      }).title,
     ).toBe(expected);
   });
 });
 
-describe('getIcon()', () => {
+describe('icon', () => {
   test.each([
     {
       name: 'gets a icon',
@@ -50,7 +50,7 @@ describe('getIcon()', () => {
           ...COLLECTION,
           ...input,
         },
-      }).getIcon(),
+      }).icon,
     ).toBe(expected);
   });
 });
@@ -59,6 +59,6 @@ test('canBeDir', () => {
   expect(
     new Collection({
       collection: COLLECTION,
-    }).canBeDir,
+    }).canBeDir(),
   ).toBe(false);
 });

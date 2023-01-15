@@ -19,19 +19,19 @@ jobs:
 
       - name: Cache dependencies
         uses: actions/cache@v3
+        id: node_modules_cache_id
+        env:
+          cache-name: cache-node-modules
         with:
-          path: ~/.npm
-          key: npm-${{ hashFiles('yarn.lock') }}
-          restore-keys: npm-
+          path: 'node_modules'
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('yarn.lock') }}
 
-      - name: Install dependencies
-        run: yarn install
+      - if: ${{ steps.node_modules_cache_id.outputs.cache-hit != 'true' }}
+        run: yarn install --immutable --immutable-cache --check-cache # same as `npm ci`
 
-      - name: Build
-        run: yarn run build
+      - run: yarn run build
 
-      - name: Test && Lint && NG Words Check
-        run: yarn run ci
+      - run: yarn run all-checks
 
       # https://action-slack.netlify.app/usage/
       - uses: 8398a7/action-slack@v3

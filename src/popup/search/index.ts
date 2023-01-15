@@ -85,15 +85,15 @@ export const search = async ({
     const getDir = (
       paths: Dir[],
       id: string,
-      tableType: TableTypeWithoutWorkspace,
+      tableType: SearchApi.TableTypeWithoutWorkspace,
     ): Dir[] => {
       let record: Record | undefined;
       try {
         record = createRecord(id, tableType, recordMap);
-        if (record.canBeDir)
+        if (record.canBeDir())
           paths.push({
-            title: record.getTitle() || TEXT_NO_TITLE,
-            block: record.record as Response.Block, // Collection は canBeDir == false なので問題ない
+            title: record.title || TEXT_NO_TITLE,
+            block: record.record as SearchApi.Block, // Collection は canBeDir == false なので問題ない
           });
 
         const parent = record.parent;
@@ -102,7 +102,7 @@ export const search = async ({
         return getDir(
           paths,
           parent.id,
-          parent.tableType as TableTypeWithoutWorkspace,
+          parent.tableType as SearchApi.TableTypeWithoutWorkspace,
         );
       } catch (error) {
         // parent_id が生えてることはまず無い(エラーのほぼ全てはクラス生成前のバリデーションなので)
@@ -128,7 +128,7 @@ export const search = async ({
       block = createBlock(id, recordMap);
 
       const result: Item = {
-        title: block.getTitle() ?? TEXT_NO_TITLE,
+        title: block.title ?? TEXT_NO_TITLE,
         text: item.highlight?.text,
         block: block.record,
         dirs: block.parent.isWorkspace
@@ -136,7 +136,7 @@ export const search = async ({
           : getDir(
               [],
               block.parent.id,
-              block.parent.tableType as TableTypeWithoutWorkspace,
+              block.parent.tableType as SearchApi.TableTypeWithoutWorkspace,
             ).reverse(),
         url:
           `${NOTION_BASE_URL}/${id.replaceAll('-', '')}` +
@@ -149,7 +149,7 @@ export const search = async ({
         },
       };
 
-      const icon = block.getIcon();
+      const icon = block.icon;
       if (icon) {
         if (icon.startsWith('http')) {
           // uploaded by user

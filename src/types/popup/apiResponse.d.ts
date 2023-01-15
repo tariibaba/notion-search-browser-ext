@@ -1,13 +1,18 @@
 // NOTE: このファイルに仕様のメモはしない。 するなら constants.ts に
 
-type TableType = valueOf<typeof import('../../popup/constants').TABLE_TYPE>;
-type TableTypeWithoutWorkspace = Exclude<
-  TableType,
-  typeof import('../../popup/constants').TABLE_TYPE.WORKSPACE
->;
-type BlockType = valueOf<typeof import('../../popup/constants').BLOCK_TYPE>;
+declare namespace SearchApi {
+  type TableType = valueOf<
+    typeof import('../../popup/search/Record/constants').TABLE_TYPE
+  >;
+  type TableTypeWithoutWorkspace = Exclude<
+    TableType,
+    typeof import('../../popup/search/Record/constants').TABLE_TYPE.WORKSPACE
+  >;
 
-declare namespace Response {
+  type BlockType = valueOf<
+    typeof import('../../popup/search/Record/constants').BLOCK_TYPE
+  >;
+
   type Item = {
     id: string;
     highlight?: {
@@ -16,65 +21,66 @@ declare namespace Response {
     highlightBlockId?: string;
   };
 
-  type RecordBase = {
+  type _RecordBase = {
     id: string;
     parent_id: string;
     parent_table: TableType;
-    format?: {
-      page_icon?: string;
-    };
-    properties?: {
-      title: string[][];
-    };
   };
 
-  type Collection = RecordBase & {
+  type Collection = _RecordBase & {
+    // こちらは探せど探せど size も深さも 1 の配列しか無いので、RecordBase と合わせない
     name?: string[][];
     icon?: string;
   };
 
-  type BlockTypeCollectionViewPage =
-    typeof import('../../popup/constants').BLOCK_TYPE.COLLECTION_VIEW_PAGE;
-  type BlockTypeCollectionView =
-    typeof import('../../popup/constants').BLOCK_TYPE.COLLECTION_VIEW;
+  type Team = _RecordBase & {
+    name: string;
+    icon?: string; // not used
+  };
 
-  type Block = RecordBase & {
+  type _BlockBase = _RecordBase & {
     format?: {
       page_icon?: string;
     };
-  } & (
-      | {
-          type: Exclude<
-            BlockType,
-            BlockTypeCollectionViewPage | BlockTypeCollectionView
-          >;
-        }
-      | {
-          type: BlockTypeCollectionViewPage | BlockTypeCollectionView;
-          // 無い場合もある（その場合はアイコン取得不可。。。）
-          // ex) https://www.notion.so/cside/63e92fc56afe463386ea800f82e37ce8
-          collection_id?: string;
-        }
-    );
+    properties?: {
+      [property: string]: (string | string[][])[][];
+    };
+  };
 
+  type _BlockTypeCollectionView =
+    typeof import('../../popup/search/Record/constants').BLOCK_TYPES_COLLECTION_VIEW[number];
+
+  type BlockNotCollectionView = _BlockBase & {
+    type: Exclude<BlockType, _BlockTypeCollectionView>;
+  };
+
+  type BlockCollectionView = _BlockBase & {
+    type: _BlockTypeCollectionView;
+    // 無い場合もある（その場合はアイコン取得不可。。。）
+    // ex) https://www.notion.so/cside/63e92fc56afe463386ea800f82e37ce8
+    collection_id?: string;
+  };
+
+  type Block = BlockCollectionView | BlockNotCollectionView;
+
+  type Record = Block | Collection | Team;
+
+  type RecordMapValue<T> = {
+    [id: string]: {
+      value: T;
+    };
+  };
   type RecordMap = {
-    // API に type: BlocksInSpace と要求してるので、欠落することはない
-    block: {
-      [id: string]: {
-        value: Block;
-      };
-    };
-    collection?: {
-      [id: string]: {
-        value: Collection;
-      };
-    };
+    // API に type: BlocksInSpaceと要求してるので、欠落することはない
+    block: RecordMapValue<Block>;
+    collection?: RecordMapValue<Collection>;
+    team?: RecordMapValue<Team>;
   };
 }
 
 type SearchApiResponse = {
-  results: Response.Item[];
-  recordMap: Response.RecordMap;
+  results: SearchApi.Item[];
+  recordMap: SearchApi.RecordMap;
   total: number;
 };
 

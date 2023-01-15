@@ -1,15 +1,16 @@
 import { Record } from '.';
-import { BLOCK_TYPE, TABLE_TYPE } from '../../constants';
 import { Block } from './Block';
-import { BlockCollectionView } from './BlockCollectionView';
+import { BlockCollectionView, isCollectionView } from './Block/CollectionView';
+import { BlockNotCollectionView } from './Block/NotCollectionView';
 import { Collection } from './Collection';
+import { TABLE_TYPE } from './constants';
 import { RecordError, RecordNotFoundError, RecordTypeError } from './errors';
-import { getBlock, getCollection } from './utils';
+import { Team } from './Team';
 
 export const createRecord = (
   id: string,
-  tableType: TableType,
-  recordMap: Response.RecordMap,
+  tableType: SearchApi.TableType,
+  recordMap: SearchApi.RecordMap,
 ): Record => {
   switch (tableType) {
     case TABLE_TYPE.WORKSPACE:
@@ -21,7 +22,7 @@ export const createRecord = (
 
     // only parent
     case TABLE_TYPE.COLLECTION: {
-      const collection = getCollection(recordMap, id);
+      const collection = recordMap.collection?.[id]?.value;
       if (!collection) {
         throw new RecordNotFoundError(
           `Collection (id:${id}) is not found in recordMap.collection`,
@@ -34,8 +35,23 @@ export const createRecord = (
       }
       return new Collection({ collection });
     }
+    // only parent
+    case TABLE_TYPE.TEAM: {
+      const team = recordMap.team?.[id]?.value;
+      if (!team) {
+        throw new RecordNotFoundError(
+          `Team (id:${id}) is not found in recordMap.team`,
+          {
+            id,
+            tableType,
+            recordMap,
+          },
+        );
+      }
+      return new Team({ team });
+    }
     case TABLE_TYPE.BLOCK: {
-      const block = getBlock(recordMap, id);
+      const block = recordMap.block[id]?.value;
       if (!block) {
         throw new RecordNotFoundError(
           `Block (id:${id}) is not found in recordMap.block`,
@@ -46,45 +62,29 @@ export const createRecord = (
           },
         );
       }
-      if (!Object.values(BLOCK_TYPE).includes(block.type)) {
-        // コード側では、CVP かそれ以外か、で扱ってるので、問題なく扱える可能性もある。
-        // ので、処理は中断しない
-        console.error(`Unknown block type: ${block.type}`, {
-          id,
-          tableType,
-          block: JSON.stringify(block),
-        });
-        console.info({ block, recordMap });
-      }
 
-      switch (block.type) {
-        case BLOCK_TYPE.COLLECTION_VIEW_PAGE:
-        case BLOCK_TYPE.COLLECTION_VIEW: {
-          let collection: Response.Collection | undefined = undefined;
-          if (block.collection_id) {
-            collection = getCollection(recordMap, block.collection_id);
-            if (!collection) {
-              throw new RecordNotFoundError(
-                `block.collection_id exists, but collection_id:${block.collection_id} is not found in recordMap.collection`,
-                {
-                  id,
-                  tableType,
-                  block,
-                  recordMap,
-                },
-              );
-            }
+      if (isCollectionView(block)) {
+        let collection: SearchApi.Collection | undefined = undefined;
+        if (block.collection_id) {
+          collection = recordMap.collection?.[block.collection_id]?.value;
+          if (!collection) {
+            throw new RecordNotFoundError(
+              `block.collection_id exists, but collection_id: ${block.collection_id} is not found in recordMap.collection`,
+              {
+                id,
+                tableType,
+                block,
+                recordMap,
+              },
+            );
           }
-          return new BlockCollectionView({
-            block,
-            ...(collection
-              ? { collection: new Collection({ collection }) }
-              : {}),
-          });
         }
-        default:
-          return new Block({ block });
+        return new BlockCollectionView({
+          block,
+          ...(collection ? { collection: new Collection({ collection }) } : {}),
+        });
       }
+      return new BlockNotCollectionView({ block });
     }
     default:
       throw new RecordTypeError(`Unknown table type: ${tableType}`, {
@@ -95,7 +95,7 @@ export const createRecord = (
   }
 };
 
-export const createBlock = (id: string, recordMap: Response.RecordMap) => {
+export const createBlock = (id: string, recordMap: SearchApi.RecordMap) => {
   const record = createRecord(id, TABLE_TYPE.BLOCK, recordMap);
   if (!(record instanceof Block))
     // 今の実装では起こり得ない。保険

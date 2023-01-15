@@ -3,7 +3,7 @@ import { ICON_TYPE } from '../../constants';
 import './styles.pcss';
 import { setHighlight } from './utils';
 
-const getType = (block: Response.Block) =>
+const getType = (block: SearchApi.Block) =>
   'debug-block-' + block.type.replaceAll('_', '-');
 
 export default function Item({
