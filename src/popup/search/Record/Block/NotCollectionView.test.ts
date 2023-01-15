@@ -83,7 +83,7 @@ describe('title', () => {
       expected: 'foo',
     },
     {
-      name: 'gets a title',
+      name: 'gets a title from a multi-dimensional array',
       input: {
         properties: {
           title: [['foo', [['bar']]], ['baz']],
@@ -92,7 +92,7 @@ describe('title', () => {
       expected: 'foobaz',
     },
     {
-      name: 'gets a title',
+      name: 'gets a title from a multi-dimensional array (2)',
       input: {
         properties: {
           title: [['foo', [['bar']]]],
@@ -101,8 +101,17 @@ describe('title', () => {
       expected: 'foo',
     },
     {
-      name: 'no title',
+      name: 'gets no title from an empty object',
       input: {},
+      expected: undefined,
+    },
+    {
+      name: 'gets no title from an array other than title',
+      input: {
+        properties: {
+          bar: [['https://example.com/']],
+        },
+      },
       expected: undefined,
     },
   ])('$name', ({ input, expected }) => {
@@ -111,7 +120,7 @@ describe('title', () => {
         block: {
           ...BLOCK,
           ...input,
-        },
+        } as SearchApi.BlockNotCollectionView,
       }).title,
     ).toBe(expected);
   });

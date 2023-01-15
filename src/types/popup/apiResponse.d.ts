@@ -43,7 +43,7 @@ declare namespace SearchApi {
       page_icon?: string;
     };
     properties?: {
-      title: (string | string[][])[][];
+      [property: string]: (string | string[][])[][];
     };
   };
 
