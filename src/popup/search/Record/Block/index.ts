@@ -16,7 +16,7 @@ export abstract class Block extends Record {
 
     // ['Works'], ['pace'] のように単語がぶった切られてることがあるので、'' で join で OK 。
     // ex) https://www.notion.so/9b5ff64a69a24b298c6c9d9df65c26a4
-    return this.record.properties?.title.map((array) => array[0]).join('');
+    return this.record.properties?.title?.map((array) => array[0]).join('');
   }
   public get icon() {
     return this.record.format?.page_icon;
