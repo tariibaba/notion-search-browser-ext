@@ -72,7 +72,7 @@ export const search = async ({
   ).data;
 
   // Known issue:
-  //   tab mode の場合、別タブで cookie を set しても、
+  //   tab mode の場合、別タブで login cookie を set しても、
   //   axios のキャッシュが残る
   if (query === '' && res.results.length === 0)
     throw new EmptySearchResultsError();
