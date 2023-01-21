@@ -40,10 +40,16 @@ export const BLOCK_TYPE = {
   FACTORY: 'factory',
 } as const;
 
+export const BLOCK_TYPE_MAP = Object.fromEntries(
+  Object.entries(BLOCK_TYPE).map((arr) => [arr[1], true]),
+) as {
+  [key in valueOf<typeof BLOCK_TYPE>]: true;
+};
+
 // types の array を作るのが容易なので、topic ごとに独立した object を作る。
 export const BLOCK_TYPE_IS_COLLECTION_VIEW = {
   [BLOCK_TYPE.COLLECTION_VIEW_PAGE]: true,
   [BLOCK_TYPE.COLLECTION_VIEW]: true,
-} as const satisfies {
+} as {
   [key in valueOf<typeof BLOCK_TYPE>]?: boolean;
 };
