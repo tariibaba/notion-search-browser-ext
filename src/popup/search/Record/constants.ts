@@ -20,55 +20,22 @@ export const TABLE_TYPE = {
 } as const;
 
 // NOTE: ここに追加したら、テストも追加
-export const BLOCK_TYPE_DETAIL = {
-  PAGE: {
-    name: 'page',
-  },
-  COLLECTION_VIEW_PAGE: {
-    name: 'collection_view_page',
-    is_collection_view: true,
-  },
-  COLLECTION_VIEW: {
-    name: 'collection_view',
-    is_collection_view: true,
-  },
-  COLUMN_LIST: {
-    name: 'column_list',
-  },
-  COLUMN: {
-    name: 'column',
-  },
-  TEXT: {
-    name: 'text',
-  },
-  TO_DO: {
-    name: 'to_do',
-  },
-  SUB_HEADER: {
-    name: 'sub_header',
-  },
-  TOGGLE: {
-    name: 'toggle',
-  },
-  BULLETED_LIST: {
-    name: 'bulleted_list',
-  },
+export const BLOCK_TYPE = {
+  PAGE: 'page',
+  COLLECTION_VIEW_PAGE: 'collection_view_page',
+  COLLECTION_VIEW: 'collection_view',
+  COLUMN_LIST: 'column_list',
+  COLUMN: 'column',
+  TEXT: 'text',
+  TO_DO: 'to_do',
+  SUB_HEADER: 'sub_header',
+  TOGGLE: 'toggle',
+  BULLETED_LIST: 'bulleted_list',
   // Also known as a "Template Button". The title is the button text, and the children are the templates to clone.
   // https://github.com/jamalex/notion-py/blob/master/notion/block.py#L504
   // Official: https://www.notion.so/help/template-buttons
-  FACTORY: {
-    name: 'factory',
-  },
-} as const satisfies {
-  [key: string]: {
-    name: string;
-    is_collection_view?: boolean;
-  };
-};
-
-export const BLOCK_TYPE = Object.fromEntries(
-  Object.entries(BLOCK_TYPE_DETAIL).map((arr) => [arr[0], arr[1].name]),
-);
+  FACTORY: 'factory',
+} as const;
 
 export const BLOCK_TYPES_COLLECTION_VIEW = [
   BLOCK_TYPE.COLLECTION_VIEW_PAGE,
