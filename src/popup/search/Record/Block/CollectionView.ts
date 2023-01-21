@@ -1,16 +1,13 @@
 import { Collection } from '../Collection';
-import { BLOCK_TYPE } from '../constants';
+import { BLOCK_TYPE_IS_COLLECTION_VIEW } from '../constants';
 import { Block } from './';
 
 export const isCollectionView = (
   block: SearchApi.Block,
 ): block is SearchApi.BlockCollectionView => {
-  return (
-    [
-      BLOCK_TYPE.COLLECTION_VIEW,
-      BLOCK_TYPE.COLLECTION_VIEW_PAGE,
-    ] as SearchApi.BlockType[]
-  ).includes(block.type);
+  return !!BLOCK_TYPE_IS_COLLECTION_VIEW[
+    block.type as keyof typeof BLOCK_TYPE_IS_COLLECTION_VIEW
+  ];
 };
 
 // combines collection view page and collection view
