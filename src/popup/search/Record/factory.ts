@@ -7,6 +7,9 @@ import { TABLE_TYPE } from './constants';
 import { RecordError, RecordNotFoundError, RecordTypeError } from './errors';
 import { Team } from './Team';
 
+// NOTE: ログ指針：
+//  - id, tableType は上流で吐いてるのでここでは吐かない
+//  - block は吐く
 export const createRecord = (
   id: string,
   tableType: SearchApi.TableType,
@@ -14,11 +17,7 @@ export const createRecord = (
 ): Record => {
   switch (tableType) {
     case TABLE_TYPE.WORKSPACE:
-      throw new RecordTypeError(`Can't handle a workspace`, {
-        id,
-        tableType,
-        recordMap,
-      });
+      throw new RecordTypeError(`Can't handle a workspace`);
 
     // only parent
     case TABLE_TYPE.COLLECTION: {
@@ -26,11 +25,6 @@ export const createRecord = (
       if (!collection) {
         throw new RecordNotFoundError(
           `Collection (id:${id}) is not found in recordMap.collection`,
-          {
-            id,
-            tableType,
-            recordMap,
-          },
         );
       }
       return new Collection({ collection });
@@ -41,11 +35,6 @@ export const createRecord = (
       if (!team) {
         throw new RecordNotFoundError(
           `Team (id:${id}) is not found in recordMap.team`,
-          {
-            id,
-            tableType,
-            recordMap,
-          },
         );
       }
       return new Team({ team });
@@ -55,11 +44,6 @@ export const createRecord = (
       if (!block) {
         throw new RecordNotFoundError(
           `Block (id:${id}) is not found in recordMap.block`,
-          {
-            id,
-            tableType,
-            recordMap,
-          },
         );
       }
 
@@ -69,13 +53,9 @@ export const createRecord = (
           collection = recordMap.collection?.[block.collection_id]?.value;
           if (!collection) {
             throw new RecordNotFoundError(
-              `block.collection_id exists, but collection_id: ${block.collection_id} is not found in recordMap.collection`,
-              {
-                id,
-                tableType,
-                block,
-                recordMap,
-              },
+              `block.collection_id exists, ` +
+                `but collection_id: ${block.collection_id} is not found in recordMap.collection. ` +
+                `block: ${JSON.stringify(block)}`,
             );
           }
         }
@@ -87,11 +67,7 @@ export const createRecord = (
       return new BlockNotCollectionView({ block });
     }
     default:
-      throw new RecordTypeError(`Unknown table type: ${tableType}`, {
-        id,
-        tableType,
-        recordMap,
-      });
+      throw new RecordTypeError(`Unknown table type: ${tableType}`);
   }
 };
 
@@ -99,11 +75,7 @@ export const createBlock = (id: string, recordMap: SearchApi.RecordMap) => {
   const record = createRecord(id, TABLE_TYPE.BLOCK, recordMap);
   if (!(record instanceof Block))
     // 今の実装では起こり得ない。保険
-    throw new RecordError('Not a block', {
-      id,
-      record,
-      recordMap,
-    });
+    throw new RecordError(`Not a block: ${JSON.stringify(record)}`);
 
   return record as Block;
 };

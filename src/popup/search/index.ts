@@ -6,7 +6,6 @@ import { storage } from '../../storage';
 import { ICON_TYPE, SEARCH_LIMIT, SORT_BY, STORAGE_KEY } from '../constants';
 import { Record } from './Record';
 import { Block } from './Record/Block';
-import { RecordError } from './Record/errors';
 import { createBlock, createRecord } from './Record/factory';
 
 const PATH = '/search';
@@ -16,6 +15,9 @@ const TEXT_NO_TITLE = 'Untitled';
 
 export class EmptySearchResultsError extends Error {}
 
+// NOTE: ログ指針
+//  - 一応 record/block を吐いているが、ほとんどのケースで undefined なので、
+//    各モジュールの内部で record/block を吐いている必要がある
 export const search = async ({
   query,
   sortBy,
@@ -107,17 +109,13 @@ export const search = async ({
       } catch (error) {
         // parent_id が生えてることはまず無い(エラーのほぼ全てはクラス生成前のバリデーションなので)
         // ので、これ以上親は探索しない
-        console.error(
-          error,
-          error instanceof RecordError
-            ? error.data
-            : {
-                id,
-                tableType,
-                record: JSON.stringify(record),
-              },
-        );
-        console.info({ record, recordMap });
+        console.error(error, {
+          id,
+          item: JSON.stringify(item),
+          tableType,
+          record: JSON.stringify(record),
+        });
+        console.info({ item, record, recordMap });
         return paths;
       }
     };
@@ -182,6 +180,7 @@ export const search = async ({
       items.push(result);
     } catch (error) {
       console.error(error, {
+        id,
         item: JSON.stringify(item),
         block: JSON.stringify(block),
       });
