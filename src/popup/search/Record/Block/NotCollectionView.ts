@@ -1,4 +1,4 @@
-import { BLOCK_TYPE } from '../constants';
+import { BLOCK_TYPE, BLOCK_TYPE_MAP } from '../constants';
 import { Block } from './';
 import { isCollectionView } from './CollectionView';
 
@@ -23,7 +23,7 @@ export class BlockNotCollectionView extends Block {
       throw new Error(
         `Collection view. type: ${block.type}. block: ${JSON.stringify(block)}`,
       );
-    } else if (!Object.values(BLOCK_TYPE).includes(block.type)) {
+    } else if (!BLOCK_TYPE_MAP[block.type]) {
       throw new Error(
         `Unknown block type: ${block.type}. block: ${JSON.stringify(block)}`,
       );
