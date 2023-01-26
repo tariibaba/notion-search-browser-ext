@@ -61,6 +61,7 @@ test('filter options', async () => {
     expect.not.objectContaining({
       filters: expect.objectContaining({ navigableBlockContentOnly: true }),
     }),
+    { signal: expect.any(AbortSignal) },
   );
 
   await user.click(elem);
@@ -71,6 +72,7 @@ test('filter options', async () => {
     expect.objectContaining({
       filters: expect.objectContaining({ navigableBlockContentOnly: true }),
     }),
+    { signal: expect.any(AbortSignal) },
   );
 });
 
@@ -140,6 +142,7 @@ test('sort options', async () => {
       expect.objectContaining({
         sort: expect.objectContaining(expected),
       }),
+      { signal: expect.any(AbortSignal) },
     );
   }
 });

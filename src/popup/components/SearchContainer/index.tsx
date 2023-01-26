@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios';
+import { AxiosError, CanceledError } from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   BooleanParam,
@@ -88,7 +88,7 @@ export const SearchContainer = ({
       } catch (error) {
         if (error instanceof EmptySearchResultsError) {
           setHasEmptySearchResultsError(true);
-        } else {
+        } else if (!(error instanceof CanceledError)) {
           alertError(
             error instanceof AxiosError ? 'Network error' : error + '',
             error,
