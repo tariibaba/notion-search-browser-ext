@@ -9,7 +9,6 @@ export class AbortControllers {
   create(query: string): [abortController: AbortController, timestamp: number] {
     const abortController = new AbortController();
     const now = Date.now();
-    // console.info(`Create ${now} ${query}`);
     this.controllers[now] = {
       abortController,
       query,
