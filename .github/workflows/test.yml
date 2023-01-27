@@ -31,7 +31,7 @@ jobs:
 
       - run: yarn run build
 
-      - run: yarn run all-checks
+      - run: yarn run check-all
 
       # https://action-slack.netlify.app/usage/
       - uses: 8398a7/action-slack@v3
