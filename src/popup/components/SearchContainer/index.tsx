@@ -1,4 +1,4 @@
-import { AxiosError } from 'axios';
+import { AxiosError, CanceledError } from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   BooleanParam,
@@ -9,7 +9,7 @@ import {
 import { storage } from '../../../storage';
 import { alertError } from '../../../utils';
 import { SORT_BY, STORAGE_KEY } from '../../constants';
-import { debouncedSearch, EmptySearchResultsError, search } from '../../search';
+import { debouncedSearch, EmptySearchResultsError } from '../../search';
 import { EmptySearchResultsCallout } from '../Callout/EmptySearchResults';
 import { SearchBox } from '../SearchBox';
 import { Sort } from '../Sorts';
@@ -72,7 +72,7 @@ export const SearchContainer = ({
         storage.remove(`${workspace.id}-${STORAGE_KEY.LAST_SEARCHED}`);
 
       try {
-        const searchResult = await (hasQuery ? debouncedSearch : search)({
+        const searchResult = await debouncedSearch({
           query,
           sortBy:
             !hasQuery && sortBy === SORT_BY.RELEVANCE // ad hoc: worthless condition
@@ -88,7 +88,7 @@ export const SearchContainer = ({
       } catch (error) {
         if (error instanceof EmptySearchResultsError) {
           setHasEmptySearchResultsError(true);
-        } else {
+        } else if (!(error instanceof CanceledError)) {
           alertError(
             error instanceof AxiosError ? 'Network error' : error + '',
             error,

@@ -4,6 +4,7 @@ import { NOTION_BASE_URL } from '../../constants';
 import { storage } from '../../storage';
 
 import { ICON_TYPE, SEARCH_LIMIT, SORT_BY, STORAGE_KEY } from '../constants';
+import { AbortControllers } from './AbortsController';
 import { Record } from './Record';
 import { Block } from './Record/Block';
 import { createBlock, createRecord } from './Record/factory';
@@ -14,6 +15,8 @@ const ICON_WIDTH = 40;
 const TEXT_NO_TITLE = 'Untitled';
 
 export class EmptySearchResultsError extends Error {}
+
+const AbortsController = new AbortControllers();
 
 // NOTE: ログ指針
 //  - 一応 record/block を吐いているが、ほとんどのケースで undefined なので、
@@ -50,28 +53,38 @@ export const search = async ({
       throw new Error(`Unknown sort option: ${sortBy}`);
   }
 
+  const [abortController, current] = AbortsController.create(trimmedQuery);
+
   const res = (
-    await axios.post<SearchApiResponse>(PATH, {
-      type: 'BlocksInSpace',
-      query: trimmedQuery,
-      spaceId: workspaceId,
-      limit: SEARCH_LIMIT,
-      filters: {
-        isDeletedOnly: false,
-        excludeTemplates: false,
-        isNavigableOnly: false,
-        requireEditPermissions: false,
-        ancestors: [],
-        createdBy: [],
-        editedBy: [],
-        lastEditedTime: {},
-        createdTime: {},
-        ...(filterByOnlyTitles ? { navigableBlockContentOnly: true } : {}),
+    await axios.post<SearchApiResponse>(
+      PATH,
+      {
+        type: 'BlocksInSpace',
+        query: trimmedQuery,
+        spaceId: workspaceId,
+        limit: SEARCH_LIMIT,
+        filters: {
+          isDeletedOnly: false,
+          excludeTemplates: false,
+          isNavigableOnly: false,
+          requireEditPermissions: false,
+          ancestors: [],
+          createdBy: [],
+          editedBy: [],
+          lastEditedTime: {},
+          createdTime: {},
+          ...(filterByOnlyTitles ? { navigableBlockContentOnly: true } : {}),
+        },
+        sort: sortOptions,
+        source: 'quick_find_input_change',
       },
-      sort: sortOptions,
-      source: 'quick_find_input_change',
-    })
+      {
+        signal: abortController.signal,
+      },
+    )
   ).data;
+
+  AbortsController.abortPast(current);
 
   // Known issue:
   //   tab mode の場合、別タブで cookie を set しても、
