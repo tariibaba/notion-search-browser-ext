@@ -16,3 +16,7 @@ Just click this extension's icon and your search term in popup.
 yarn install
 yarn run build
 ```
+
+## Release Notes
+
+https://github.com/Cside/notion-search/releases
