@@ -124,11 +124,10 @@ export const search = async ({
         // ので、これ以上親は探索しない
         console.error(error, {
           id,
-          item: JSON.stringify(item),
           tableType,
           record: JSON.stringify(record),
         });
-        console.info({ item, record, recordMap });
+        console.info({ record, recordMap });
         return paths;
       }
     };

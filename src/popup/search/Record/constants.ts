@@ -28,10 +28,10 @@ export const BLOCK_TYPE = {
   COLLECTION_VIEW: 'collection_view',
   COLUMN_LIST: 'column_list', // parent only
   COLUMN: 'column', // parent only
-  // TEXT: 'text',
+  TEXT: 'text',
   // TO_DO: 'to_do',
   // SUB_HEADER: 'sub_header',
-  // TOGGLE: 'toggle',
+  TOGGLE: 'toggle',
   // BULLETED_LIST: 'bulleted_list',
   // // Also known as a "Template Button".
   // // The title is the button text, and the children are the templates to clone.
