@@ -58,6 +58,8 @@ describe('canBeDir', () => {
     { input: BLOCK_TYPE.PAGE, expected: true },
     { input: BLOCK_TYPE.COLUMN_LIST, expected: false },
     { input: BLOCK_TYPE.COLUMN, expected: false },
+    { input: BLOCK_TYPE.TOGGLE, expected: false },
+    { input: BLOCK_TYPE.TEXT, expected: false },
   ])('$input → $expected', ({ input, expected }) => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
     expect(
