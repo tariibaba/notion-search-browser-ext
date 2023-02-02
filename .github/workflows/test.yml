@@ -29,8 +29,6 @@ jobs:
       - if: ${{ steps.node_modules_cache_id.outputs.cache-hit != 'true' }}
         run: yarn install --immutable --immutable-cache --check-cache # same as `npm ci`
 
-      - run: yarn run build
-
       - run: yarn run check-all
 
       # https://action-slack.netlify.app/usage/
