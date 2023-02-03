@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "build": "rm -rf ./public/js && webpack --mode=production",
-    "watch": "rm -rf ./public/js && IS_SENTRY_ENABLED=false webpack --mode=development -w",
+    "build": "rimraf ./public/js && webpack --mode=production",
+    "watch": "rimraf ./public/js && IS_SENTRY_ENABLED=false webpack --mode=development -w",
     "test": "jest",
     "eslint": "eslint './{src,test}/**/*.{ts,tsx}'",
     "eslint:fix": "eslint --fix './{src,test}/**/*.{ts,tsx}'",
@@ -11,7 +11,7 @@
     "stylelint:fix": "stylelint --fix './src/**/*.pcss'",
     "lint": "run-p eslint prettier stylelint",
     "lint:fix": "run-p eslint:fix prettier:fix stylelint:fix",
-    "release": "rm -f out.zip && yarn install && yarn run build && zip -r out.zip public",
+    "release": "rimraf out.zip && yarn install && yarn run build && zip -r out.zip public",
     "check-ngword": "if grep -rE \"console\\.(log|dir)|FIXME\" ./src ./test; then exit 1; else echo \"All good\"; fi",
     "check-all": "run-p test lint check-ngword"
   },
@@ -51,6 +51,7 @@
     "postcss-nested": "^6.0.0",
     "postcss-preset-env": "^7.8.3",
     "prettier": "^2.8.1",
+    "rimraf": "^4.1.2",
     "style-loader": "^3.3.1",
     "stylelint": "^14.16.1",
     "stylelint-config-prettier": "^9.0.4",
